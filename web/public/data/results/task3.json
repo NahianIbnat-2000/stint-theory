@@ -1,614 +1,614 @@
 {
-  "robustness": [
-    {
-      "specification": "main: race-lap + driver-race + race-compound FE",
-      "compound": "SOFT",
-      "s_per_lap": 0.06788128583109905,
-      "se": 0.006331886112209896,
-      "ci_low": 0.05547078905116765,
-      "ci_high": 0.08029178261103044,
-      "n laps": 60248,
-      "races": 68
-    },
-    {
-      "specification": "main: race-lap + driver-race + race-compound FE",
-      "compound": "MEDIUM",
-      "s_per_lap": 0.04778665868253811,
-      "se": 0.003700725781089525,
-      "ci_low": 0.04053323615160265,
-      "ci_high": 0.05504008121347358,
-      "n laps": 60248,
-      "races": 68
-    },
-    {
-      "specification": "main: race-lap + driver-race + race-compound FE",
-      "compound": "HARD",
-      "s_per_lap": 0.042439060812495114,
-      "se": 0.002775990274684939,
-      "ci_low": 0.03699811987411263,
-      "ci_high": 0.047880001750877595,
-      "n laps": 60248,
-      "races": 68
-    },
-    {
-      "specification": "naive: no race-lap FE (fuel and track not removed)",
-      "compound": "SOFT",
-      "s_per_lap": -0.0006648487143620011,
-      "se": 0.014314830002530652,
-      "ci_low": -0.02872191551932208,
-      "ci_high": 0.027392218090598074,
-      "n laps": 60264,
-      "races": 68
-    },
-    {
-      "specification": "naive: no race-lap FE (fuel and track not removed)",
-      "compound": "MEDIUM",
-      "s_per_lap": -0.023203088698961316,
-      "se": 0.012989851890831062,
-      "ci_low": -0.0486631984049902,
-      "ci_high": 0.0022570210070675632,
-      "n laps": 60264,
-      "races": 68
-    },
-    {
-      "specification": "naive: no race-lap FE (fuel and track not removed)",
-      "compound": "HARD",
-      "s_per_lap": -0.018872673112899852,
-      "se": 0.005344095440473358,
-      "ci_low": -0.029347100176227634,
-      "ci_high": -0.00839824604957207,
-      "n laps": 60264,
-      "races": 68
-    },
-    {
-      "specification": "R1: first 2 laps of each stint dropped",
-      "compound": "SOFT",
-      "s_per_lap": 0.06595813489456043,
-      "se": 0.006056180585200554,
-      "ci_low": 0.054088020947567345,
-      "ci_high": 0.07782824884155351,
-      "n laps": 58030,
-      "races": 68
-    },
-    {
-      "specification": "R1: first 2 laps of each stint dropped",
-      "compound": "MEDIUM",
-      "s_per_lap": 0.04576759530635597,
-      "se": 0.0036751182873664204,
-      "ci_low": 0.038564363463117785,
-      "ci_high": 0.052970827149594155,
-      "n laps": 58030,
-      "races": 68
-    },
-    {
-      "specification": "R1: first 2 laps of each stint dropped",
-      "compound": "HARD",
-      "s_per_lap": 0.04118747494058483,
-      "se": 0.002655909458385734,
-      "ci_low": 0.03598189240214879,
-      "ci_high": 0.046393057479020866,
-      "n laps": 58030,
-      "races": 68
-    },
-    {
-      "specification": "R2: tyre age <= 15 laps",
-      "compound": "SOFT",
-      "s_per_lap": 0.09509431767834813,
-      "se": 0.008130812456949979,
-      "ci_low": 0.07915792526272616,
-      "ci_high": 0.11103071009397009,
-      "n laps": 33685,
-      "races": 68
-    },
-    {
-      "specification": "R2: tyre age <= 15 laps",
-      "compound": "MEDIUM",
-      "s_per_lap": 0.08038909715911409,
-      "se": 0.006140284931571604,
-      "ci_low": 0.06835413869323374,
-      "ci_high": 0.09242405562499444,
-      "n laps": 33685,
-      "races": 68
-    },
-    {
-      "specification": "R2: tyre age <= 15 laps",
-      "compound": "HARD",
-      "s_per_lap": 0.06806959385133406,
-      "se": 0.005363597748960214,
-      "ci_low": 0.05755694226337204,
-      "ci_high": 0.07858224543929608,
-      "n laps": 33685,
-      "races": 68
-    },
-    {
-      "specification": "R4: strict sample (pace outliers out)",
-      "compound": "SOFT",
-      "s_per_lap": 0.06446326483209167,
-      "se": 0.005857167083165026,
-      "ci_low": 0.052983217349088216,
-      "ci_high": 0.07594331231509512,
-      "n laps": 58049,
-      "races": 68
-    },
-    {
-      "specification": "R4: strict sample (pace outliers out)",
-      "compound": "MEDIUM",
-      "s_per_lap": 0.04694447914368241,
-      "se": 0.003284442955832796,
-      "ci_low": 0.04050697095025013,
-      "ci_high": 0.05338198733711469,
-      "n laps": 58049,
-      "races": 68
-    },
-    {
-      "specification": "R4: strict sample (pace outliers out)",
-      "compound": "HARD",
-      "s_per_lap": 0.041591769852970084,
-      "se": 0.0027458418019509984,
-      "ci_low": 0.036209919921146125,
-      "ci_high": 0.04697361978479404,
-      "n laps": 58049,
-      "races": 68
-    },
-    {
-      "specification": "R6: + race x stint-number FE (common push/manage pattern by stint)",
-      "compound": "SOFT",
-      "s_per_lap": 0.07033025187237948,
-      "se": 0.00508027406887725,
-      "ci_low": 0.06037291469738007,
-      "ci_high": 0.0802875890473789,
-      "n laps": 60243,
-      "races": 68
-    },
-    {
-      "specification": "R6: + race x stint-number FE (common push/manage pattern by stint)",
-      "compound": "MEDIUM",
-      "s_per_lap": 0.049975250528777396,
-      "se": 0.004062307939499993,
-      "ci_low": 0.042013126967357414,
-      "ci_high": 0.05793737409019738,
-      "n laps": 60243,
-      "races": 68
-    },
-    {
-      "specification": "R6: + race x stint-number FE (common push/manage pattern by stint)",
-      "compound": "HARD",
-      "s_per_lap": 0.04677454477725234,
-      "se": 0.003441384499927945,
-      "ci_low": 0.04002943115739357,
-      "ci_high": 0.05351965839711111,
-      "n laps": 60243,
-      "races": 68
-    },
-    {
-      "specification": "R5: season 2023",
-      "compound": "SOFT",
-      "s_per_lap": 0.0605698320564136,
-      "se": 0.010065790142440459,
-      "ci_low": 0.0408408833772303,
-      "ci_high": 0.0802987807355969,
-      "n laps": 19186,
-      "races": 22
-    },
-    {
-      "specification": "R5: season 2023",
-      "compound": "MEDIUM",
-      "s_per_lap": 0.04919131107519203,
-      "se": 0.0064861245910763695,
-      "ci_low": 0.036478506876682346,
-      "ci_high": 0.06190411527370171,
-      "n laps": 19186,
-      "races": 22
-    },
-    {
-      "specification": "R5: season 2023",
-      "compound": "HARD",
-      "s_per_lap": 0.04266141249184534,
-      "se": 0.005361106423189736,
-      "ci_low": 0.032153643902393454,
-      "ci_high": 0.05316918108129722,
-      "n laps": 19186,
-      "races": 22
-    },
-    {
-      "specification": "R5: season 2024",
-      "compound": "SOFT",
-      "s_per_lap": 0.08021376689581786,
-      "se": 0.013153726369782726,
-      "ci_low": 0.05443246321104371,
-      "ci_high": 0.105995070580592,
-      "n laps": 20792,
-      "races": 23
-    },
-    {
-      "specification": "R5: season 2024",
-      "compound": "MEDIUM",
-      "s_per_lap": 0.05217726337212124,
-      "se": 0.008854439084403804,
-      "ci_low": 0.03482256276668978,
-      "ci_high": 0.0695319639775527,
-      "n laps": 20792,
-      "races": 23
-    },
-    {
-      "specification": "R5: season 2024",
-      "compound": "HARD",
-      "s_per_lap": 0.0514872704652966,
-      "se": 0.004419683393448271,
-      "ci_low": 0.042824691014137994,
-      "ci_high": 0.06014984991645521,
-      "n laps": 20792,
-      "races": 23
-    },
-    {
-      "specification": "R5: season 2025",
-      "compound": "SOFT",
-      "s_per_lap": 0.07073242990575078,
-      "se": 0.007155073456596469,
-      "ci_low": 0.0567084859308217,
-      "ci_high": 0.08475637388067986,
-      "n laps": 20270,
-      "races": 23
-    },
-    {
-      "specification": "R5: season 2025",
-      "compound": "MEDIUM",
-      "s_per_lap": 0.04513751250951168,
-      "se": 0.0037540055928453205,
-      "ci_low": 0.03777966154753485,
-      "ci_high": 0.05249536347148851,
-      "n laps": 20270,
-      "races": 23
-    },
-    {
-      "specification": "R5: season 2025",
-      "compound": "HARD",
-      "s_per_lap": 0.03329459560229767,
-      "se": 0.0034595028576903807,
-      "ci_low": 0.026513970001224525,
-      "ci_high": 0.04007522120337082,
-      "n laps": 20270,
-      "races": 23
-    }
-  ],
-  "quadratic_marginal": [
-    {
-      "compound": "SOFT",
-      "tyre_age": 5,
-      "marginal s_per_lap": 0.08732811529323517,
-      "se": 0.010990084620297514,
-      "ci_low": 0.06578754943745205,
-      "ci_high": 0.10886868114901829
-    },
-    {
-      "compound": "SOFT",
-      "tyre_age": 10,
-      "marginal s_per_lap": 0.07862843436211671,
-      "se": 0.008013627984472842,
-      "ci_low": 0.06292172351254993,
-      "ci_high": 0.09433514521168349
-    },
-    {
-      "compound": "SOFT",
-      "tyre_age": 20,
-      "marginal s_per_lap": 0.061229072499879786,
-      "se": 0.004314140484526487,
-      "ci_low": 0.052773357150207874,
-      "ci_high": 0.0696847878495517
-    },
-    {
-      "compound": "SOFT",
-      "tyre_age": 30,
-      "marginal s_per_lap": 0.04382971063764287,
-      "se": 0.007939358890779742,
-      "ci_low": 0.028268567211714578,
-      "ci_high": 0.05939085406357116
-    },
-    {
-      "compound": "MEDIUM",
-      "tyre_age": 5,
-      "marginal s_per_lap": 0.07631316234336155,
-      "se": 0.005387794599744248,
-      "ci_low": 0.06575308492786283,
-      "ci_high": 0.08687323975886027
-    },
-    {
-      "compound": "MEDIUM",
-      "tyre_age": 10,
-      "marginal s_per_lap": 0.06636739282394577,
-      "se": 0.003923241661554329,
-      "ci_low": 0.05867783916729929,
-      "ci_high": 0.07405694648059226
-    },
-    {
-      "compound": "MEDIUM",
-      "tyre_age": 20,
-      "marginal s_per_lap": 0.04647585378511422,
-      "se": 0.002243156645980061,
-      "ci_low": 0.0420792667589933,
-      "ci_high": 0.05087244081123514
-    },
-    {
-      "compound": "MEDIUM",
-      "tyre_age": 30,
-      "marginal s_per_lap": 0.026584314746282672,
-      "se": 0.004149971307209159,
-      "ci_low": 0.018450370984152722,
-      "ci_high": 0.03471825850841262
-    },
-    {
-      "compound": "HARD",
-      "tyre_age": 5,
-      "marginal s_per_lap": 0.06407982183449187,
-      "se": 0.004894102896515801,
-      "ci_low": 0.05448738015732091,
-      "ci_high": 0.07367226351166284
-    },
-    {
-      "compound": "HARD",
-      "tyre_age": 10,
-      "marginal s_per_lap": 0.05728236113920324,
-      "se": 0.003838368154633035,
-      "ci_low": 0.04975915955612249,
-      "ci_high": 0.064805562722284
-    },
-    {
-      "compound": "HARD",
-      "tyre_age": 20,
-      "marginal s_per_lap": 0.043687439748625975,
-      "se": 0.0025412590531682065,
-      "ci_low": 0.03870657200441629,
-      "ci_high": 0.04866830749283566
-    },
-    {
-      "compound": "HARD",
-      "tyre_age": 30,
-      "marginal s_per_lap": 0.030092518358048707,
-      "se": 0.0034254863250373336,
-      "ci_low": 0.023378565160975535,
-      "ci_high": 0.03680647155512188
-    }
-  ],
-  "by_circuit": [
-    {
-      "circuit": "Bahrain Grand Prix",
-      "races": 3,
-      "driver-race clusters": 60,
-      "n laps": 2778,
-      "s_per_lap": 0.11353310363270178,
-      "se": 0.005066050168071271,
-      "ci_low": 0.10360364530328209,
-      "ci_high": 0.12346256196212146
-    },
-    {
-      "circuit": "Belgian Grand Prix",
-      "races": 3,
-      "driver-race clusters": 59,
-      "n laps": 2019,
-      "s_per_lap": 0.07831806013671125,
-      "se": 0.00985155340925668,
-      "ci_low": 0.05900901545456816,
-      "ci_high": 0.09762710481885434
-    },
-    {
-      "circuit": "Japanese Grand Prix",
-      "races": 3,
-      "driver-race clusters": 57,
-      "n laps": 2380,
-      "s_per_lap": 0.07246704387652779,
-      "se": 0.007303032333422429,
-      "ci_low": 0.05815310050301983,
-      "ci_high": 0.08678098725003575
-    },
-    {
-      "circuit": "Spanish Grand Prix",
-      "races": 3,
-      "driver-race clusters": 59,
-      "n laps": 3334,
-      "s_per_lap": 0.06567805269509917,
-      "se": 0.007226726218494977,
-      "ci_low": 0.051513669306849016,
-      "ci_high": 0.07984243608334933
-    },
-    {
-      "circuit": "Hungarian Grand Prix",
-      "races": 3,
-      "driver-race clusters": 58,
-      "n laps": 3630,
-      "s_per_lap": 0.05899694657702988,
-      "se": 0.004095985832347974,
-      "ci_low": 0.05096881434562785,
-      "ci_high": 0.0670250788084319
-    },
-    {
-      "circuit": "Austrian Grand Prix",
-      "races": 3,
-      "driver-race clusters": 57,
-      "n laps": 3281,
-      "s_per_lap": 0.05865811330093609,
-      "se": 0.0030401607188313405,
-      "ci_low": 0.05269939829202667,
-      "ci_high": 0.06461682830984553
-    },
-    {
-      "circuit": "Abu Dhabi Grand Prix",
-      "races": 3,
-      "driver-race clusters": 59,
-      "n laps": 2924,
-      "s_per_lap": 0.05675901712622479,
-      "se": 0.0031636213867751346,
-      "ci_low": 0.050558319208145526,
-      "ci_high": 0.06295971504430406
-    },
-    {
-      "circuit": "S\u00e3o Paulo Grand Prix",
-      "races": 2,
-      "driver-race clusters": 35,
-      "n laps": 1990,
-      "s_per_lap": 0.05363152512883051,
-      "se": 0.0037149912124778265,
-      "ci_low": 0.04635014235237397,
-      "ci_high": 0.06091290790528705
-    },
-    {
-      "circuit": "Chinese Grand Prix",
-      "races": 2,
-      "driver-race clusters": 39,
-      "n laps": 1665,
-      "s_per_lap": 0.053419929463081446,
-      "se": 0.0084480852593876,
-      "ci_low": 0.03686168235468175,
-      "ci_high": 0.06997817657148114
-    },
-    {
-      "circuit": "Emilia Romagna Grand Prix",
-      "races": 2,
-      "driver-race clusters": 40,
-      "n laps": 2069,
-      "s_per_lap": 0.051626039522599226,
-      "se": 0.003597974968468358,
-      "ci_low": 0.04457400858440125,
-      "ci_high": 0.058678070460797205
-    },
-    {
-      "circuit": "Las Vegas Grand Prix",
-      "races": 3,
-      "driver-race clusters": 57,
-      "n laps": 2175,
-      "s_per_lap": 0.050026317996175046,
-      "se": 0.007062795077039199,
-      "ci_low": 0.036183239645178215,
-      "ci_high": 0.06386939634717187
-    },
-    {
-      "circuit": "Singapore Grand Prix",
-      "races": 3,
-      "driver-race clusters": 58,
-      "n laps": 3005,
-      "s_per_lap": 0.04890270453275995,
-      "se": 0.004549016770544226,
-      "ci_low": 0.03998663166249327,
-      "ci_high": 0.057818777403026635
-    },
-    {
-      "circuit": "United States Grand Prix",
-      "races": 3,
-      "driver-race clusters": 59,
-      "n laps": 2608,
-      "s_per_lap": 0.04807671119280967,
-      "se": 0.0060089216731730195,
-      "ci_low": 0.03629922471339055,
-      "ci_high": 0.05985419767222879
-    },
-    {
-      "circuit": "Mexico City Grand Prix",
-      "races": 3,
-      "driver-race clusters": 56,
-      "n laps": 3127,
-      "s_per_lap": 0.042991668894768624,
-      "se": 0.003030287799019501,
-      "ci_low": 0.0370523048086904,
-      "ci_high": 0.04893103298084685
-    },
-    {
-      "circuit": "Dutch Grand Prix",
-      "races": 3,
-      "driver-race clusters": 60,
-      "n laps": 2991,
-      "s_per_lap": 0.04005049679541547,
-      "se": 0.003723593537248771,
-      "ci_low": 0.03275225346240788,
-      "ci_high": 0.04734874012842306
-    },
-    {
-      "circuit": "Italian Grand Prix",
-      "races": 3,
-      "driver-race clusters": 58,
-      "n laps": 2658,
-      "s_per_lap": 0.03630322978992563,
-      "se": 0.005155954199122163,
-      "ci_low": 0.026197559559646193,
-      "ci_high": 0.04640890002020507
-    },
-    {
-      "circuit": "Australian Grand Prix",
-      "races": 3,
-      "driver-race clusters": 42,
-      "n laps": 1593,
-      "s_per_lap": 0.03484402252997555,
-      "se": 0.005983688048653756,
-      "ci_low": 0.023115993954614188,
-      "ci_high": 0.046572051105336916
-    },
-    {
-      "circuit": "Monaco Grand Prix",
-      "races": 3,
-      "driver-race clusters": 56,
-      "n laps": 3250,
-      "s_per_lap": 0.03449514827554297,
-      "se": 0.004335538090748097,
-      "ci_low": 0.025997493617676698,
-      "ci_high": 0.042992802933409235
-    },
-    {
-      "circuit": "British Grand Prix",
-      "races": 3,
-      "driver-race clusters": 54,
-      "n laps": 1420,
-      "s_per_lap": 0.032158174382776974,
-      "se": 0.0076359883624193235,
-      "ci_low": 0.0171916371924351,
-      "ci_high": 0.04712471157311885
-    },
-    {
-      "circuit": "Saudi Arabian Grand Prix",
-      "races": 3,
-      "driver-race clusters": 57,
-      "n laps": 2350,
-      "s_per_lap": 0.030964606972201082,
-      "se": 0.004003863348313525,
-      "ci_low": 0.023117034809506574,
-      "ci_high": 0.03881217913489559
-    },
-    {
-      "circuit": "Miami Grand Prix",
-      "races": 2,
-      "driver-race clusters": 40,
-      "n laps": 1951,
-      "s_per_lap": 0.022951591282531818,
-      "se": 0.0031542570251771036,
-      "ci_low": 0.016769247513184694,
-      "ci_high": 0.029133935051878942
-    },
-    {
-      "circuit": "Canadian Grand Prix",
-      "races": 3,
-      "driver-race clusters": 58,
-      "n laps": 2427,
-      "s_per_lap": 0.02263986278704563,
-      "se": 0.003070058917885738,
-      "ci_low": 0.016622547307989583,
-      "ci_high": 0.028657178266101677
-    },
-    {
-      "circuit": "Azerbaijan Grand Prix",
-      "races": 3,
-      "driver-race clusters": 59,
-      "n laps": 2354,
-      "s_per_lap": 0.021597896055715493,
-      "se": 0.004735254907059672,
-      "ci_low": 0.012316796437878537,
-      "ci_high": 0.03087899567355245
-    },
-    {
-      "circuit": "Qatar Grand Prix",
-      "races": 3,
-      "driver-race clusters": 55,
-      "n laps": 2269,
-      "s_per_lap": 0.01810431373378675,
-      "se": 0.007504362771304245,
-      "ci_low": 0.0033957627020304304,
-      "ci_high": 0.03281286476554307
-    }
-  ]
+ "robustness": [
+  {
+   "specification": "main: race-lap + driver-race + race-compound FE",
+   "compound": "SOFT",
+   "s_per_lap": 0.06788128583109905,
+   "se": 0.006331886112209896,
+   "ci_low": 0.05547078905116765,
+   "ci_high": 0.08029178261103044,
+   "n laps": 60248,
+   "races": 68
+  },
+  {
+   "specification": "main: race-lap + driver-race + race-compound FE",
+   "compound": "MEDIUM",
+   "s_per_lap": 0.04778665868253811,
+   "se": 0.003700725781089525,
+   "ci_low": 0.04053323615160265,
+   "ci_high": 0.05504008121347358,
+   "n laps": 60248,
+   "races": 68
+  },
+  {
+   "specification": "main: race-lap + driver-race + race-compound FE",
+   "compound": "HARD",
+   "s_per_lap": 0.042439060812495114,
+   "se": 0.002775990274684939,
+   "ci_low": 0.03699811987411263,
+   "ci_high": 0.047880001750877595,
+   "n laps": 60248,
+   "races": 68
+  },
+  {
+   "specification": "naive: no race-lap FE (fuel and track not removed)",
+   "compound": "SOFT",
+   "s_per_lap": -0.0006648487143620011,
+   "se": 0.014314830002530652,
+   "ci_low": -0.02872191551932208,
+   "ci_high": 0.027392218090598074,
+   "n laps": 60264,
+   "races": 68
+  },
+  {
+   "specification": "naive: no race-lap FE (fuel and track not removed)",
+   "compound": "MEDIUM",
+   "s_per_lap": -0.023203088698961316,
+   "se": 0.012989851890831062,
+   "ci_low": -0.0486631984049902,
+   "ci_high": 0.0022570210070675632,
+   "n laps": 60264,
+   "races": 68
+  },
+  {
+   "specification": "naive: no race-lap FE (fuel and track not removed)",
+   "compound": "HARD",
+   "s_per_lap": -0.018872673112899852,
+   "se": 0.005344095440473358,
+   "ci_low": -0.029347100176227634,
+   "ci_high": -0.00839824604957207,
+   "n laps": 60264,
+   "races": 68
+  },
+  {
+   "specification": "R1: first 2 laps of each stint dropped",
+   "compound": "SOFT",
+   "s_per_lap": 0.06595813489456043,
+   "se": 0.006056180585200554,
+   "ci_low": 0.054088020947567345,
+   "ci_high": 0.07782824884155351,
+   "n laps": 58030,
+   "races": 68
+  },
+  {
+   "specification": "R1: first 2 laps of each stint dropped",
+   "compound": "MEDIUM",
+   "s_per_lap": 0.04576759530635597,
+   "se": 0.0036751182873664204,
+   "ci_low": 0.038564363463117785,
+   "ci_high": 0.052970827149594155,
+   "n laps": 58030,
+   "races": 68
+  },
+  {
+   "specification": "R1: first 2 laps of each stint dropped",
+   "compound": "HARD",
+   "s_per_lap": 0.04118747494058483,
+   "se": 0.002655909458385734,
+   "ci_low": 0.03598189240214879,
+   "ci_high": 0.046393057479020866,
+   "n laps": 58030,
+   "races": 68
+  },
+  {
+   "specification": "R2: tyre age <= 15 laps",
+   "compound": "SOFT",
+   "s_per_lap": 0.09509431767834813,
+   "se": 0.008130812456949979,
+   "ci_low": 0.07915792526272616,
+   "ci_high": 0.11103071009397009,
+   "n laps": 33685,
+   "races": 68
+  },
+  {
+   "specification": "R2: tyre age <= 15 laps",
+   "compound": "MEDIUM",
+   "s_per_lap": 0.08038909715911409,
+   "se": 0.006140284931571604,
+   "ci_low": 0.06835413869323374,
+   "ci_high": 0.09242405562499444,
+   "n laps": 33685,
+   "races": 68
+  },
+  {
+   "specification": "R2: tyre age <= 15 laps",
+   "compound": "HARD",
+   "s_per_lap": 0.06806959385133406,
+   "se": 0.005363597748960214,
+   "ci_low": 0.05755694226337204,
+   "ci_high": 0.07858224543929608,
+   "n laps": 33685,
+   "races": 68
+  },
+  {
+   "specification": "R4: strict sample (pace outliers out)",
+   "compound": "SOFT",
+   "s_per_lap": 0.06446326483209167,
+   "se": 0.005857167083165026,
+   "ci_low": 0.052983217349088216,
+   "ci_high": 0.07594331231509512,
+   "n laps": 58049,
+   "races": 68
+  },
+  {
+   "specification": "R4: strict sample (pace outliers out)",
+   "compound": "MEDIUM",
+   "s_per_lap": 0.04694447914368241,
+   "se": 0.003284442955832796,
+   "ci_low": 0.04050697095025013,
+   "ci_high": 0.05338198733711469,
+   "n laps": 58049,
+   "races": 68
+  },
+  {
+   "specification": "R4: strict sample (pace outliers out)",
+   "compound": "HARD",
+   "s_per_lap": 0.041591769852970084,
+   "se": 0.0027458418019509984,
+   "ci_low": 0.036209919921146125,
+   "ci_high": 0.04697361978479404,
+   "n laps": 58049,
+   "races": 68
+  },
+  {
+   "specification": "R6: + race x stint-number FE (common push/manage pattern by stint)",
+   "compound": "SOFT",
+   "s_per_lap": 0.07033025187237948,
+   "se": 0.00508027406887725,
+   "ci_low": 0.06037291469738007,
+   "ci_high": 0.0802875890473789,
+   "n laps": 60243,
+   "races": 68
+  },
+  {
+   "specification": "R6: + race x stint-number FE (common push/manage pattern by stint)",
+   "compound": "MEDIUM",
+   "s_per_lap": 0.049975250528777396,
+   "se": 0.004062307939499993,
+   "ci_low": 0.042013126967357414,
+   "ci_high": 0.05793737409019738,
+   "n laps": 60243,
+   "races": 68
+  },
+  {
+   "specification": "R6: + race x stint-number FE (common push/manage pattern by stint)",
+   "compound": "HARD",
+   "s_per_lap": 0.04677454477725234,
+   "se": 0.003441384499927945,
+   "ci_low": 0.04002943115739357,
+   "ci_high": 0.05351965839711111,
+   "n laps": 60243,
+   "races": 68
+  },
+  {
+   "specification": "R5: season 2023",
+   "compound": "SOFT",
+   "s_per_lap": 0.0605698320564136,
+   "se": 0.010065790142440459,
+   "ci_low": 0.0408408833772303,
+   "ci_high": 0.0802987807355969,
+   "n laps": 19186,
+   "races": 22
+  },
+  {
+   "specification": "R5: season 2023",
+   "compound": "MEDIUM",
+   "s_per_lap": 0.04919131107519203,
+   "se": 0.0064861245910763695,
+   "ci_low": 0.036478506876682346,
+   "ci_high": 0.06190411527370171,
+   "n laps": 19186,
+   "races": 22
+  },
+  {
+   "specification": "R5: season 2023",
+   "compound": "HARD",
+   "s_per_lap": 0.04266141249184534,
+   "se": 0.005361106423189736,
+   "ci_low": 0.032153643902393454,
+   "ci_high": 0.05316918108129722,
+   "n laps": 19186,
+   "races": 22
+  },
+  {
+   "specification": "R5: season 2024",
+   "compound": "SOFT",
+   "s_per_lap": 0.08021376689581786,
+   "se": 0.013153726369782726,
+   "ci_low": 0.05443246321104371,
+   "ci_high": 0.105995070580592,
+   "n laps": 20792,
+   "races": 23
+  },
+  {
+   "specification": "R5: season 2024",
+   "compound": "MEDIUM",
+   "s_per_lap": 0.05217726337212124,
+   "se": 0.008854439084403804,
+   "ci_low": 0.03482256276668978,
+   "ci_high": 0.0695319639775527,
+   "n laps": 20792,
+   "races": 23
+  },
+  {
+   "specification": "R5: season 2024",
+   "compound": "HARD",
+   "s_per_lap": 0.0514872704652966,
+   "se": 0.004419683393448271,
+   "ci_low": 0.042824691014137994,
+   "ci_high": 0.06014984991645521,
+   "n laps": 20792,
+   "races": 23
+  },
+  {
+   "specification": "R5: season 2025",
+   "compound": "SOFT",
+   "s_per_lap": 0.07073242990575078,
+   "se": 0.007155073456596469,
+   "ci_low": 0.0567084859308217,
+   "ci_high": 0.08475637388067986,
+   "n laps": 20270,
+   "races": 23
+  },
+  {
+   "specification": "R5: season 2025",
+   "compound": "MEDIUM",
+   "s_per_lap": 0.04513751250951168,
+   "se": 0.0037540055928453205,
+   "ci_low": 0.03777966154753485,
+   "ci_high": 0.05249536347148851,
+   "n laps": 20270,
+   "races": 23
+  },
+  {
+   "specification": "R5: season 2025",
+   "compound": "HARD",
+   "s_per_lap": 0.03329459560229767,
+   "se": 0.0034595028576903807,
+   "ci_low": 0.026513970001224525,
+   "ci_high": 0.04007522120337082,
+   "n laps": 20270,
+   "races": 23
+  }
+ ],
+ "quadratic_marginal": [
+  {
+   "compound": "SOFT",
+   "tyre_age": 5,
+   "marginal s_per_lap": 0.08732811529323517,
+   "se": 0.010990084620297514,
+   "ci_low": 0.06578754943745205,
+   "ci_high": 0.10886868114901829
+  },
+  {
+   "compound": "SOFT",
+   "tyre_age": 10,
+   "marginal s_per_lap": 0.07862843436211671,
+   "se": 0.008013627984472842,
+   "ci_low": 0.06292172351254993,
+   "ci_high": 0.09433514521168349
+  },
+  {
+   "compound": "SOFT",
+   "tyre_age": 20,
+   "marginal s_per_lap": 0.061229072499879786,
+   "se": 0.004314140484526487,
+   "ci_low": 0.052773357150207874,
+   "ci_high": 0.0696847878495517
+  },
+  {
+   "compound": "SOFT",
+   "tyre_age": 30,
+   "marginal s_per_lap": 0.04382971063764287,
+   "se": 0.007939358890779742,
+   "ci_low": 0.028268567211714578,
+   "ci_high": 0.05939085406357116
+  },
+  {
+   "compound": "MEDIUM",
+   "tyre_age": 5,
+   "marginal s_per_lap": 0.07631316234336155,
+   "se": 0.005387794599744248,
+   "ci_low": 0.06575308492786283,
+   "ci_high": 0.08687323975886027
+  },
+  {
+   "compound": "MEDIUM",
+   "tyre_age": 10,
+   "marginal s_per_lap": 0.06636739282394577,
+   "se": 0.003923241661554329,
+   "ci_low": 0.05867783916729929,
+   "ci_high": 0.07405694648059226
+  },
+  {
+   "compound": "MEDIUM",
+   "tyre_age": 20,
+   "marginal s_per_lap": 0.04647585378511422,
+   "se": 0.002243156645980061,
+   "ci_low": 0.0420792667589933,
+   "ci_high": 0.05087244081123514
+  },
+  {
+   "compound": "MEDIUM",
+   "tyre_age": 30,
+   "marginal s_per_lap": 0.026584314746282672,
+   "se": 0.004149971307209159,
+   "ci_low": 0.018450370984152722,
+   "ci_high": 0.03471825850841262
+  },
+  {
+   "compound": "HARD",
+   "tyre_age": 5,
+   "marginal s_per_lap": 0.06407982183449187,
+   "se": 0.004894102896515801,
+   "ci_low": 0.05448738015732091,
+   "ci_high": 0.07367226351166284
+  },
+  {
+   "compound": "HARD",
+   "tyre_age": 10,
+   "marginal s_per_lap": 0.05728236113920324,
+   "se": 0.003838368154633035,
+   "ci_low": 0.04975915955612249,
+   "ci_high": 0.064805562722284
+  },
+  {
+   "compound": "HARD",
+   "tyre_age": 20,
+   "marginal s_per_lap": 0.043687439748625975,
+   "se": 0.0025412590531682065,
+   "ci_low": 0.03870657200441629,
+   "ci_high": 0.04866830749283566
+  },
+  {
+   "compound": "HARD",
+   "tyre_age": 30,
+   "marginal s_per_lap": 0.030092518358048707,
+   "se": 0.0034254863250373336,
+   "ci_low": 0.023378565160975535,
+   "ci_high": 0.03680647155512188
+  }
+ ],
+ "by_circuit": [
+  {
+   "circuit": "Bahrain Grand Prix",
+   "races": 3,
+   "driver-race clusters": 60,
+   "n laps": 2778,
+   "s_per_lap": 0.11353310363270178,
+   "se": 0.005066050168071271,
+   "ci_low": 0.10360364530328209,
+   "ci_high": 0.12346256196212146
+  },
+  {
+   "circuit": "Belgian Grand Prix",
+   "races": 3,
+   "driver-race clusters": 59,
+   "n laps": 2019,
+   "s_per_lap": 0.07831806013671125,
+   "se": 0.00985155340925668,
+   "ci_low": 0.05900901545456816,
+   "ci_high": 0.09762710481885434
+  },
+  {
+   "circuit": "Japanese Grand Prix",
+   "races": 3,
+   "driver-race clusters": 57,
+   "n laps": 2380,
+   "s_per_lap": 0.07246704387652779,
+   "se": 0.007303032333422429,
+   "ci_low": 0.05815310050301983,
+   "ci_high": 0.08678098725003575
+  },
+  {
+   "circuit": "Spanish Grand Prix",
+   "races": 3,
+   "driver-race clusters": 59,
+   "n laps": 3334,
+   "s_per_lap": 0.06567805269509917,
+   "se": 0.007226726218494977,
+   "ci_low": 0.051513669306849016,
+   "ci_high": 0.07984243608334933
+  },
+  {
+   "circuit": "Hungarian Grand Prix",
+   "races": 3,
+   "driver-race clusters": 58,
+   "n laps": 3630,
+   "s_per_lap": 0.05899694657702988,
+   "se": 0.004095985832347974,
+   "ci_low": 0.05096881434562785,
+   "ci_high": 0.0670250788084319
+  },
+  {
+   "circuit": "Austrian Grand Prix",
+   "races": 3,
+   "driver-race clusters": 57,
+   "n laps": 3281,
+   "s_per_lap": 0.05865811330093609,
+   "se": 0.0030401607188313405,
+   "ci_low": 0.05269939829202667,
+   "ci_high": 0.06461682830984553
+  },
+  {
+   "circuit": "Abu Dhabi Grand Prix",
+   "races": 3,
+   "driver-race clusters": 59,
+   "n laps": 2924,
+   "s_per_lap": 0.05675901712622479,
+   "se": 0.0031636213867751346,
+   "ci_low": 0.050558319208145526,
+   "ci_high": 0.06295971504430406
+  },
+  {
+   "circuit": "S\u00e3o Paulo Grand Prix",
+   "races": 2,
+   "driver-race clusters": 35,
+   "n laps": 1990,
+   "s_per_lap": 0.05363152512883051,
+   "se": 0.0037149912124778265,
+   "ci_low": 0.04635014235237397,
+   "ci_high": 0.06091290790528705
+  },
+  {
+   "circuit": "Chinese Grand Prix",
+   "races": 2,
+   "driver-race clusters": 39,
+   "n laps": 1665,
+   "s_per_lap": 0.053419929463081446,
+   "se": 0.0084480852593876,
+   "ci_low": 0.03686168235468175,
+   "ci_high": 0.06997817657148114
+  },
+  {
+   "circuit": "Emilia Romagna Grand Prix",
+   "races": 2,
+   "driver-race clusters": 40,
+   "n laps": 2069,
+   "s_per_lap": 0.051626039522599226,
+   "se": 0.003597974968468358,
+   "ci_low": 0.04457400858440125,
+   "ci_high": 0.058678070460797205
+  },
+  {
+   "circuit": "Las Vegas Grand Prix",
+   "races": 3,
+   "driver-race clusters": 57,
+   "n laps": 2175,
+   "s_per_lap": 0.050026317996175046,
+   "se": 0.007062795077039199,
+   "ci_low": 0.036183239645178215,
+   "ci_high": 0.06386939634717187
+  },
+  {
+   "circuit": "Singapore Grand Prix",
+   "races": 3,
+   "driver-race clusters": 58,
+   "n laps": 3005,
+   "s_per_lap": 0.04890270453275995,
+   "se": 0.004549016770544226,
+   "ci_low": 0.03998663166249327,
+   "ci_high": 0.057818777403026635
+  },
+  {
+   "circuit": "United States Grand Prix",
+   "races": 3,
+   "driver-race clusters": 59,
+   "n laps": 2608,
+   "s_per_lap": 0.04807671119280967,
+   "se": 0.0060089216731730195,
+   "ci_low": 0.03629922471339055,
+   "ci_high": 0.05985419767222879
+  },
+  {
+   "circuit": "Mexico City Grand Prix",
+   "races": 3,
+   "driver-race clusters": 56,
+   "n laps": 3127,
+   "s_per_lap": 0.042991668894768624,
+   "se": 0.003030287799019501,
+   "ci_low": 0.0370523048086904,
+   "ci_high": 0.04893103298084685
+  },
+  {
+   "circuit": "Dutch Grand Prix",
+   "races": 3,
+   "driver-race clusters": 60,
+   "n laps": 2991,
+   "s_per_lap": 0.04005049679541547,
+   "se": 0.003723593537248771,
+   "ci_low": 0.03275225346240788,
+   "ci_high": 0.04734874012842306
+  },
+  {
+   "circuit": "Italian Grand Prix",
+   "races": 3,
+   "driver-race clusters": 58,
+   "n laps": 2658,
+   "s_per_lap": 0.03630322978992563,
+   "se": 0.005155954199122163,
+   "ci_low": 0.026197559559646193,
+   "ci_high": 0.04640890002020507
+  },
+  {
+   "circuit": "Australian Grand Prix",
+   "races": 3,
+   "driver-race clusters": 42,
+   "n laps": 1593,
+   "s_per_lap": 0.03484402252997555,
+   "se": 0.005983688048653756,
+   "ci_low": 0.023115993954614188,
+   "ci_high": 0.046572051105336916
+  },
+  {
+   "circuit": "Monaco Grand Prix",
+   "races": 3,
+   "driver-race clusters": 56,
+   "n laps": 3250,
+   "s_per_lap": 0.03449514827554297,
+   "se": 0.004335538090748097,
+   "ci_low": 0.025997493617676698,
+   "ci_high": 0.042992802933409235
+  },
+  {
+   "circuit": "British Grand Prix",
+   "races": 3,
+   "driver-race clusters": 54,
+   "n laps": 1420,
+   "s_per_lap": 0.032158174382776974,
+   "se": 0.0076359883624193235,
+   "ci_low": 0.0171916371924351,
+   "ci_high": 0.04712471157311885
+  },
+  {
+   "circuit": "Saudi Arabian Grand Prix",
+   "races": 3,
+   "driver-race clusters": 57,
+   "n laps": 2350,
+   "s_per_lap": 0.030964606972201082,
+   "se": 0.004003863348313525,
+   "ci_low": 0.023117034809506574,
+   "ci_high": 0.03881217913489559
+  },
+  {
+   "circuit": "Miami Grand Prix",
+   "races": 2,
+   "driver-race clusters": 40,
+   "n laps": 1951,
+   "s_per_lap": 0.022951591282531818,
+   "se": 0.0031542570251771036,
+   "ci_low": 0.016769247513184694,
+   "ci_high": 0.029133935051878942
+  },
+  {
+   "circuit": "Canadian Grand Prix",
+   "races": 3,
+   "driver-race clusters": 58,
+   "n laps": 2427,
+   "s_per_lap": 0.02263986278704563,
+   "se": 0.003070058917885738,
+   "ci_low": 0.016622547307989583,
+   "ci_high": 0.028657178266101677
+  },
+  {
+   "circuit": "Azerbaijan Grand Prix",
+   "races": 3,
+   "driver-race clusters": 59,
+   "n laps": 2354,
+   "s_per_lap": 0.021597896055715493,
+   "se": 0.004735254907059672,
+   "ci_low": 0.012316796437878537,
+   "ci_high": 0.03087899567355245
+  },
+  {
+   "circuit": "Qatar Grand Prix",
+   "races": 3,
+   "driver-race clusters": 55,
+   "n laps": 2269,
+   "s_per_lap": 0.01810431373378675,
+   "se": 0.007504362771304245,
+   "ci_low": 0.0033957627020304304,
+   "ci_high": 0.03281286476554307
+  }
+ ]
 }

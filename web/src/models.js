@@ -12,6 +12,13 @@ export const MODEL = {
   mlp: "MLP",
   lstm: "LSTM",
   tcn: "TCN",
+  xgboost_direct: "XGBoost",
+  trend_extrapolation: "Trend extrapolation",
+  xgb_direct: "XGBoost",
+  lstm_multi: "LSTM",
+  mlp_multi: "MLP",
+  tcn_multi: "TCN",
+  persistence_multi: "Persistence (repeat the last lap)",
 };
 export const name = (id) => MODEL[id] || id;
 export const comparison = (s) => s.split(" vs ").map(name).join(" vs ");

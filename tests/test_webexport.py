@@ -25,7 +25,7 @@ def web(tmp_path_factory):
 def test_export_has_no_lap_times(web):
     p = json.loads(next((web / "data" / "sim" / "races").glob("*.json")).read_text())
     d = next(iter(p["drivers"].values()))
-    assert set(d) == {"stints", "stops", "finished", "last_lap", "states"}
+    assert set(d) == {"stints", "stops", "finished", "last_lap", "status", "states"}
     assert "lap_time_s" not in json.dumps(p)
     assert len(d["states"]["mu"]) == len(d["states"]["lap"]) > 0
 
@@ -38,3 +38,11 @@ def test_javascript_matches_python(web):
     env = {**os.environ, "STINT_WEB_DATA": str(web / "data"), "STINT_PARITY": str(ref)}
     r = subprocess.run(["node", "--test", test_file], capture_output=True, text=True, env=env)
     assert r.returncode == 0, r.stdout + r.stderr
+
+
+def test_nan_becomes_null(tmp_path):
+    from webexport.export import copy_json
+    src = tmp_path / "a.json"
+    src.write_text('{"a": NaN, "b": [1.5, Infinity], "c": "x"}')
+    copy_json(src, tmp_path / "b.json")
+    assert json.loads((tmp_path / "b.json").read_text()) == {"a": None, "b": [1.5, None], "c": "x"}

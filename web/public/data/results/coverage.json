@@ -1,925 +1,925 @@
 {
-  "generated_at_utc": "2026-11-24T10:38:16+00:00",
-  "by_season": {
-    "2023": {
-      "races_listed": 22,
-      "ingest_status": {
-        "downloaded": 22
-      },
-      "validated": 22,
-      "passed_validation": 22,
-      "races_in_sample": 22,
-      "driver_laps": 24479,
-      "clean_green_laps": 19192,
-      "clean_green_share": 0.784,
-      "strict_clean_share": 0.7529,
-      "stints": 1338
-    },
-    "2024": {
-      "races_listed": 24,
-      "ingest_status": {
-        "downloaded": 24
-      },
-      "validated": 24,
-      "passed_validation": 24,
-      "races_in_sample": 24,
-      "driver_laps": 26629,
-      "clean_green_laps": 20801,
-      "clean_green_share": 0.7811,
-      "strict_clean_share": 0.7535,
-      "stints": 1287
-    },
-    "2025": {
-      "races_listed": 24,
-      "ingest_status": {
-        "downloaded": 24
-      },
-      "validated": 24,
-      "passed_validation": 23,
-      "races_in_sample": 23,
-      "driver_laps": 25706,
-      "clean_green_laps": 20290,
-      "clean_green_share": 0.7893,
-      "strict_clean_share": 0.7623,
-      "stints": 1270
-    }
+ "generated_at_utc": "2026-11-24T10:38:16+00:00",
+ "by_season": {
+  "2023": {
+   "races_listed": 22,
+   "ingest_status": {
+    "downloaded": 22
+   },
+   "validated": 22,
+   "passed_validation": 22,
+   "races_in_sample": 22,
+   "driver_laps": 24479,
+   "clean_green_laps": 19192,
+   "clean_green_share": 0.784,
+   "strict_clean_share": 0.7529,
+   "stints": 1338
   },
-  "lap_completeness": [
-    {
-      "season": 2023,
-      "round": 1,
-      "event_name": "Bahrain Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 2,
-      "event_name": "Saudi Arabian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 3,
-      "event_name": "Australian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 4,
-      "event_name": "Azerbaijan Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 5,
-      "event_name": "Miami Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 6,
-      "event_name": "Monaco Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 7,
-      "event_name": "Spanish Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 8,
-      "event_name": "Canadian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 9,
-      "event_name": "Austrian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 10,
-      "event_name": "British Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 11,
-      "event_name": "Hungarian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 12,
-      "event_name": "Belgian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 13,
-      "event_name": "Dutch Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 14,
-      "event_name": "Italian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 15,
-      "event_name": "Singapore Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 16,
-      "event_name": "Japanese Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 17,
-      "event_name": "Qatar Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 18,
-      "event_name": "United States Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 19,
-      "event_name": "Mexico City Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 20,
-      "event_name": "S\u00e3o Paulo Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 21,
-      "event_name": "Las Vegas Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2023,
-      "round": 22,
-      "event_name": "Abu Dhabi Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 1,
-      "event_name": "Bahrain Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 2,
-      "event_name": "Saudi Arabian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 3,
-      "event_name": "Australian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 4,
-      "event_name": "Japanese Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 5,
-      "event_name": "Chinese Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 6,
-      "event_name": "Miami Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 7,
-      "event_name": "Emilia Romagna Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 8,
-      "event_name": "Monaco Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 9,
-      "event_name": "Canadian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 10,
-      "event_name": "Spanish Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 11,
-      "event_name": "Austrian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 12,
-      "event_name": "British Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 13,
-      "event_name": "Hungarian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 14,
-      "event_name": "Belgian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 15,
-      "event_name": "Dutch Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 16,
-      "event_name": "Italian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 17,
-      "event_name": "Azerbaijan Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 18,
-      "event_name": "Singapore Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 19,
-      "event_name": "United States Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 20,
-      "event_name": "Mexico City Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 21,
-      "event_name": "S\u00e3o Paulo Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 22,
-      "event_name": "Las Vegas Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 23,
-      "event_name": "Qatar Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2024,
-      "round": 24,
-      "event_name": "Abu Dhabi Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 1,
-      "event_name": "Australian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 2,
-      "event_name": "Chinese Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 3,
-      "event_name": "Japanese Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 4,
-      "event_name": "Bahrain Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 5,
-      "event_name": "Saudi Arabian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 6,
-      "event_name": "Miami Grand Prix",
-      "lap_completeness": 0.5579,
-      "passed": false
-    },
-    {
-      "season": 2025,
-      "round": 7,
-      "event_name": "Emilia Romagna Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 8,
-      "event_name": "Monaco Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 9,
-      "event_name": "Spanish Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 10,
-      "event_name": "Canadian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 11,
-      "event_name": "Austrian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 12,
-      "event_name": "British Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 13,
-      "event_name": "Belgian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 14,
-      "event_name": "Hungarian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 15,
-      "event_name": "Dutch Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 16,
-      "event_name": "Italian Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 17,
-      "event_name": "Azerbaijan Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 18,
-      "event_name": "Singapore Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 19,
-      "event_name": "United States Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 20,
-      "event_name": "Mexico City Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 21,
-      "event_name": "S\u00e3o Paulo Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 22,
-      "event_name": "Las Vegas Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 23,
-      "event_name": "Qatar Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    },
-    {
-      "season": 2025,
-      "round": 24,
-      "event_name": "Abu Dhabi Grand Prix",
-      "lap_completeness": 1.0,
-      "passed": true
-    }
-  ],
-  "reconstruction_checks": [
-    {
-      "season": 2023,
-      "lap_rows_without_driver_or_lap": 0,
-      "duplicate_lap_rows_dropped": 0,
-      "laps_without_stint": 0,
-      "laps_stint_extended_by_one": 92,
-      "in_laps_inferred": 912,
-      "pit_table_rows": 693,
-      "pit_rows_on_inferred_in_lap": 693,
-      "pit_rows_on_out_lap": 37,
-      "deleted_laps": 368,
-      "laps_missing_start_time": 18,
-      "rc_messages": 1896,
-      "sc_unpaired": 0,
-      "vsc_unpaired": 0,
-      "red_unpaired": 0,
-      "yellow_capped": 25,
-      "safetycar_msgs_unmatched": 0,
-      "sc_restart_periods": 2,
-      "vsc_upgraded_to_sc": 1,
-      "closed_by_chequered": 0,
-      "starting_grid_rows": 0,
-      "session_result_rows": 439
-    },
-    {
-      "season": 2024,
-      "lap_rows_without_driver_or_lap": 0,
-      "duplicate_lap_rows_dropped": 0,
-      "laps_without_stint": 0,
-      "laps_stint_extended_by_one": 41,
-      "in_laps_inferred": 825,
-      "pit_table_rows": 825,
-      "pit_rows_on_inferred_in_lap": 825,
-      "pit_rows_on_out_lap": 35,
-      "deleted_laps": 327,
-      "laps_missing_start_time": 14,
-      "rc_messages": 2174,
-      "sc_unpaired": 0,
-      "vsc_unpaired": 0,
-      "red_unpaired": 0,
-      "yellow_capped": 34,
-      "safetycar_msgs_unmatched": 0,
-      "sc_restart_periods": 1,
-      "vsc_upgraded_to_sc": 2,
-      "closed_by_chequered": 2,
-      "starting_grid_rows": 0,
-      "session_result_rows": 479
-    },
-    {
-      "season": 2025,
-      "lap_rows_without_driver_or_lap": 0,
-      "duplicate_lap_rows_dropped": 0,
-      "laps_without_stint": 0,
-      "laps_stint_extended_by_one": 40,
-      "in_laps_inferred": 817,
-      "pit_table_rows": 821,
-      "pit_rows_on_inferred_in_lap": 815,
-      "pit_rows_on_out_lap": 73,
-      "deleted_laps": 309,
-      "laps_missing_start_time": 19,
-      "rc_messages": 2216,
-      "sc_unpaired": 0,
-      "vsc_unpaired": 0,
-      "red_unpaired": 0,
-      "yellow_capped": 39,
-      "safetycar_msgs_unmatched": 0,
-      "sc_restart_periods": 1,
-      "vsc_upgraded_to_sc": 0,
-      "closed_by_chequered": 1,
-      "starting_grid_rows": 0,
-      "session_result_rows": 479
-    }
-  ],
-  "field_non_null_share": [
-    {
-      "season": 2023,
-      "lap_time_s": 0.9952,
-      "s1_s": 0.9913,
-      "s2_s": 0.9962,
-      "s3_s": 0.9933,
-      "tyre_life": 1.0,
-      "compound_relative": 1.0,
-      "position_end_of_lap": 0.9959,
-      "grid_position": 1.0,
-      "track_temp_c": 0.9993,
-      "air_temp_c": 0.9993,
-      "scheduled_laps": 1.0
-    },
-    {
-      "season": 2024,
-      "lap_time_s": 0.9968,
-      "s1_s": 0.9935,
-      "s2_s": 0.9982,
-      "s3_s": 0.9971,
-      "tyre_life": 1.0,
-      "compound_relative": 0.9999,
-      "position_end_of_lap": 0.9979,
-      "grid_position": 1.0,
-      "track_temp_c": 0.9995,
-      "air_temp_c": 0.9995,
-      "scheduled_laps": 1.0
-    },
-    {
-      "season": 2025,
-      "lap_time_s": 0.998,
-      "s1_s": 0.9957,
-      "s2_s": 0.9976,
-      "s3_s": 0.9972,
-      "tyre_life": 1.0,
-      "compound_relative": 1.0,
-      "position_end_of_lap": 0.998,
-      "grid_position": 1.0,
-      "track_temp_c": 1.0,
-      "air_temp_c": 1.0,
-      "scheduled_laps": 1.0
-    }
-  ],
-  "exclusion_flag_rates": [
-    {
-      "season": 2023,
-      "flag_pit_in": 0.0373,
-      "flag_pit_out": 0.0373,
-      "flag_first_lap": 0.0179,
-      "flag_missing_time": 0.0048,
-      "flag_sc": 0.045,
-      "flag_vsc": 0.0138,
-      "flag_red": 0.0063,
-      "flag_yellow": 0.0779,
-      "flag_post_neutralisation": 0.0181,
-      "flag_deleted": 0.015,
-      "flag_not_accurate": 0.0,
-      "flag_fastf1_generated": 0.0,
-      "flag_non_slick": 0.0324,
-      "flag_rain": 0.0277,
-      "flag_beyond_scheduled": 0.0014,
-      "flag_pace_outlier": 0.0349
-    },
-    {
-      "season": 2024,
-      "flag_pit_in": 0.031,
-      "flag_pit_out": 0.0317,
-      "flag_first_lap": 0.018,
-      "flag_missing_time": 0.0032,
-      "flag_sc": 0.0362,
-      "flag_vsc": 0.0105,
-      "flag_red": 0.0019,
-      "flag_yellow": 0.0574,
-      "flag_post_neutralisation": 0.0115,
-      "flag_deleted": 0.0123,
-      "flag_not_accurate": 0.0,
-      "flag_fastf1_generated": 0.0,
-      "flag_non_slick": 0.0827,
-      "flag_rain": 0.0601,
-      "flag_beyond_scheduled": 0.0001,
-      "flag_pace_outlier": 0.0336
-    },
-    {
-      "season": 2025,
-      "flag_pit_in": 0.0312,
-      "flag_pit_out": 0.0312,
-      "flag_first_lap": 0.0179,
-      "flag_missing_time": 0.002,
-      "flag_sc": 0.0597,
-      "flag_vsc": 0.0163,
-      "flag_red": 0.0,
-      "flag_yellow": 0.0786,
-      "flag_post_neutralisation": 0.0174,
-      "flag_deleted": 0.012,
-      "flag_not_accurate": 0.0,
-      "flag_fastf1_generated": 0.0,
-      "flag_non_slick": 0.0512,
-      "flag_rain": 0.014,
-      "flag_beyond_scheduled": 0.0,
-      "flag_pace_outlier": 0.0291
-    }
-  ],
-  "outlier_rate_by_tyre_life": [
-    {
-      "season": 2023,
-      "tyre_life_bin": "(0, 5]",
-      "laps": 2785,
-      "outlier_share": 0.075
-    },
-    {
-      "season": 2023,
-      "tyre_life_bin": "(10, 15]",
-      "laps": 3913,
-      "outlier_share": 0.0281
-    },
-    {
-      "season": 2023,
-      "tyre_life_bin": "(15, 20]",
-      "laps": 3055,
-      "outlier_share": 0.036
-    },
-    {
-      "season": 2023,
-      "tyre_life_bin": "(20, 30]",
-      "laps": 3305,
-      "outlier_share": 0.0324
-    },
-    {
-      "season": 2023,
-      "tyre_life_bin": "(30, 80]",
-      "laps": 1699,
-      "outlier_share": 0.0453
-    },
-    {
-      "season": 2023,
-      "tyre_life_bin": "(5, 10]",
-      "laps": 4435,
-      "outlier_share": 0.0336
-    },
-    {
-      "season": 2024,
-      "tyre_life_bin": "(0, 5]",
-      "laps": 3302,
-      "outlier_share": 0.0591
-    },
-    {
-      "season": 2024,
-      "tyre_life_bin": "(10, 15]",
-      "laps": 4007,
-      "outlier_share": 0.027
-    },
-    {
-      "season": 2024,
-      "tyre_life_bin": "(15, 20]",
-      "laps": 3247,
-      "outlier_share": 0.032
-    },
-    {
-      "season": 2024,
-      "tyre_life_bin": "(20, 30]",
-      "laps": 3744,
-      "outlier_share": 0.0329
-    },
-    {
-      "season": 2024,
-      "tyre_life_bin": "(30, 80]",
-      "laps": 2020,
-      "outlier_share": 0.0436
-    },
-    {
-      "season": 2024,
-      "tyre_life_bin": "(5, 10]",
-      "laps": 4481,
-      "outlier_share": 0.0261
-    },
-    {
-      "season": 2025,
-      "tyre_life_bin": "(0, 5]",
-      "laps": 2693,
-      "outlier_share": 0.0839
-    },
-    {
-      "season": 2025,
-      "tyre_life_bin": "(10, 15]",
-      "laps": 4110,
-      "outlier_share": 0.0251
-    },
-    {
-      "season": 2025,
-      "tyre_life_bin": "(15, 20]",
-      "laps": 3301,
-      "outlier_share": 0.0227
-    },
-    {
-      "season": 2025,
-      "tyre_life_bin": "(20, 30]",
-      "laps": 4173,
-      "outlier_share": 0.028
-    },
-    {
-      "season": 2025,
-      "tyre_life_bin": "(30, 80]",
-      "laps": 1814,
-      "outlier_share": 0.0364
-    },
-    {
-      "season": 2025,
-      "tyre_life_bin": "(5, 10]",
-      "laps": 4199,
-      "outlier_share": 0.0257
-    }
-  ],
-  "compound_raw_counts": [
-    {
-      "season": 2023,
-      "compound_raw": "HARD",
-      "laps": 11894
-    },
-    {
-      "season": 2023,
-      "compound_raw": "INTERMEDIATE",
-      "laps": 743
-    },
-    {
-      "season": 2023,
-      "compound_raw": "MEDIUM",
-      "laps": 8294
-    },
-    {
-      "season": 2023,
-      "compound_raw": "SOFT",
-      "laps": 3498
-    },
-    {
-      "season": 2023,
-      "compound_raw": "WET",
-      "laps": 50
-    },
-    {
-      "season": 2024,
-      "compound_raw": "HARD",
-      "laps": 13801
-    },
-    {
-      "season": 2024,
-      "compound_raw": "INTERMEDIATE",
-      "laps": 2166
-    },
-    {
-      "season": 2024,
-      "compound_raw": "MEDIUM",
-      "laps": 8879
-    },
-    {
-      "season": 2024,
-      "compound_raw": "SOFT",
-      "laps": 1746
-    },
-    {
-      "season": 2024,
-      "compound_raw": "UNKNOWN",
-      "laps": 2
-    },
-    {
-      "season": 2024,
-      "compound_raw": "WET",
-      "laps": 35
-    },
-    {
-      "season": 2025,
-      "compound_raw": "HARD",
-      "laps": 10512
-    },
-    {
-      "season": 2025,
-      "compound_raw": "INTERMEDIATE",
-      "laps": 1315
-    },
-    {
-      "season": 2025,
-      "compound_raw": "MEDIUM",
-      "laps": 10564
-    },
-    {
-      "season": 2025,
-      "compound_raw": "SOFT",
-      "laps": 3315
-    }
-  ],
-  "compound_mapping_methods": [
-    {
-      "season": 2023,
-      "compound_map_method": "reported",
-      "laps": 24479
-    },
-    {
-      "season": 2024,
-      "compound_map_method": "missing",
-      "laps": 2
-    },
-    {
-      "season": 2024,
-      "compound_map_method": "reported",
-      "laps": 26627
-    },
-    {
-      "season": 2025,
-      "compound_map_method": "reported",
-      "laps": 25706
-    }
-  ]
+  "2024": {
+   "races_listed": 24,
+   "ingest_status": {
+    "downloaded": 24
+   },
+   "validated": 24,
+   "passed_validation": 24,
+   "races_in_sample": 24,
+   "driver_laps": 26629,
+   "clean_green_laps": 20801,
+   "clean_green_share": 0.7811,
+   "strict_clean_share": 0.7535,
+   "stints": 1287
+  },
+  "2025": {
+   "races_listed": 24,
+   "ingest_status": {
+    "downloaded": 24
+   },
+   "validated": 24,
+   "passed_validation": 23,
+   "races_in_sample": 23,
+   "driver_laps": 25706,
+   "clean_green_laps": 20290,
+   "clean_green_share": 0.7893,
+   "strict_clean_share": 0.7623,
+   "stints": 1270
+  }
+ },
+ "lap_completeness": [
+  {
+   "season": 2023,
+   "round": 1,
+   "event_name": "Bahrain Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 2,
+   "event_name": "Saudi Arabian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 3,
+   "event_name": "Australian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 4,
+   "event_name": "Azerbaijan Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 5,
+   "event_name": "Miami Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 6,
+   "event_name": "Monaco Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 7,
+   "event_name": "Spanish Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 8,
+   "event_name": "Canadian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 9,
+   "event_name": "Austrian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 10,
+   "event_name": "British Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 11,
+   "event_name": "Hungarian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 12,
+   "event_name": "Belgian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 13,
+   "event_name": "Dutch Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 14,
+   "event_name": "Italian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 15,
+   "event_name": "Singapore Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 16,
+   "event_name": "Japanese Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 17,
+   "event_name": "Qatar Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 18,
+   "event_name": "United States Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 19,
+   "event_name": "Mexico City Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 20,
+   "event_name": "S\u00e3o Paulo Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 21,
+   "event_name": "Las Vegas Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2023,
+   "round": 22,
+   "event_name": "Abu Dhabi Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 1,
+   "event_name": "Bahrain Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 2,
+   "event_name": "Saudi Arabian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 3,
+   "event_name": "Australian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 4,
+   "event_name": "Japanese Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 5,
+   "event_name": "Chinese Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 6,
+   "event_name": "Miami Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 7,
+   "event_name": "Emilia Romagna Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 8,
+   "event_name": "Monaco Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 9,
+   "event_name": "Canadian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 10,
+   "event_name": "Spanish Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 11,
+   "event_name": "Austrian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 12,
+   "event_name": "British Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 13,
+   "event_name": "Hungarian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 14,
+   "event_name": "Belgian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 15,
+   "event_name": "Dutch Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 16,
+   "event_name": "Italian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 17,
+   "event_name": "Azerbaijan Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 18,
+   "event_name": "Singapore Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 19,
+   "event_name": "United States Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 20,
+   "event_name": "Mexico City Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 21,
+   "event_name": "S\u00e3o Paulo Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 22,
+   "event_name": "Las Vegas Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 23,
+   "event_name": "Qatar Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2024,
+   "round": 24,
+   "event_name": "Abu Dhabi Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 1,
+   "event_name": "Australian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 2,
+   "event_name": "Chinese Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 3,
+   "event_name": "Japanese Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 4,
+   "event_name": "Bahrain Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 5,
+   "event_name": "Saudi Arabian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 6,
+   "event_name": "Miami Grand Prix",
+   "lap_completeness": 0.5579,
+   "passed": false
+  },
+  {
+   "season": 2025,
+   "round": 7,
+   "event_name": "Emilia Romagna Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 8,
+   "event_name": "Monaco Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 9,
+   "event_name": "Spanish Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 10,
+   "event_name": "Canadian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 11,
+   "event_name": "Austrian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 12,
+   "event_name": "British Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 13,
+   "event_name": "Belgian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 14,
+   "event_name": "Hungarian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 15,
+   "event_name": "Dutch Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 16,
+   "event_name": "Italian Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 17,
+   "event_name": "Azerbaijan Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 18,
+   "event_name": "Singapore Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 19,
+   "event_name": "United States Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 20,
+   "event_name": "Mexico City Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 21,
+   "event_name": "S\u00e3o Paulo Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 22,
+   "event_name": "Las Vegas Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 23,
+   "event_name": "Qatar Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  },
+  {
+   "season": 2025,
+   "round": 24,
+   "event_name": "Abu Dhabi Grand Prix",
+   "lap_completeness": 1.0,
+   "passed": true
+  }
+ ],
+ "reconstruction_checks": [
+  {
+   "season": 2023,
+   "lap_rows_without_driver_or_lap": 0,
+   "duplicate_lap_rows_dropped": 0,
+   "laps_without_stint": 0,
+   "laps_stint_extended_by_one": 92,
+   "in_laps_inferred": 912,
+   "pit_table_rows": 693,
+   "pit_rows_on_inferred_in_lap": 693,
+   "pit_rows_on_out_lap": 37,
+   "deleted_laps": 368,
+   "laps_missing_start_time": 18,
+   "rc_messages": 1896,
+   "sc_unpaired": 0,
+   "vsc_unpaired": 0,
+   "red_unpaired": 0,
+   "yellow_capped": 25,
+   "safetycar_msgs_unmatched": 0,
+   "sc_restart_periods": 2,
+   "vsc_upgraded_to_sc": 1,
+   "closed_by_chequered": 0,
+   "starting_grid_rows": 0,
+   "session_result_rows": 439
+  },
+  {
+   "season": 2024,
+   "lap_rows_without_driver_or_lap": 0,
+   "duplicate_lap_rows_dropped": 0,
+   "laps_without_stint": 0,
+   "laps_stint_extended_by_one": 41,
+   "in_laps_inferred": 825,
+   "pit_table_rows": 825,
+   "pit_rows_on_inferred_in_lap": 825,
+   "pit_rows_on_out_lap": 35,
+   "deleted_laps": 327,
+   "laps_missing_start_time": 14,
+   "rc_messages": 2174,
+   "sc_unpaired": 0,
+   "vsc_unpaired": 0,
+   "red_unpaired": 0,
+   "yellow_capped": 34,
+   "safetycar_msgs_unmatched": 0,
+   "sc_restart_periods": 1,
+   "vsc_upgraded_to_sc": 2,
+   "closed_by_chequered": 2,
+   "starting_grid_rows": 0,
+   "session_result_rows": 479
+  },
+  {
+   "season": 2025,
+   "lap_rows_without_driver_or_lap": 0,
+   "duplicate_lap_rows_dropped": 0,
+   "laps_without_stint": 0,
+   "laps_stint_extended_by_one": 40,
+   "in_laps_inferred": 817,
+   "pit_table_rows": 821,
+   "pit_rows_on_inferred_in_lap": 815,
+   "pit_rows_on_out_lap": 73,
+   "deleted_laps": 309,
+   "laps_missing_start_time": 19,
+   "rc_messages": 2216,
+   "sc_unpaired": 0,
+   "vsc_unpaired": 0,
+   "red_unpaired": 0,
+   "yellow_capped": 39,
+   "safetycar_msgs_unmatched": 0,
+   "sc_restart_periods": 1,
+   "vsc_upgraded_to_sc": 0,
+   "closed_by_chequered": 1,
+   "starting_grid_rows": 0,
+   "session_result_rows": 479
+  }
+ ],
+ "field_non_null_share": [
+  {
+   "season": 2023,
+   "lap_time_s": 0.9952,
+   "s1_s": 0.9913,
+   "s2_s": 0.9962,
+   "s3_s": 0.9933,
+   "tyre_life": 1.0,
+   "compound_relative": 1.0,
+   "position_end_of_lap": 0.9959,
+   "grid_position": 1.0,
+   "track_temp_c": 0.9993,
+   "air_temp_c": 0.9993,
+   "scheduled_laps": 1.0
+  },
+  {
+   "season": 2024,
+   "lap_time_s": 0.9968,
+   "s1_s": 0.9935,
+   "s2_s": 0.9982,
+   "s3_s": 0.9971,
+   "tyre_life": 1.0,
+   "compound_relative": 0.9999,
+   "position_end_of_lap": 0.9979,
+   "grid_position": 1.0,
+   "track_temp_c": 0.9995,
+   "air_temp_c": 0.9995,
+   "scheduled_laps": 1.0
+  },
+  {
+   "season": 2025,
+   "lap_time_s": 0.998,
+   "s1_s": 0.9957,
+   "s2_s": 0.9976,
+   "s3_s": 0.9972,
+   "tyre_life": 1.0,
+   "compound_relative": 1.0,
+   "position_end_of_lap": 0.998,
+   "grid_position": 1.0,
+   "track_temp_c": 1.0,
+   "air_temp_c": 1.0,
+   "scheduled_laps": 1.0
+  }
+ ],
+ "exclusion_flag_rates": [
+  {
+   "season": 2023,
+   "flag_pit_in": 0.0373,
+   "flag_pit_out": 0.0373,
+   "flag_first_lap": 0.0179,
+   "flag_missing_time": 0.0048,
+   "flag_sc": 0.045,
+   "flag_vsc": 0.0138,
+   "flag_red": 0.0063,
+   "flag_yellow": 0.0779,
+   "flag_post_neutralisation": 0.0181,
+   "flag_deleted": 0.015,
+   "flag_not_accurate": 0.0,
+   "flag_fastf1_generated": 0.0,
+   "flag_non_slick": 0.0324,
+   "flag_rain": 0.0277,
+   "flag_beyond_scheduled": 0.0014,
+   "flag_pace_outlier": 0.0349
+  },
+  {
+   "season": 2024,
+   "flag_pit_in": 0.031,
+   "flag_pit_out": 0.0317,
+   "flag_first_lap": 0.018,
+   "flag_missing_time": 0.0032,
+   "flag_sc": 0.0362,
+   "flag_vsc": 0.0105,
+   "flag_red": 0.0019,
+   "flag_yellow": 0.0574,
+   "flag_post_neutralisation": 0.0115,
+   "flag_deleted": 0.0123,
+   "flag_not_accurate": 0.0,
+   "flag_fastf1_generated": 0.0,
+   "flag_non_slick": 0.0827,
+   "flag_rain": 0.0601,
+   "flag_beyond_scheduled": 0.0001,
+   "flag_pace_outlier": 0.0336
+  },
+  {
+   "season": 2025,
+   "flag_pit_in": 0.0312,
+   "flag_pit_out": 0.0312,
+   "flag_first_lap": 0.0179,
+   "flag_missing_time": 0.002,
+   "flag_sc": 0.0597,
+   "flag_vsc": 0.0163,
+   "flag_red": 0.0,
+   "flag_yellow": 0.0786,
+   "flag_post_neutralisation": 0.0174,
+   "flag_deleted": 0.012,
+   "flag_not_accurate": 0.0,
+   "flag_fastf1_generated": 0.0,
+   "flag_non_slick": 0.0512,
+   "flag_rain": 0.014,
+   "flag_beyond_scheduled": 0.0,
+   "flag_pace_outlier": 0.0291
+  }
+ ],
+ "outlier_rate_by_tyre_life": [
+  {
+   "season": 2023,
+   "tyre_life_bin": "(0, 5]",
+   "laps": 2785,
+   "outlier_share": 0.075
+  },
+  {
+   "season": 2023,
+   "tyre_life_bin": "(10, 15]",
+   "laps": 3913,
+   "outlier_share": 0.0281
+  },
+  {
+   "season": 2023,
+   "tyre_life_bin": "(15, 20]",
+   "laps": 3055,
+   "outlier_share": 0.036
+  },
+  {
+   "season": 2023,
+   "tyre_life_bin": "(20, 30]",
+   "laps": 3305,
+   "outlier_share": 0.0324
+  },
+  {
+   "season": 2023,
+   "tyre_life_bin": "(30, 80]",
+   "laps": 1699,
+   "outlier_share": 0.0453
+  },
+  {
+   "season": 2023,
+   "tyre_life_bin": "(5, 10]",
+   "laps": 4435,
+   "outlier_share": 0.0336
+  },
+  {
+   "season": 2024,
+   "tyre_life_bin": "(0, 5]",
+   "laps": 3302,
+   "outlier_share": 0.0591
+  },
+  {
+   "season": 2024,
+   "tyre_life_bin": "(10, 15]",
+   "laps": 4007,
+   "outlier_share": 0.027
+  },
+  {
+   "season": 2024,
+   "tyre_life_bin": "(15, 20]",
+   "laps": 3247,
+   "outlier_share": 0.032
+  },
+  {
+   "season": 2024,
+   "tyre_life_bin": "(20, 30]",
+   "laps": 3744,
+   "outlier_share": 0.0329
+  },
+  {
+   "season": 2024,
+   "tyre_life_bin": "(30, 80]",
+   "laps": 2020,
+   "outlier_share": 0.0436
+  },
+  {
+   "season": 2024,
+   "tyre_life_bin": "(5, 10]",
+   "laps": 4481,
+   "outlier_share": 0.0261
+  },
+  {
+   "season": 2025,
+   "tyre_life_bin": "(0, 5]",
+   "laps": 2693,
+   "outlier_share": 0.0839
+  },
+  {
+   "season": 2025,
+   "tyre_life_bin": "(10, 15]",
+   "laps": 4110,
+   "outlier_share": 0.0251
+  },
+  {
+   "season": 2025,
+   "tyre_life_bin": "(15, 20]",
+   "laps": 3301,
+   "outlier_share": 0.0227
+  },
+  {
+   "season": 2025,
+   "tyre_life_bin": "(20, 30]",
+   "laps": 4173,
+   "outlier_share": 0.028
+  },
+  {
+   "season": 2025,
+   "tyre_life_bin": "(30, 80]",
+   "laps": 1814,
+   "outlier_share": 0.0364
+  },
+  {
+   "season": 2025,
+   "tyre_life_bin": "(5, 10]",
+   "laps": 4199,
+   "outlier_share": 0.0257
+  }
+ ],
+ "compound_raw_counts": [
+  {
+   "season": 2023,
+   "compound_raw": "HARD",
+   "laps": 11894
+  },
+  {
+   "season": 2023,
+   "compound_raw": "INTERMEDIATE",
+   "laps": 743
+  },
+  {
+   "season": 2023,
+   "compound_raw": "MEDIUM",
+   "laps": 8294
+  },
+  {
+   "season": 2023,
+   "compound_raw": "SOFT",
+   "laps": 3498
+  },
+  {
+   "season": 2023,
+   "compound_raw": "WET",
+   "laps": 50
+  },
+  {
+   "season": 2024,
+   "compound_raw": "HARD",
+   "laps": 13801
+  },
+  {
+   "season": 2024,
+   "compound_raw": "INTERMEDIATE",
+   "laps": 2166
+  },
+  {
+   "season": 2024,
+   "compound_raw": "MEDIUM",
+   "laps": 8879
+  },
+  {
+   "season": 2024,
+   "compound_raw": "SOFT",
+   "laps": 1746
+  },
+  {
+   "season": 2024,
+   "compound_raw": "UNKNOWN",
+   "laps": 2
+  },
+  {
+   "season": 2024,
+   "compound_raw": "WET",
+   "laps": 35
+  },
+  {
+   "season": 2025,
+   "compound_raw": "HARD",
+   "laps": 10512
+  },
+  {
+   "season": 2025,
+   "compound_raw": "INTERMEDIATE",
+   "laps": 1315
+  },
+  {
+   "season": 2025,
+   "compound_raw": "MEDIUM",
+   "laps": 10564
+  },
+  {
+   "season": 2025,
+   "compound_raw": "SOFT",
+   "laps": 3315
+  }
+ ],
+ "compound_mapping_methods": [
+  {
+   "season": 2023,
+   "compound_map_method": "reported",
+   "laps": 24479
+  },
+  {
+   "season": 2024,
+   "compound_map_method": "missing",
+   "laps": 2
+  },
+  {
+   "season": 2024,
+   "compound_map_method": "reported",
+   "laps": 26627
+  },
+  {
+   "season": 2025,
+   "compound_map_method": "reported",
+   "laps": 25706
+  }
+ ]
 }

@@ -17,6 +17,7 @@ model, rounded to 1 ms; individual laps cannot be recovered from it.
 from __future__ import annotations
 
 import json
+import math
 import shutil
 from pathlib import Path
 
@@ -56,11 +57,45 @@ JSONS = {
 STATE_KEYS = ["lap", "comp", "age", "stops", "used", "mu", "mu_se", "n"]
 
 
-def _none(v):
-    return None if v is None or (isinstance(v, float) and v != v) else v
+def _clean(o):
+    """NaN/inf -> null: Python's json writes NaN, which browsers reject as JSON."""
+    if isinstance(o, float):
+        return o if math.isfinite(o) else None
+    if isinstance(o, dict):
+        return {k: _clean(v) for k, v in o.items()}
+    if isinstance(o, list):
+        return [_clean(v) for v in o]
+    return o
 
 
-def driver_export(p: dict, drv: str) -> dict:
+def copy_json(src: Path, dst: Path) -> None:
+    text = src.read_text().replace("-Infinity", "null").replace("Infinity", "null")
+    data = json.loads(text.replace("NaN", "null")) if "NaN" in text else json.loads(text)
+    dst.write_text(json.dumps(_clean(data), indent=1))
+
+
+def official_status(season: int, rnd: int, numbers: dict) -> dict:
+    """driver code -> 'dnf' | 'dsq' | 'dns' | 'classified', from OpenF1 session results
+    in the raw folder. Empty if the results file is not there (then nothing is marked)."""
+    hits = sorted((config.RAW / str(season)).glob(f"R{rnd:02d}_*/results.parquet"))
+    if not hits:
+        return {}
+    r = pd.read_parquet(hits[0])
+    out = {}
+    for _, row in r.iterrows():
+        code = numbers.get(str(row.get("DriverNumber")))
+        if code is None:
+            continue
+        status = "classified"
+        for k in ("dsq", "dns", "dnf"):
+            v = row.get(k)
+            if v is not None and not (isinstance(v, float) and math.isnan(v)) and bool(v):
+                status = k
+        out[code] = status
+    return out
+
+
+def driver_export(p: dict, drv: str, status: str | None = None) -> dict:
     h = p["drivers"][drv]
     laps, comps, stints = h["lap_number"], h["compound_relative"], h["stint"]
     st_rows, cur = [], None
@@ -88,7 +123,7 @@ def driver_export(p: dict, drv: str) -> dict:
             states[k].append(v)
     return {"stints": [[r["comp"], int(r["from"]), int(r["to"])] for r in st_rows],
             "stops": stops, "finished": bool(max(laps) >= p["total_laps"]),
-            "last_lap": int(max(laps)), "states": states}
+            "last_lap": int(max(laps)), "status": status, "states": states}
 
 
 def public_params(p: dict) -> dict:
@@ -98,16 +133,28 @@ def public_params(p: dict) -> dict:
     return {k: p[k] for k in keep if k in p}
 
 
-def export_sim(sim_dir: Path, out: Path, log=print) -> int:
+def driver_numbers(laps_path: Path | None) -> dict:
+    """race_id -> {driver number: driver code}, from the processed lap table."""
+    laps_path = laps_path or config.PROCESSED / "laps_clean.parquet"
+    if not laps_path.exists():
+        return {}
+    d = pd.read_parquet(laps_path, columns=["race_id", "driver", "driver_number"]).drop_duplicates()
+    return {rid: {str(n): str(c) for n, c in zip(g["driver_number"], g["driver"])}
+            for rid, g in d.groupby("race_id")}
+
+
+def export_sim(sim_dir: Path, out: Path, log=print, laps_path: Path | None = None) -> int:
     index = json.loads((sim_dir / "index.json").read_text())
+    numbers = driver_numbers(laps_path)
     (out / "sim" / "races").mkdir(parents=True, exist_ok=True)
     rows = []
     for r in index:
         p = json.loads((sim_dir / "races" / f"{r['race_id']}.json").read_text())
         web = public_params(p)
-        web["drivers"] = {d: driver_export(p, d) for d in sorted(p["drivers"])}
+        status = official_status(p["season"], p["round"], numbers.get(p["race_id"], {}))
+        web["drivers"] = {d: driver_export(p, d, status.get(d)) for d in sorted(p["drivers"])}
         (out / "sim" / "races" / f"{r['race_id']}.json").write_text(
-            json.dumps(web, separators=(",", ":"), default=float))
+            json.dumps(_clean(web), separators=(",", ":"), default=float))
         rows.append({k: r[k] for k in ("race_id", "season", "event_name", "total_laps",
                                         "simulatable")} | {"round": p["round"]})
         log(f"sim {r['race_id']}")
@@ -127,12 +174,13 @@ def export_results(out: Path, log=print) -> dict:
             found["missing"].append(str(src.relative_to(ROOT)))
     for name, src in JSONS.items():
         if src.exists():
-            shutil.copyfile(src, out / "results" / f"{name}.json")
+            copy_json(src, out / "results" / f"{name}.json")
         else:
             found["missing"].append(str(src.relative_to(ROOT)))
     curve = RESULTS / "task3" / "tyre_age_curves.csv"
     if curve.exists():
-        pd.read_csv(curve).to_json(out / "results" / "tyre_curves.json", orient="records")
+        (out / "results" / "tyre_curves.json").write_text(
+            json.dumps(_clean(pd.read_csv(curve).to_dict(orient="records"))))
     else:
         found["missing"].append(str(curve.relative_to(ROOT)))
     for m in found["missing"]:

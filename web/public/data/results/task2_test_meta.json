@@ -1,52 +1,52 @@
 {
-  "started_utc": "2026-11-24T11:06:00+00:00",
-  "finished_utc": "2026-11-24T11:34:03+00:00",
-  "quick": false,
-  "n_seeds": 3,
-  "preregistration": {
-    "file": "preregistration_task2.md",
-    "sha256": "991df6177c18b37cfd75cac842eb187c6e0ee4812c62f8a5550a013a65e7ad73",
-    "git_commit": "c662c5641693becb648676dd1c4a9c0a0239424d",
-    "prereg_committed_at": "2026-11-24T17:05:37+06:00",
-    "committed": true
+ "started_utc": "2026-11-24T11:06:00+00:00",
+ "finished_utc": "2026-11-24T11:34:03+00:00",
+ "quick": false,
+ "n_seeds": 3,
+ "preregistration": {
+  "file": "preregistration_task2.md",
+  "sha256": "991df6177c18b37cfd75cac842eb187c6e0ee4812c62f8a5550a013a65e7ad73",
+  "git_commit": "c662c5641693becb648676dd1c4a9c0a0239424d",
+  "prereg_committed_at": "2026-11-24T17:05:37+06:00",
+  "committed": true
+ },
+ "margin_total_s": 0.1,
+ "primary": [
+  {
+   "#": "Q1",
+   "comparison": "xgboost_direct vs persistence",
+   "10-lap MAE diff (s)": -1.0227419500956825,
+   "95% low": -1.2670011872362865,
+   "95% high": -0.6943498994657821,
+   "90% low": -1.2373849684381106,
+   "90% high": -0.7456851349646925,
+   "p": 0.0,
+   "Holm p": 0.0,
+   "label": "meaningful difference"
   },
-  "margin_total_s": 0.1,
-  "primary": [
-    {
-      "#": "Q1",
-      "comparison": "xgboost_direct vs persistence",
-      "10-lap MAE diff (s)": -1.0227419500956825,
-      "95% low": -1.2670011872362865,
-      "95% high": -0.6943498994657821,
-      "90% low": -1.2373849684381106,
-      "90% high": -0.7456851349646925,
-      "p": 0.0,
-      "Holm p": 0.0,
-      "label": "meaningful difference"
-    },
-    {
-      "#": "Q2",
-      "comparison": "lstm_multi vs xgboost_direct",
-      "10-lap MAE diff (s)": 0.13456565983456104,
-      "95% low": 0.029920549356089215,
-      "95% high": 0.26976861829195126,
-      "90% low": 0.041681704632796815,
-      "90% high": 0.24735608518875313,
-      "p": 0.008,
-      "Holm p": 0.016,
-      "label": "statistically different, size unclear"
-    },
-    {
-      "#": "Q3",
-      "comparison": "lstm_multi vs mlp_multi",
-      "10-lap MAE diff (s)": -0.15076023164312247,
-      "95% low": -0.4433260348855283,
-      "95% high": 0.009191647853887342,
-      "90% low": -0.3763201555259754,
-      "90% high": -0.001314224275665708,
-      "p": 0.09,
-      "Holm p": 0.09,
-      "label": "inconclusive"
-    }
-  ]
+  {
+   "#": "Q2",
+   "comparison": "lstm_multi vs xgboost_direct",
+   "10-lap MAE diff (s)": 0.13456565983456104,
+   "95% low": 0.029920549356089215,
+   "95% high": 0.26976861829195126,
+   "90% low": 0.041681704632796815,
+   "90% high": 0.24735608518875313,
+   "p": 0.008,
+   "Holm p": 0.016,
+   "label": "statistically different, size unclear"
+  },
+  {
+   "#": "Q3",
+   "comparison": "lstm_multi vs mlp_multi",
+   "10-lap MAE diff (s)": -0.15076023164312247,
+   "95% low": -0.4433260348855283,
+   "95% high": 0.009191647853887342,
+   "90% low": -0.3763201555259754,
+   "90% high": -0.001314224275665708,
+   "p": 0.09,
+   "Holm p": 0.09,
+   "label": "inconclusive"
+  }
+ ]
 }

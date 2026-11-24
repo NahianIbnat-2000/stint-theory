@@ -46,7 +46,7 @@ export default function StintChart({ race, highlight, decisionLap, onPick }) {
                     </g>
                   );
                 })}
-                {!d.finished && <text x={x(d.last_lap + 1) + 4} y={y + 15} className="axis">out</text>}
+                {["dnf", "dsq", "dns"].includes(d.status) && <text x={x(d.last_lap + 1) + 4} y={y + 15} className="axis">{d.status === "dsq" ? "DSQ" : "out"}</text>}
               </g>
             );
           })}
@@ -54,7 +54,7 @@ export default function StintChart({ race, highlight, decisionLap, onPick }) {
         {tt.node}
       </div>
       <figcaption>
-        <Legend /> Each bar is one set of tyres; letters give the compound. “out” marks a car that did not finish.
+        <Legend /> Each bar is one set of tyres; letters give the compound. “out” marks a car that retired (official classification); lapped cars end a lap or two early.
         {onPick && " Click a row to pick that driver."}
       </figcaption>
     </figure>
