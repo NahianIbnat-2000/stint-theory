@@ -72,6 +72,28 @@ Status: **fixed** in this round, **deferred** to a later round (with the reason)
 
 Tests added: `tests/test_webexport.py` (test-error aggregates sum back to the overall error and carry no lap values; race context has no lap times).
 
+## Round 3: visual identity, 2026-11-24
+
+The Priority 1 redesign followed the brief's palette (light canvas, graphite band,
+racing red, Inter and JetBrains Mono). That turned out to share its skeleton with the
+owner's other sites (Space Shock and F1 Moneyball: light paper, navy band, red accent,
+Inter / JetBrains Mono / Source Serif), so the identity was replaced with "Pit Lane":
+
+- signal yellow and black on white, from pit-lane signage; yellow is structural and
+  never used for text; no red brand accent;
+- a fixed black navigation rail on the left (a top bar on phones) instead of a top
+  navigation bar; square panels with 2 px black frames; black table heads; hazard
+  stripes only on the hero edge and the footer;
+- Anybody (variable width, wide italic headings), Atkinson Hyperlegible (body), Martian
+  Mono (numbers), bundled with the site through Fontsource: no Google Fonts request;
+- chart data colours unchanged (compounds, strategies A/B, diverging pair were already
+  validated for colour-blind readers).
+
+Files: `web/src/tokens.css`, theme layer at the end of `web/src/styles.css`,
+`web/src/App.jsx` (rail layout), `web/src/main.jsx` (fonts), `web/index.html`,
+`web/package.json` (three font packages). Checked at 1280 px and 390 px: no page is
+wider than the screen.
+
 ## Still deferred
 
 1. Featured race case study (Priority 4).

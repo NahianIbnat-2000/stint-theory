@@ -128,7 +128,7 @@ export default function StrategyTimeline({ race, driver, st, plans, svgRef, show
         {tt.node}
       </div>
       {showPace && <figcaption>
-        <Legend /> Shaded laps were already run at the decision. A red outline marks stints that differ from what happened.
+        <Legend /> Shaded laps were already run at the decision. A dashed black outline marks stints that differ from what happened.
         Triangles mark planned stops. The pace lines are expected values; pit-lane time is added once per stop in the totals, not drawn here.
       </figcaption>}
     </figure>

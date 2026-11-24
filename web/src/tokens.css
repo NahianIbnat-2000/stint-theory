@@ -1,23 +1,31 @@
-/* STINT THEORY design tokens: Precision Motorsport.
-   Every colour, type and spacing value used in the app is defined here. */
+/* STINT THEORY design tokens: "Pit Lane".
+   Signal yellow and black on white, like pit-lane signage and the pit-wall gantry.
+   Yellow is structural (hero, rail, active states, highlights) and never used for text.
+   Data colours (compounds, strategies A/B, diverging) are validated for colour-blind
+   readers and stay fixed. */
 :root {
   /* surfaces */
-  --canvas: #f5f6f3;
+  --canvas: #ffffff;
   --panel: #ffffff;
-  --graphite: #14202c;
-  --graphite-2: #1f2d3b;
-  --border: #d7dce0;
-  --border-strong: #b9c1c8;
+  --sunk: #f3f3f0;           /* quiet fill for wells and table heads */
+  --signal: #ffce00;         /* signal yellow */
+  --signal-soft: #fff3b8;
+  --black: #0d0d0d;
+  --graphite: #0d0d0d;       /* alias used by charts and older rules */
+  --graphite-2: #1b1b1b;
+  --border: #0d0d0d;
+  --border-strong: #0d0d0d;
+  --hair: #d6d6d0;           /* light rules inside panels and grids */
   /* text */
-  --text: #17212b;
-  --text-2: #4f5b67;
-  --text-on-dark: #eef1f3;
-  --text-on-dark-2: #a9b4be;
-  /* emphasis: interaction and the key strategic difference only */
-  --red: #c9363e;
-  --red-dark: #a72b32;
-  --steel: #47778a;
-  /* tyre compounds: fixed meaning, always paired with an S/M/H mark */
+  --text: #0d0d0d;
+  --text-2: #55554f;
+  --text-on-dark: #f5f5f0;
+  --text-on-dark-2: #b9b9b0;
+  /* emphasis: black weight and yellow highlight, no red brand accent */
+  --red: #0d0d0d;
+  --red-dark: #000000;
+  --steel: #0d0d0d;
+  /* tyre compounds: fixed meaning, always with an S/M/H mark */
   --soft: #d33a2c;
   --medium: #c99700;
   --hard: #2f7fc8;
@@ -25,29 +33,26 @@
   /* chart roles */
   --series-a: #b5612a;
   --series-b: #1f82a8;
-  --div-neg: #1f82a8;   /* B faster */
-  --div-pos: #b5612a;   /* A faster */
-  --div-mid: #eef0ee;
-  --grid: #e7eaed;
-  --band: #e3e8ec;
+  --div-neg: #1f82a8;
+  --div-pos: #b5612a;
+  --div-mid: #f1f1ec;
+  --grid: #e6e6e0;
+  --band: #fff3b8;
   /* type */
-  --font-head: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
-  --font-ui: "Inter", "Segoe UI", system-ui, sans-serif;
-  --font-num: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
-  --step--1: .84rem;
-  --step-0: 1rem;
-  --step-1: 1.2rem;
-  --step-2: 1.5rem;
-  --step-3: 2.1rem;
-  --step-4: clamp(2.4rem, 5vw, 3.6rem);
-  --step-5: clamp(2.6rem, 6.5vw, 4.8rem);
+  --font-head: "Anybody Variable", "Anybody", "Arial Narrow", system-ui, sans-serif;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-num: "Martian Mono Variable", "Martian Mono", ui-monospace, Consolas, monospace;
+  --step--1: .84rem; --step-0: 1.0625rem; --step-1: 1.25rem; --step-2: 1.6rem; --step-3: 2.2rem;
+  --step-4: clamp(2.4rem, 5vw, 3.8rem); --step-5: clamp(2.8rem, 7vw, 5.6rem);
   /* layout */
-  --measure: 68ch;
-  --page: 1200px;
-  --gutter: clamp(1rem, 4vw, 3rem);
-  --radius-s: 4px;
-  --radius-m: 8px;
+  --rail: 232px;
+  --measure: 66ch;
+  --page: 1160px;
+  --gutter: clamp(1rem, 3.5vw, 3rem);
+  --radius-s: 0; --radius-m: 0;
+  --line: 2px;
   --space-1: .25rem; --space-2: .5rem; --space-3: .75rem; --space-4: 1rem;
   --space-5: 1.5rem; --space-6: 2rem; --space-7: 3rem; --space-8: 4.5rem;
   --ease: cubic-bezier(.2, .7, .2, 1);
+  --hazard: repeating-linear-gradient(-45deg, var(--black) 0 14px, var(--signal) 14px 28px);
 }

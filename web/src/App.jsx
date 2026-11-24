@@ -36,14 +36,19 @@ export default function App() {
     <HashRouter>
       <Chrome />
       <a className="skip" href="#main">Skip to content</a>
-      <nav className="top" aria-label="Main">
-        <div className="top-inner">
-          <NavLink to="/" end className="brand"><i aria-hidden="true" />STINT THEORY</NavLink>
-          <ul className="nav-links">
-            {ROUTES.filter((r) => r.nav).map((r) => <li key={r.path}><NavLink to={r.path}>{r.label}</NavLink></li>)}
-          </ul>
-        </div>
+      <div className="shell">
+      <nav className="rail" aria-label="Main">
+        <NavLink to="/" end className="brand">STINT THEORY<small>F1 strategy research, 2023–2025</small></NavLink>
+        <ul>
+          {ROUTES.filter((r) => r.nav).map((r) => (
+            <li key={r.path}>
+              <NavLink to={r.path}>{r.label}</NavLink>
+            </li>
+          ))}
+        </ul>
+        <div className="rail-foot">Data: OpenF1. Not affiliated with Formula 1, the FIA or Pirelli.<br /><a href="https://github.com/NahianIbnat-2000/stint-theory">Code and reports</a></div>
       </nav>
+      <div>
       <main id="main">
         <Suspense fallback={<div className="page"><div className="skeleton" style={{ marginTop: "3rem" }} aria-label="Loading page" /></div>}>
           <Routes>
@@ -60,6 +65,8 @@ export default function App() {
           <a href="https://github.com/NahianIbnat-2000/stint-theory">Code and reports on GitHub</a>
         </div>
       </footer>
+      </div>
+      </div>
     </HashRouter>
   );
 }
