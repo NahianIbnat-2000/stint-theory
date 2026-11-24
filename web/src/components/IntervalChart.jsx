@@ -1,15 +1,17 @@
-import { fmt, signed } from "../data.js";
+import { fmt, signed } from "../format.js";
 import { useTooltip } from "./Tooltip.jsx";
 import { useWidth } from "./useWidth.js";
 
 // Paired differences with 90% and 95% intervals against an equivalence margin.
 // rows: [{label, point, lo95, hi95, lo90, hi90, verdict}]
-export default function IntervalChart({ rows, margin, unit = "s", note }) {
+export default function IntervalChart({ rows, margin, unit = "s", note, svgRef }) {
   const tt = useTooltip();
   const [ref, width] = useWidth();
   const narrow = width > 0 && width < 620;
   // narrow screens: labels sit above each interval instead of to the left
-  const W = narrow ? 420 : 760, left = narrow ? 14 : 250, right = narrow ? 14 : 24, row = narrow ? 64 : 46, top = 30;
+  // left margin sized to the longest label so nothing is clipped
+  const longest = Math.max(...rows.map((r) => r.label.length));
+  const W = narrow ? 420 : 820, left = narrow ? 14 : Math.min(380, 24 + longest * 7.4), right = narrow ? 14 : 24, row = narrow ? 64 : 48, top = 30;
   const H = top + rows.length * row + 30;
   const ext = Math.max(margin * 1.6, ...rows.flatMap((r) => [Math.abs(r.lo95), Math.abs(r.hi95)])) * 1.1;
   const x = (v) => left + ((v + ext) / (2 * ext)) * (W - left - right);
@@ -17,7 +19,7 @@ export default function IntervalChart({ rows, margin, unit = "s", note }) {
   return (
     <figure className="chart">
       <div className="chart-box" ref={ref}>
-        <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Differences in error between models with intervals">
+        <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Differences in error between models with intervals">
           <rect x={x(-margin)} y={top - 10} width={x(margin) - x(-margin)} height={H - top - 20} className="band" />
           <text x={x(0)} y={top - 16} textAnchor="middle" className="axis">
             ±{margin} {unit}: too small to matter

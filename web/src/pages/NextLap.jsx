@@ -1,4 +1,5 @@
-import { useData, fmt } from "../data.js";
+import { useData } from "../data.js";
+import { fmt } from "../format.js";
 import IntervalChart from "../components/IntervalChart.jsx";
 import Report, { Missing } from "../components/Report.jsx";
 import { intervalRows, name } from "../models.js";
@@ -8,7 +9,7 @@ export default function NextLap() {
   const meta = useData("results/final_test_meta.json");
   const margin = meta.data?.margin_s ?? 0.01;
   return (
-    <>
+    <div className="page">
       <header className="page-head">
         <h1>The next lap</h1>
         <p className="lede">Task 1. At the end of each lap, forecast the driver’s next lap time. The models are tested on
@@ -42,6 +43,6 @@ export default function NextLap() {
         </section>
       )}
       <section><Report name="final_test" /></section>
-    </>
+    </div>
   );
 }

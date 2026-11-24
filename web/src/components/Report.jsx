@@ -16,7 +16,8 @@ export function Markdown({ text }) {
 // A generated report or doc, rendered as it is in the repository.
 export default function Report({ name, title, open = false }) {
   const { data, error } = useData(`reports/${name}.md`, "text");
-  const body = error ? <Missing what={`${name}.md`} /> : data === undefined ? <p className="muted">Loading…</p> : <Markdown text={data} />;
+  const body0 = error ? <Missing what={`${name}.md`} /> : data === undefined ? <p className="muted">Loading…</p> : <Markdown text={data} />;
+  const body = <div className="report-body">{body0}</div>;
   if (open) return body;
   return (
     <details className="report">

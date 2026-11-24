@@ -1,4 +1,5 @@
-import { useData, fmt, COMPOUND } from "../data.js";
+import { useData, COMPOUND } from "../data.js";
+import { fmt } from "../format.js";
 import TyreCurves from "../components/TyreCurves.jsx";
 import Report, { Missing } from "../components/Report.jsx";
 
@@ -8,7 +9,7 @@ export default function Tyres() {
   const rob = est.data?.robustness;
   const specs = rob ? [...new Set(rob.map((r) => r.specification))] : [];
   return (
-    <>
+    <div className="page">
       <header className="page-head">
         <h1>Tyre wear lab</h1>
         <p className="lede">Task 3. How much slower does a lap get for each extra lap on the same set of tyres? Cars also
@@ -56,6 +57,6 @@ export default function Tyres() {
         </section>
       )}
       <section><Report name="task3" /></section>
-    </>
+    </div>
   );
 }

@@ -45,7 +45,9 @@ Each race is checked with parameters estimated without it. These checks cover th
 |---|---|---|---|---|
 | 35.053 | 19.187 | 19.062 | 1.003 | 50.885 |
 
-Strategy differences smaller than these errors are not separable by the model.
+These are errors in absolute race time. They are not an interval for the gap between two strategies: much of the error (the driver's pace level, the per-lap trend) is shared by every plan for the same driver and cancels in a comparison. The part that does not cancel is strategy-specific, mainly the fresh-tyre bias in section 1, which charges each extra stop about 1-2 s too much.
+
+_Wording of this paragraph corrected on 2026-11-24 after the run; the numbers are unchanged._
 
 ## 3. Pit loss of green-flag stops (s)
 

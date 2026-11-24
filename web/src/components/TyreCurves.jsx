@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { COMPOUND, fmt, signed } from "../data.js";
+import { COMPOUND } from "../data.js";
+import { fmt, signed } from "../format.js";
 
 // Lap time at each tyre age relative to age 5, by compound, with 95% bands.
-export default function TyreCurves({ curve }) {
+export default function TyreCurves({ curve, svgRef }) {
   const [hover, setHover] = useState(null);
   const W = 760, H = 360, left = 56, right = 80, top = 16, bottom = 40;
   const ages = [...new Set(curve.map((r) => r.tyre_age))].sort((a, b) => a - b);
@@ -12,6 +13,12 @@ export default function TyreCurves({ curve }) {
   const yt = ticks(lo, hi);
   const series = Object.keys(COMPOUND).map((c) => ({ c, rows: curve.filter((r) => r.compound === c).sort((a, b) => a.tyre_age - b.tyre_age) }))
     .filter((s) => s.rows.length);
+  // end labels: keep at least 15 px apart so they never overlap
+  const labelY = (() => {
+    const ys = series.map((s, i) => ({ i, y: y(s.rows.at(-1).effect_s) + 4 })).sort((a, b) => a.y - b.y);
+    for (let k = 1; k < ys.length; k++) ys[k].y = Math.max(ys[k].y, ys[k - 1].y + 15);
+    const out = []; ys.forEach((v) => { out[v.i] = v.y; }); return out;
+  })();
   const move = (e) => {
     const r = e.currentTarget.getBoundingClientRect();
     const px = ((e.clientX - r.left) / r.width) * W;
@@ -21,7 +28,7 @@ export default function TyreCurves({ curve }) {
   return (
     <figure className="chart">
       <div className="chart-box">
-        <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Lap time by tyre age and compound" onMouseMove={move} onMouseLeave={() => setHover(null)}>
+        <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Lap time by tyre age and compound" onMouseMove={move} onMouseLeave={() => setHover(null)}>
           {yt.map((t) => (
             <g key={t}>
               <line x1={left} x2={W - right} y1={y(t)} y2={y(t)} className={t === 0 ? "zero" : "grid"} />
@@ -33,12 +40,12 @@ export default function TyreCurves({ curve }) {
           ))}
           <text x={(left + W - right) / 2} y={H - 2} textAnchor="middle" className="axis">Tyre age (laps); ages above {ages.at(-1)} pooled</text>
           <text x={left - 44} y={top + 2} className="axis">s</text>
-          {series.map(({ c, rows }) => (
+          {series.map(({ c, rows }, si) => (
             <g key={c}>
               <path className="ci-band" fill={COMPOUND[c].color}
                 d={`M${rows.map((r) => `${x(r.tyre_age)},${y(r.ci_high)}`).join("L")}L${[...rows].reverse().map((r) => `${x(r.tyre_age)},${y(r.ci_low)}`).join("L")}Z`} />
               <path className="line" stroke={COMPOUND[c].color} d={`M${rows.map((r) => `${x(r.tyre_age)},${y(r.effect_s)}`).join("L")}`} />
-              <text x={x(rows.at(-1).tyre_age) + 8} y={y(rows.at(-1).effect_s) + 4} className="direct-label">{COMPOUND[c].name}</text>
+              <text x={x(rows.at(-1).tyre_age) + 8} y={labelY[si]} className="direct-label">{COMPOUND[c].name}</text>
             </g>
           ))}
           {hover !== null && (

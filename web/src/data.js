@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+export { fmt, signed } from "./format.js";
 
 const BASE = `${import.meta.env.BASE_URL}data/`;
 const cache = new Map();
@@ -27,8 +28,6 @@ export function useData(path, kind = "json") {
   return state;
 }
 
-export const fmt = (x, d = 3) => (x === null || x === undefined || Number.isNaN(x) ? "–" : Number(x).toFixed(d));
-export const signed = (x, d = 3) => (x > 0 ? "+" : "") + fmt(x, d);
 export const COMPOUND = {
   SOFT: { color: "var(--soft)", short: "S", name: "Soft" },
   MEDIUM: { color: "var(--medium)", short: "M", name: "Medium" },

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Report from "../components/Report.jsx";
 
 const DOCS = [
@@ -16,9 +17,12 @@ const DOCS = [
 ];
 
 export default function Methods() {
-  const [doc, setDoc] = useState(DOCS[0][0]);
+  const [params, setParams] = useSearchParams();
+  const want = params.get("doc");
+  const [doc, setDocState] = useState(DOCS.some(([id]) => id === want) ? want : DOCS[0][0]);
+  const setDoc = (id) => { setDocState(id); setParams({ doc: id }, { replace: true }); };
   return (
-    <>
+    <div className="page">
       <header className="page-head">
         <h1>Methods</h1>
         <p className="lede">How the tests were set up so that the results can be trusted: train on 2023–2024, develop on
@@ -33,6 +37,6 @@ export default function Methods() {
         </nav>
         <div className="doc-body"><Report key={doc} name={doc} open /></div>
       </section>
-    </>
+    </div>
   );
 }

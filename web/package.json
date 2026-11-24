@@ -8,7 +8,7 @@
     "check-data": "node scripts/check-data.mjs",
     "build": "node scripts/check-data.mjs && vite build",
     "preview": "vite preview",
-    "test": "node --test test/parity.test.mjs"
+    "test": "node --test test/parity.test.mjs test/features.test.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

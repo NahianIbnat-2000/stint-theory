@@ -187,3 +187,15 @@ limitations.md and the website:
 
 Not changed: the split, the reference pace, the features, the scored sample and
 the evaluation method.
+
+## Correction to the reading of backtest 3, 2026-11-24 (no model change)
+
+The note above said strategy differences inside the backtest error band would be
+shown as "not separable". That mixes two different things. The backtest errors are
+errors in absolute remaining race time; they are not an interval for the gap between
+two plans for the same driver, because most of the error (driver pace level, per-lap
+trend) is shared by both plans and cancels. The website and `backtest.md` now say
+this, and treat the part that does not cancel (the fresh-tyre bias, about 1-2 s per
+extra stop) as the strategy-specific caveat. The wording of `backtest.md` was edited
+by hand after the run (marked in the file); `simulation/backtest.py` now writes the
+corrected text. No parameter, number or model changed.

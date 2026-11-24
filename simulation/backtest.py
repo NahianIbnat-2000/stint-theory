@@ -138,7 +138,10 @@ def run_backtest(root: Path | None = None, public: Path | None = None) -> Path:
                       "MAE (s)": rem["err"].abs().mean(), "median abs (s)": rem["err"].abs().median(),
                       "bias (s)": rem["err"].mean(), "MAE per lap (s)": rem["err_per_lap"].abs().mean(),
                       "90% of errors within (s)": rem["err"].abs().quantile(0.9)}])),
-                  "Strategy differences smaller than these errors are not separable by the model."]
+                  "These are errors in absolute race time. They are not an interval for the gap between two strategies: "
+                  "much of the error (the driver's pace level, the per-lap trend) is shared by every plan for the same "
+                  "driver and cancels in a comparison. The part that does not cancel is strategy-specific, mainly the "
+                  "fresh-tyre bias in section 1, which charges each extra stop about 1-2 s too much."]
     if not pit.empty:
         e = pit["pred"] - pit["actual"]
         parts += ["## 3. Pit loss of green-flag stops (s)",

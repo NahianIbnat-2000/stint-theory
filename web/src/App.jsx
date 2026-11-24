@@ -1,41 +1,62 @@
 import { HashRouter, NavLink, Route, Routes, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
+import { ROUTES } from "./routes.js";
 import Home from "./pages/Home.jsx";
-import Data from "./pages/Data.jsx";
-import NextLap from "./pages/NextLap.jsx";
-import TenLaps from "./pages/TenLaps.jsx";
-import Tyres from "./pages/Tyres.jsx";
-import Simulator from "./pages/Simulator.jsx";
-import Methods from "./pages/Methods.jsx";
-import Limits from "./pages/Limits.jsx";
 
-const PAGES = [
-  ["/", "Home", Home], ["/data", "Data", Data], ["/next-lap", "Next lap", NextLap],
-  ["/ten-laps", "Ten laps", TenLaps], ["/tyres", "Tyre wear", Tyres], ["/simulator", "Simulator", Simulator],
-  ["/methods", "Methods", Methods], ["/limits", "Limits", Limits],
-];
+// Home loads first; other pages are fetched when visited.
+const PAGES = {
+  "/": Home,
+  "/simulator": lazy(() => import("./pages/Simulator.jsx")),
+  "/next-lap": lazy(() => import("./pages/NextLap.jsx")),
+  "/ten-laps": lazy(() => import("./pages/TenLaps.jsx")),
+  "/tyres": lazy(() => import("./pages/Tyres.jsx")),
+  "/data": lazy(() => import("./pages/Data.jsx")),
+  "/methods": lazy(() => import("./pages/Methods.jsx")),
+  "/limits": lazy(() => import("./pages/Limits.jsx")),
+};
 
-function ScrollTop() {
+function Chrome() {
   const { pathname } = useLocation();
-  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const r = ROUTES.find((x) => x.path === pathname);
+    document.title = r && r.path !== "/" ? `${r.title} · STINT THEORY` : "STINT THEORY";
+  }, [pathname]);
   return null;
+}
+
+function NotFound() {
+  return <div className="page"><div className="page-head"><h1>Page not found</h1><p>That address is not part of this site. <NavLink to="/">Go to the home page</NavLink>.</p></div></div>;
 }
 
 export default function App() {
   return (
     <HashRouter>
-      <ScrollTop />
+      <Chrome />
       <a className="skip" href="#main">Skip to content</a>
-      <nav className="top" aria-label="Pages">
-        <NavLink to="/" end className="brand">STINT THEORY</NavLink>
-        <ul>{PAGES.slice(1).map(([to, label]) => <li key={to}><NavLink to={to}>{label}</NavLink></li>)}</ul>
+      <nav className="top" aria-label="Main">
+        <div className="top-inner">
+          <NavLink to="/" end className="brand"><i aria-hidden="true" />STINT THEORY</NavLink>
+          <ul className="nav-links">
+            {ROUTES.filter((r) => r.nav).map((r) => <li key={r.path}><NavLink to={r.path}>{r.label}</NavLink></li>)}
+          </ul>
+        </div>
       </nav>
       <main id="main">
-        <Routes>{PAGES.map(([to, , C]) => <Route key={to} path={to} element={<C />} />)}</Routes>
+        <Suspense fallback={<div className="page"><div className="skeleton" style={{ marginTop: "3rem" }} aria-label="Loading page" /></div>}>
+          <Routes>
+            {ROUTES.map((r) => { const C = PAGES[r.path]; return <Route key={r.path} path={r.path} element={<C />} />; })}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </main>
       <footer>
-        Nahian Ibnat. Data: OpenF1, 2023–2025. Not affiliated with Formula 1, the FIA or Pirelli.{" "}
-        <a href="https://github.com/NahianIbnat-2000/stint-theory">Code and reports</a>
+        <div className="inner">
+          <span>STINT THEORY, by Nahian Ibnat</span>
+          <span>Data: OpenF1, 2023–2025</span>
+          <span>Not affiliated with Formula 1, the FIA or Pirelli</span>
+          <a href="https://github.com/NahianIbnat-2000/stint-theory">Code and reports on GitHub</a>
+        </div>
       </footer>
     </HashRouter>
   );

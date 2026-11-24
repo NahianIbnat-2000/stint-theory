@@ -6,7 +6,7 @@ import { intervalRows } from "../models.js";
 export default function TenLaps() {
   const meta = useData("results/task2_test_meta.json");
   return (
-    <>
+    <div className="page">
       <header className="page-head">
         <h1>The next ten laps</h1>
         <p className="lede">Task 2. Forecast the next ten laps at once, the horizon a strategist needs. Scored on the total
@@ -20,6 +20,6 @@ export default function TenLaps() {
         )}
       </section>
       <section><Report name="task2_test" /></section>
-    </>
+    </div>
   );
 }

@@ -2,7 +2,7 @@ import Report from "../components/Report.jsx";
 
 export default function Limits() {
   return (
-    <>
+    <div className="page">
       <header className="page-head">
         <h1>Limits and reproducing</h1>
         <p className="lede">What these results cannot tell you, and how to rerun everything from scratch.</p>
@@ -26,6 +26,6 @@ python -m webexport              # data for this website`}</code></pre>
           project. Data from <a href="https://openf1.org">OpenF1</a>. Not affiliated with Formula 1, the FIA, Pirelli or any
           team. Formula 1 timing data belongs to Formula 1 and its partners.</p>
       </section>
-    </>
+    </div>
   );
 }

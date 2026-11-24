@@ -2,7 +2,7 @@ import Report from "../components/Report.jsx";
 
 export default function Data() {
   return (
-    <>
+    <div className="page">
       <header className="page-head">
         <h1>Data</h1>
         <p className="lede">Lap timing, pit stops, tyres, flags and weather for the 2023–2025 seasons, from the free OpenF1
@@ -11,6 +11,6 @@ export default function Data() {
       </header>
       <section><h2>Coverage and checks</h2><Report name="coverage" open /></section>
       <section><Report name="data_dictionary" title="Data dictionary" /></section>
-    </>
+    </div>
   );
 }
