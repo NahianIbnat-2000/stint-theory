@@ -107,5 +107,25 @@ lstm 32 / 0.3, tcn 64 / 0.3.
    correction, 0.01 s practical margin, decision labels, secondary analyses, one-run
    rule. Written after all development runs and before the test set was opened.
 
+## Task 1 final test, 2026-11-24 (pre-registered, one run)
+
+All five primary comparisons equivalent within the 0.01 s margin (90% intervals
+inside ±0.005 s). Development hint "TCN beats XGBoost" did not replicate
+(+0.0004 s). Secondary S1 (tyres > 30 laps) went the other way: TCN 0.009 s worse
+than xgboost_ens5 (interval 0.003-0.015, uncorrected). Full report:
+`research/results/final_test/report.md`.
+
+## Task 2 development run, 2026-11-24
+
+Settings carried over from Task 1. 9,064 origins, 11 races. XGBoost skill vs
+persistence rises from 0.066 (h=1) to 0.16-0.17 (h=5-10). LSTM minus XGBoost
+negative at every horizon (-0.005 to -0.017 s) but intervals include zero from
+h=2 on. 10-lap total MAE: xgboost_direct 3.72 s, lstm_multi 3.73 s, mlp_multi
+4.01 s, persistence 4.84 s. Known weakness: stacked XGBoost at h=1 is 0.397 s vs
+0.382 s for the dedicated Task 1 model; not changed.
+
+7. **Task 2 pre-registration** (`docs/preregistration_task2.md`) written after
+   this run and before Task 2 was run on the test races.
+
 Not changed: the split, the reference pace, the features, the scored sample and
 the evaluation method.

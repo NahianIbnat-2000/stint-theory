@@ -82,3 +82,35 @@ def test_quick_horizon_run(feat_path, tmp_path):
                           p2=tmp_path / "p2" / "tuning.json", p3=tmp_path / "p3" / "tuning.json")
     text = rep.read_text()
     assert "MAE by horizon" in text and "xgboost_direct" in text and "lstm_multi" in text
+
+
+def test_horizon_test_run_is_locked_and_runs(feat_path, tmp_path, monkeypatch):
+    import json
+    from models.run import run_dev
+    from models.deep_run import run_deep
+    from models.horizon_run import run_horizon_test
+    # add a 2025 R13 race so the test split exists
+    from pipelines.clean import clean_session
+    from pipelines.features import build_features
+    base = pd.read_parquet(feat_path)
+    raw = make_raw_race(2025, 13, n_drivers=6, n_laps=40, seed=99)
+    raw["meta"]["event_name"] = "Circuit 0"
+    extra = build_features(clean_session(raw))
+    p = tmp_path / "f.parquet"
+    pd.concat([base, extra], ignore_index=True).to_parquet(p, index=False)
+    run_dev(p, out=tmp_path / "p2", quick=True, boot_b=50)
+    run_deep(p, p2_pred_path=tmp_path / "p2" / "predictions.parquet", out=tmp_path / "p3",
+             quick=True, boot_b=50)
+    kw = dict(features_path=p, out=tmp_path / "t2", quick=True, allow_uncommitted=True,
+              p2=tmp_path / "p2" / "tuning.json", p3=tmp_path / "p3" / "tuning.json",
+              boot_b=100, access_log=tmp_path / "log")
+    monkeypatch.delenv(data.UNLOCK_ENV, raising=False)
+    with pytest.raises(data.TestSetLocked):
+        run_horizon_test(**kw)
+    monkeypatch.setenv(data.UNLOCK_ENV, data.UNLOCK_VALUE)
+    text = run_horizon_test(**kw).read_text()
+    assert "Q3" in text and "error correlation" in text
+    meta = json.loads((tmp_path / "t2" / "run_meta.json").read_text())
+    assert ("NOT committed" in text) == (not meta["preregistration"]["committed"])
+    with pytest.raises(RuntimeError, match="run once"):
+        run_horizon_test(**kw)

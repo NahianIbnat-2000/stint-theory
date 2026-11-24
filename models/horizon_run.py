@@ -181,3 +181,113 @@ def run_horizon_dev(features_path=None, out=None, quick=False, n_seeds=3, p2=Non
                   "2025 rounds 1-12, one race at a time from all earlier races. Test set not "
                   "loaded. Settings carried over from Task 1, not retuned.",
                   out, n_seeds, b=200 if quick else boot_b)
+
+
+# ------------------------------------------------------------------ Task 2 test
+TEST_OUT = config.ROOT / "research" / "results" / "task2_test"
+PREREG2 = config.ROOT / "docs" / "preregistration_task2.md"
+MARGIN_TOTAL = 0.1
+PRIMARY2 = [("xgboost_direct", "persistence"), ("lstm_multi", "xgboost_direct"),
+            ("lstm_multi", "mlp_multi")]
+
+
+def totals_frame(pred, k=H):
+    """One row per origin with all k laps scored: actual and predicted k-lap totals."""
+    ok = pred[[f"valid_h{h}" for h in range(1, k + 1)]].all(axis=1)
+    p = pred[ok]
+    f = p[["race_id", "driver", "lap_number"]].copy()
+    f["y"] = p[[f"y_h{h}" for h in range(1, k + 1)]].sum(axis=1)
+    for m in MODELS:
+        f[f"pred_{m}"] = p[[f"{m}_h{h}" for h in range(1, k + 1)]].sum(axis=1)
+    return f.reset_index(drop=True)
+
+
+def error_correlation(pred, model, k=H):
+    """Mean pairwise correlation of per-lap errors within origins (all k scored)."""
+    ok = pred[[f"valid_h{h}" for h in range(1, k + 1)]].all(axis=1)
+    E = np.column_stack([pred.loc[ok, f"{model}_h{h}"] - pred.loc[ok, f"y_h{h}"]
+                         for h in range(1, k + 1)])
+    if len(E) < 3:
+        return float("nan")
+    C = np.corrcoef(E.T)
+    return float(C[np.triu_indices(k, 1)].mean())
+
+
+def run_horizon_test(features_path=None, out=None, quick=False, n_seeds=3, force=False,
+                     allow_uncommitted=False, p2=None, p3=None, boot_b=2000, access_log=None):
+    from . import evaluate
+    from .final_test import check_preregistration
+    out = out or TEST_OUT
+    prereg = check_preregistration(allow_uncommitted, PREREG2)
+    if (out / "report.md").exists() and not force:
+        raise RuntimeError(f"{out/'report.md'} exists. The Task 2 test is run once.")
+    out.mkdir(parents=True, exist_ok=True)
+    started = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
+    full, seq = load(features_path, include_test=True,
+                     reason=f"Task 2 test run, prereg sha256 {prereg['sha256'][:12]}",
+                     log=access_log)
+    xgb, nets = frozen_settings(p2, p3)
+    n_seeds = 1 if quick else n_seeds
+    pred, runtime = predict_folds(full, seq, "test", xgb, nets, n_seeds=n_seeds, quick=quick,
+                                  max_epochs=5 if quick else 40)
+    pred.to_parquet(out / "predictions.parquet", index=False)
+    tot = totals_frame(pred)
+    rows, samples, pvals = [], {}, {}
+    for a, c in PRIMARY2:
+        k = f"{a} vs {c}"
+        point, d = evaluate.paired_diff_samples(tot, a, c, b=boot_b)
+        samples[k], pvals[k] = (point, d), evaluate.bootstrap_p(d)
+    adj = evaluate.holm(pvals) if pvals else {}
+    for i, (a, c) in enumerate(PRIMARY2, 1):
+        k = f"{a} vs {c}"
+        point, d = samples[k]
+        rows.append({"#": f"Q{i}", "comparison": k, "10-lap MAE diff (s)": point,
+                     "95% low": np.percentile(d, 2.5), "95% high": np.percentile(d, 97.5),
+                     "90% low": np.percentile(d, 5), "90% high": np.percentile(d, 95),
+                     "p": pvals[k], "Holm p": adj[k],
+                     "label": evaluate.classify(point, d, adj[k], MARGIN_TOTAL)})
+    primary = pd.DataFrame(rows)
+    lf = long_format(pred)
+    sec = []
+    for h in (5, 10):
+        fr = lf[lf["h"] == h]
+        for a, c in (("lstm_multi", "mlp_multi"), ("lstm_multi", "xgboost_direct")):
+            if fr.empty:
+                continue
+            point, d = evaluate.paired_diff_samples(fr, a, c, b=boot_b)
+            sec.append({"horizon": h, "comparison": f"{a} vs {c}", "MAE diff (s)": point,
+                        "95% low": np.percentile(d, 2.5), "95% high": np.percentile(d, 97.5)})
+    corr = pd.DataFrame([{"model": m, "mean error correlation across the 10 laps":
+                          error_correlation(pred, m)} for m in MODELS])
+    totals = pd.DataFrame([{"model": m, "origins": len(tot),
+                            "MAE of 10-lap total (s)": (tot[f"pred_{m}"] - tot["y"]).abs().mean(),
+                            "bias (s)": (tot[f"pred_{m}"] - tot["y"]).mean()} for m in MODELS]
+                          ).sort_values("MAE of 10-lap total (s)")
+    by_h, h_ci = horizon_tables(lf, 200 if quick else boot_b)
+    finished = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
+    parts = [
+        "# Task 2 final test: multi-lap stint forecasts (pre-registered)",
+        f"Run {started} to {finished}. Test races 2025 R13-24. Rules: "
+        f"`docs/preregistration_task2.md`, SHA-256 `{prereg['sha256']}`, committed "
+        f"{prereg['prereg_committed_at']}, code commit `{prereg['git_commit']}`" +
+        ("" if prereg["committed"] else " (**pre-registration NOT committed: not a valid test**)") + ".",
+        f"- Origins with all 10 laps scored: {len(tot)} from {tot['race_id'].nunique()} races.",
+        f"- Practical margin {MARGIN_TOTAL} s on the 10-lap total; Holm over three comparisons.",
+        "## Primary comparisons (10-lap total)",
+        _md(primary, 4),
+        "## 10-lap total, all models",
+        _md(totals),
+        "## Secondary: by horizon",
+        _md(by_h), _md(h_ci, 4),
+        "## Secondary: sequence and model comparisons at horizons 5 and 10",
+        _md(pd.DataFrame(sec), 4),
+        "## Secondary: error correlation across laps (for the simulator)",
+        _md(corr, 3),
+        "## Compute (seconds)", _md(pd.DataFrame([runtime]), 1),
+    ]
+    (out / "report.md").write_text("\n\n".join(parts) + "\n")
+    (out / "run_meta.json").write_text(json.dumps({
+        "started_utc": started, "finished_utc": finished, "quick": quick, "n_seeds": n_seeds,
+        "preregistration": prereg, "margin_total_s": MARGIN_TOTAL,
+        "primary": primary.to_dict(orient="records")}, indent=2, default=str))
+    return out / "report.md"

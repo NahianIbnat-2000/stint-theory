@@ -7,7 +7,7 @@ import logging
 
 def main(argv=None):
     p = argparse.ArgumentParser(prog="models")
-    p.add_argument("command", choices=["dev", "deep", "test", "horizon"])
+    p.add_argument("command", choices=["dev", "deep", "test", "horizon", "horizon-test"])
     p.add_argument("--quick", action="store_true", help="smoke test: small grids, 2 folds")
     p.add_argument("--seeds", type=int, default=None,
                    help="seeds per neural model (default 5 for deep, 3 for horizon)")
@@ -20,6 +20,9 @@ def main(argv=None):
     if a.command == "dev":
         from .run import run_dev
         print(run_dev(quick=a.quick))
+    elif a.command == "horizon-test":
+        from .horizon_run import run_horizon_test
+        print(run_horizon_test(n_seeds=a.seeds or 3, force=a.force))
     elif a.command == "horizon":
         from .horizon_run import run_horizon_dev
         print(run_horizon_dev(quick=a.quick, n_seeds=a.seeds or 3))

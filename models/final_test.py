@@ -47,18 +47,19 @@ def _git(*args) -> str | None:
         return None
 
 
-def check_preregistration(allow_uncommitted: bool = False) -> dict:
-    if not PREREG.exists():
-        raise NotPreregistered("docs/preregistration.md is missing.")
-    sha = hashlib.sha256(PREREG.read_bytes()).hexdigest()
-    info = {"sha256": sha, "git_commit": _git("rev-parse", "HEAD"),
-            "prereg_committed_at": _git("log", "-1", "--format=%cI", "--", str(PREREG))}
-    tracked = _git("ls-files", "--error-unmatch", str(PREREG)) is not None
-    dirty = _git("status", "--porcelain", "--", str(PREREG))
+def check_preregistration(allow_uncommitted: bool = False, path: Path | None = None) -> dict:
+    path = path or PREREG
+    if not path.exists():
+        raise NotPreregistered(f"{path.name} is missing.")
+    sha = hashlib.sha256(path.read_bytes()).hexdigest()
+    info = {"file": path.name, "sha256": sha, "git_commit": _git("rev-parse", "HEAD"),
+            "prereg_committed_at": _git("log", "-1", "--format=%cI", "--", str(path))}
+    tracked = _git("ls-files", "--error-unmatch", str(path)) is not None
+    dirty = _git("status", "--porcelain", "--", str(path))
     if not allow_uncommitted and (not tracked or dirty):
         raise NotPreregistered(
-            "Commit docs/preregistration.md to git before running the test "
-            "(git add docs/preregistration.md && git commit -m 'Pre-register final test').")
+            f"Commit docs/{path.name} to git before running the test "
+            f"(git add docs/{path.name} && git commit -m 'Pre-register').")
     info["committed"] = bool(tracked and not dirty)
     return info
 
