@@ -1,0 +1,50 @@
+{
+  "started_utc": "2026-11-24T07:19:34+00:00",
+  "finished_utc": "2026-11-24T10:18:33+00:00",
+  "quick": false,
+  "preregistration": {
+    "sha256": "98780c55b2eebef466704f11b0c390a565e4cffc2cfaaf12684c4bd9c9cce0ab",
+    "git_commit": "5c481b0f76484027328e66487a8ba0fb749efe6a",
+    "prereg_committed_at": "2026-11-24T13:15:25+06:00",
+    "committed": true
+  },
+  "margin_s": 0.01,
+  "n_seeds": 5,
+  "hyperparameters": {
+    "phase2": {
+      "ridge": {
+        "alpha": 10000.0
+      },
+      "random_forest": {
+        "min_samples_leaf": 50,
+        "max_features": 1.0
+      },
+      "xgboost": {
+        "max_depth": 6,
+        "n_estimators": 150,
+        "min_child_weight": 100,
+        "objective": "reg:pseudohubererror"
+      },
+      "xgboost_ens5": {
+        "max_depth": 6,
+        "n_estimators": 150,
+        "min_child_weight": 100,
+        "objective": "reg:pseudohubererror"
+      }
+    },
+    "phase3": {
+      "mlp": {
+        "hidden": 64,
+        "dropout": 0.3
+      },
+      "lstm": {
+        "hidden": 32,
+        "dropout": 0.3
+      },
+      "tcn": {
+        "hidden": 64,
+        "dropout": 0.3
+      }
+    }
+  }
+}
