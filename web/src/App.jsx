@@ -7,6 +7,7 @@ import Home from "./pages/Home.jsx";
 // Home loads first; other pages are fetched when visited.
 const PAGES = {
   "/": Home,
+  "/faq": lazy(() => import("./pages/Faq.jsx")),
   "/simulator": lazy(() => import("./pages/Simulator.jsx")),
   "/case-study": lazy(() => import("./pages/CaseStudy.jsx")),
   "/reliability": lazy(() => import("./pages/Reliability.jsx")),

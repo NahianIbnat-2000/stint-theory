@@ -70,6 +70,7 @@ export default function Home() {
               <Link className="btn btn-ghost" to="/next-lap">Explore research findings</Link>
               <Link className="text-link" to="/methods">View methodology</Link>
             </div>
+            <p className="hero-newcomer">New to Formula 1 or machine learning? <Link to="/faq">Start with the questions, answered plainly</Link>.</p>
           </div>
           <div className="hero-card">
             {featured ? (
