@@ -11,8 +11,9 @@
 
 Raw and processed lap tables stay out of the repository because the timing data
 belongs to Formula 1 and its data partners (served here through OpenF1). Anyone can rebuild them with
-`python -m pipelines all`. The website will only publish derived results and
-small aggregates.
+`python -m pipelines all`. The website (`web/public/data`, written by `python -m webexport`) publishes derived
+results and small aggregates only: model parameters, tyre stints and pit-stop laps, and
+per-lap decision states whose pace term is an average over up to 30 laps. No lap times.
 
 ## Note on an early commit
 

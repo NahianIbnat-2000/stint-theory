@@ -12,3 +12,6 @@ venv/
 .DS_Store
 # simulator row-level outputs (lap histories, per-stop rows)
 research/results/simulator/*.csv
+# website build
+web/node_modules/
+web/dist/

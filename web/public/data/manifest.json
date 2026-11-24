@@ -1,0 +1,24 @@
+{
+ "generated_utc": "2026-11-24T13:50:28+00:00",
+ "races_simulator": 69,
+ "reports": [
+  "coverage",
+  "phase2_dev",
+  "phase3_dev",
+  "final_test",
+  "task2_dev",
+  "task2_test",
+  "task3",
+  "sim_backtest",
+  "methodology",
+  "methodology_models",
+  "methodology_tyre",
+  "methodology_simulator",
+  "model_changes",
+  "preregistration",
+  "preregistration_task2",
+  "limitations",
+  "data_dictionary"
+ ],
+ "missing": []
+}

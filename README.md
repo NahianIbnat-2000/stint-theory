@@ -17,8 +17,8 @@ rights holders.
 | 1 | Data pipeline: ingest (OpenF1, 2023 to 2025), validate, clean, features, coverage audit | **Done.** 70 races, 77,373 driver-laps, 60,701 clean green laps. See `data/reports/coverage_report.md`. |
 | 2 | Benchmarks, ridge, mixed-effects, random forest, XGBoost; locked test set | **Code done and tested on synthetic races.** Development results: `research/results/phase2_dev/report.md` after `python -m models dev`. |
 | 3 | MLP, LSTM, TCN on the same design | **Development done.** Neural models tie XGBoost within about 0.005 s; the lap sequence adds nothing measurable. Final test pre-registered in `docs/preregistration.md`. |
-| 4 | Strategy simulator | **Code done and tested on synthetic races.** `python -m simulation build / backtest / demo`. See `docs/methodology_simulator.md`. |
-| 5 | Website | planned |
+| 4 | Strategy simulator | **Done and frozen** after three leave-race-out backtests (`research/results/simulator/backtest.md`). See `docs/methodology_simulator.md`. |
+| 5 | Website | **In progress.** React site in `web/`, deployed to GitHub Pages by `.github/workflows/pages.yml`. |
 | 6 | Publication and deployment | planned |
 
 Development results are in `research/results/phase2_dev/` and `phase3_dev/`
@@ -118,3 +118,18 @@ leak and checks that the first test catches it.
 
 Code: MIT (see `LICENSE`). Formula 1 timing data (via OpenF1) is not covered by
 this licence and is not redistributed here.
+
+## Website
+
+```bash
+python -m webexport              # results, reports and compact simulator inputs -> web/public/data
+python -m webexport parity       # Python reference outputs for the JavaScript simulator test
+cd web && npm install
+npm test                         # JavaScript simulator must match Python to 1e-6 s
+npm run dev                      # local preview at http://localhost:5173/stint-theory/
+```
+
+The site publishes derived results only, never lap times (see `webexport/export.py`).
+The strategy simulator runs in the browser: `web/src/sim/` is a line-by-line port of
+`simulation/` with the same random-number generator, checked draw by draw against
+Python.
