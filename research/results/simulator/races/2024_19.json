@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 21.070000000000007,
+  "mean_s": 21.09504464285714,
+  "median_s": 21.070000000000007,
   "sd_s": 4.382184317525357,
   "source": "United States Grand Prix, other years (56 green-flag stops)",
   "neutralised_factor": 1.0,

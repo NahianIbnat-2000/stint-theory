@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 18.464,
+  "mean_s": 18.877971830985917,
+  "median_s": 18.464,
   "sd_s": 4.046597352711812,
   "source": "Belgian Grand Prix, other years (71 green-flag stops)",
   "neutralised_factor": 1.0,

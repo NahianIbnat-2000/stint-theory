@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 26.9285,
+  "mean_s": 29.66770652173913,
+  "median_s": 26.9285,
   "sd_s": 4.283303055839087,
   "source": "Dutch Grand Prix, other years (46 green-flag stops)",
   "neutralised_factor": 1.0,

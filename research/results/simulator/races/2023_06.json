@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 20.37499999999997,
+  "mean_s": 20.274451162790697,
+  "median_s": 20.37499999999997,
   "sd_s": 3.6641952021911055,
   "source": "Monaco Grand Prix, other years (43 green-flag stops)",
   "neutralised_factor": 1.0,

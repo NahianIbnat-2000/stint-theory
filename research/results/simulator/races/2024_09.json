@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 20.08449999999999,
+  "mean_s": 20.92363,
+  "median_s": 20.08449999999999,
   "sd_s": 4.247137229420606,
   "source": "Canadian Grand Prix, other years (50 green-flag stops)",
   "neutralised_factor": 1.0,

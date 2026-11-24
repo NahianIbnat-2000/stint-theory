@@ -150,7 +150,8 @@
   "years": 1
  },
  "pit_loss": {
-  "mean_s": 22.688000000000017,
+  "mean_s": 24.00296,
+  "median_s": 22.688000000000017,
   "sd_s": 4.36096466879156,
   "source": "Chinese Grand Prix, other years (25 green-flag stops)",
   "neutralised_factor": 1.0,

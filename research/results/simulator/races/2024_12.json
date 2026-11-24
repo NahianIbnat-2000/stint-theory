@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 36.58100000000002,
+  "mean_s": 34.371863999999995,
+  "median_s": 36.58100000000002,
   "sd_s": 4.357077317595932,
   "source": "British Grand Prix, other years (25 green-flag stops)",
   "neutralised_factor": 1.0,

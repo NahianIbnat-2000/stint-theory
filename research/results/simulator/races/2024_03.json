@@ -150,7 +150,8 @@
   "years": 1
  },
  "pit_loss": {
-  "mean_s": 22.799999999999983,
+  "mean_s": 24.460811024565604,
+  "median_s": 22.799999999999983,
   "sd_s": 4.3617534184229845,
   "source": "all other races (circuit has too few stops)",
   "neutralised_factor": 1.0,

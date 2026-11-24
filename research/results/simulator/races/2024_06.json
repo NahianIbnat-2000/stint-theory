@@ -150,7 +150,8 @@
   "years": 1
  },
  "pit_loss": {
-  "mean_s": 19.923500000000004,
+  "mean_s": 20.38691,
+  "median_s": 19.923500000000004,
   "sd_s": 4.365340547526523,
   "source": "Miami Grand Prix, other years (20 green-flag stops)",
   "neutralised_factor": 1.0,

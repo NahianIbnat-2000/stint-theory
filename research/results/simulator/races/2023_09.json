@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 21.257500000000007,
+  "mean_s": 22.148624324324324,
+  "median_s": 21.257500000000007,
   "sd_s": 4.373991628916422,
   "source": "Austrian Grand Prix, other years (74 green-flag stops)",
   "neutralised_factor": 1.0,

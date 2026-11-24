@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 23.945999999999998,
+  "mean_s": 25.540511111111115,
+  "median_s": 23.945999999999998,
   "sd_s": 4.340413328446986,
   "source": "Singapore Grand Prix, other years (27 green-flag stops)",
   "neutralised_factor": 1.0,

@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 22.3575,
+  "mean_s": 23.50636363636364,
+  "median_s": 22.3575,
   "sd_s": 4.384411605055511,
   "source": "Japanese Grand Prix, other years (66 green-flag stops)",
   "neutralised_factor": 1.0,

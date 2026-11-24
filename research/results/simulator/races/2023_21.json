@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 22.537999999999982,
+  "mean_s": 23.22425818181818,
+  "median_s": 22.537999999999982,
   "sd_s": 4.3566282178675575,
   "source": "Las Vegas Grand Prix, other years (55 green-flag stops)",
   "neutralised_factor": 1.0,

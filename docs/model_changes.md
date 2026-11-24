@@ -127,5 +127,20 @@ h=2 on. 10-lap total MAE: xgboost_direct 3.72 s, lstm_multi 3.73 s, mlp_multi
 7. **Task 2 pre-registration** (`docs/preregistration_task2.md`) written after
    this run and before Task 2 was run on the test races.
 
+## Simulator backtest 1, 2026-11-24 (leave-race-out parameters)
+
+Next stint after 1,807 real stops (37,586 clean laps): model MAE 0.887 s (bias
++0.298), repeating the last clean lap 1.597 s (bias +1.456). Remaining race time
+of the strategy actually run (537 drivers, 43 races, decision at one third
+distance, no neutralisation): MAE 34.5 s, median 18.0 s, bias +22.2 s. Green-flag
+pit loss: MAE 5.1 s, median 1.4 s, bias -2.0 s.
+
+8. **Simulator v2.** (a) Driver pace from up to 30 clean laps before the decision
+   lap instead of 8: with 8, pace came from late-stint laps and the model was too
+   slow right after a stop. (b) Expected pit loss = mean with the top 5% capped
+   instead of the median, which was 2 s per stop too low. The simulator has no
+   locked test set; these changes were made once after backtest 1 and backtest 2
+   is reported as it comes out, without further tuning.
+
 Not changed: the split, the reference pace, the features, the scored sample and
 the evaluation method.

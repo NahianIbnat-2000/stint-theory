@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 21.72,
+  "mean_s": 22.374834482758622,
+  "median_s": 21.72,
   "sd_s": 4.37777077324842,
   "source": "Azerbaijan Grand Prix, other years (29 green-flag stops)",
   "neutralised_factor": 1.0,

@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 20.543499999999995,
+  "mean_s": 21.629365384615383,
+  "median_s": 20.543499999999995,
   "sd_s": 4.34030104383607,
   "source": "Saudi Arabian Grand Prix, other years (26 green-flag stops)",
   "neutralised_factor": 1.0,

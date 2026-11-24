@@ -150,7 +150,8 @@
   "years": 1
  },
  "pit_loss": {
-  "mean_s": 22.164999999999992,
+  "mean_s": 23.43292121212121,
+  "median_s": 22.164999999999992,
   "sd_s": 4.404375995821626,
   "source": "S\u00e3o Paulo Grand Prix, other years (33 green-flag stops)",
   "neutralised_factor": 1.0,

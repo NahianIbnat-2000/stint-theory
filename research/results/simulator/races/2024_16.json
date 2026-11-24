@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 25.287499999999994,
+  "mean_s": 25.754436363636366,
+  "median_s": 25.287499999999994,
   "sd_s": 4.370554657589432,
   "source": "Italian Grand Prix, other years (44 green-flag stops)",
   "neutralised_factor": 1.0,

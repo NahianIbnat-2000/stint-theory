@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 27.0235,
+  "mean_s": 28.706903333333344,
+  "median_s": 27.0235,
   "sd_s": 4.417015806264521,
   "source": "Qatar Grand Prix, other years (30 green-flag stops)",
   "neutralised_factor": 1.0,

@@ -75,7 +75,13 @@ class Pace:
         return mu + self.c["lap_number"] * np.asarray(lap, float) + self.kappa(comp) + self.g(comp, age)
 
 
-def decision_state(p: dict, driver: str, lap: int, n_pace: int = 8) -> DecisionState:
+# v2 (after the first backtest): 30 instead of 8. With 8, mu came from late-stint
+# laps only and absorbed end-of-stint slowness (model too slow after a stop by
+# about 0.3 s/lap). See docs/model_changes.md.
+N_PACE = 30
+
+
+def decision_state(p: dict, driver: str, lap: int, n_pace: int = N_PACE) -> DecisionState:
     """State known at the end of `lap`. Pace intercept mu from the driver's clean
     laps up to `lap` (most recent n_pace), net of the model's lap, compound and
     tyre-age terms."""

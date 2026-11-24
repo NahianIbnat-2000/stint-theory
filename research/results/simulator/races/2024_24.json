@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 22.35250000000002,
+  "mean_s": 22.56799375,
+  "median_s": 22.35250000000002,
   "sd_s": 4.247482840159018,
   "source": "Abu Dhabi Grand Prix, other years (64 green-flag stops)",
   "neutralised_factor": 1.0,

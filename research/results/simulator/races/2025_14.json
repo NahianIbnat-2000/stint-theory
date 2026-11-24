@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 20.883500000000012,
+  "mean_s": 21.01413157894737,
+  "median_s": 20.883500000000012,
   "sd_s": 4.39028574906122,
   "source": "Hungarian Grand Prix, other years (76 green-flag stops)",
   "neutralised_factor": 1.0,

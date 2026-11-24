@@ -87,12 +87,14 @@ def run_backtest(root: Path | None = None, public: Path | None = None) -> Path:
     root = root or OUT
     public = public or (PUBLIC if root == OUT else root)
     index = json.loads((root / "index.json").read_text())
-    ns, rem, pit = [], [], []
+    ns, rem, pit, coefs = [], [], [], []
     stops = pd.read_csv(root / "pit_stops.csv")
     for r in index:
         if not r["simulatable"]:
             continue
         p = load_params(r["race_id"], root)
+        coefs.append({k: p["pace"]["coef"][k] for k in p["pace"]["coef"]} |
+                     {"circuit_scale": p["circuit"]["scale"], "pit_loss": p["pit_loss"]["mean_s"]})
         ns += next_stint_rows(p)
         rem += remaining_rows(p)
         g = stops[(stops["race_id"] == r["race_id"]) & ~stops["neutralised"]]
@@ -102,6 +104,13 @@ def run_backtest(root: Path | None = None, public: Path | None = None) -> Path:
     parts = ["# Simulator backtest (leave-race-out parameters)",
              "Each race is checked with parameters estimated without it. These checks cover "
              "the building blocks; a counterfactual strategy outcome itself cannot be checked."]
+    if coefs:
+        c = pd.DataFrame(coefs)
+        summ = c.agg(["mean", "min", "max"]).T.reset_index().rename(columns={"index": "parameter"})
+        parts += ["## Pace-model parameters across the leave-race-out fits",
+                  "`lap_number` is the common per-lap trend (fuel burn + track evolution; Task 3 "
+                  "implied about -0.065 s/lap). `k_*` are compound offsets against medium; "
+                  "`age_*`, `age2_*` the tyre-age curve.", _md(summ, 4)]
     if not ns.empty:
         ns["err_model"] = ns["model"] - ns["actual"]
         ns["err_persist"] = ns["persistence"] - ns["actual"]

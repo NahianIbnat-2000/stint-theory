@@ -124,18 +124,23 @@ def pit_loss_params(stops: pd.DataFrame, race_id: str, event: str) -> dict:
     o = stops[stops["race_id"] != race_id]
     green = o[~o["neutralised"]]
     same = green[green["event_name"] == event]["loss_s"]
-    # trim implausible values (slow stops are real but unrepeatable mistakes stay in the spread)
-    q = same.clip(upper=same.quantile(0.95)) if len(same) >= 10 else same
-    if len(q) >= 5:
-        mean, source = float(q.median()), f"{event}, other years ({len(q)} green-flag stops)"
+    # v2: expected loss = mean with the top 5% capped (slow stops and penalties are
+    # part of the expected cost; v1 used the median and was 2 s per stop too low)
+    def capped_mean(x):
+        return float(x.clip(upper=x.quantile(0.95)).mean())
+    if len(same) >= 5:
+        mean, source = capped_mean(same), f"{event}, other years ({len(same)} green-flag stops)"
+        median = float(same.median())
     else:
-        mean, source = float(green["loss_s"].median()), "all other races (circuit has too few stops)"
+        mean = capped_mean(green["loss_s"])
+        median = float(green["loss_s"].median())
+        source = "all other races (circuit has too few stops)"
     resid = (green["loss_s"] - green.groupby("event_name")["loss_s"].transform("median"))
     sd = float(resid.clip(resid.quantile(0.02), resid.quantile(0.95)).std())
     neut = o[o["neutralised"]]
     factor = float((neut["loss_s"] / neut["event_name"].map(
         green.groupby("event_name")["loss_s"].median())).median()) if len(neut) else 0.6
-    return {"mean_s": mean, "sd_s": sd, "source": source,
+    return {"mean_s": mean, "median_s": median, "sd_s": sd, "source": source,
             "neutralised_factor": float(np.clip(factor, 0.2, 1.0)),
             "n_green_stops_other_races": int(len(green))}
 

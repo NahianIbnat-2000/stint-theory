@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 22.72200000000001,
+  "mean_s": 23.49475675675675,
+  "median_s": 22.72200000000001,
   "sd_s": 4.380172292956692,
   "source": "Mexico City Grand Prix, other years (37 green-flag stops)",
   "neutralised_factor": 1.0,

@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 23.212000000000018,
+  "mean_s": 23.315457831325297,
+  "median_s": 23.212000000000018,
   "sd_s": 4.411356463111546,
   "source": "Spanish Grand Prix, other years (83 green-flag stops)",
   "neutralised_factor": 1.0,

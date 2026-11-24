@@ -150,7 +150,8 @@
   "years": 1
  },
  "pit_loss": {
-  "mean_s": 28.394499999999994,
+  "mean_s": 30.5849625,
+  "median_s": 28.394499999999994,
   "sd_s": 4.352728655512041,
   "source": "Emilia Romagna Grand Prix, other years (12 green-flag stops)",
   "neutralised_factor": 1.0,

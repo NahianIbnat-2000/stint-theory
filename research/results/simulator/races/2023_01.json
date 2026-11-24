@@ -150,7 +150,8 @@
   "years": 2
  },
  "pit_loss": {
-  "mean_s": 24.093000000000018,
+  "mean_s": 24.684239436619716,
+  "median_s": 24.093000000000018,
   "sd_s": 4.340198299186404,
   "source": "Bahrain Grand Prix, other years (71 green-flag stops)",
   "neutralised_factor": 1.0,
