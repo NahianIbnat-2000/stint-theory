@@ -1,10 +1,14 @@
 # STINT THEORY
 
+![STINT THEORY: does deep learning beat simpler models at forecasting F1 lap times? No. Same next-lap accuracy at 85 times the training time.](docs/img/social-preview.png)
+
 **Every lap is data. Every pit stop is a decision.**
 
 An open-source Formula 1 research platform comparing statistical,
 machine-learning and deep-learning lap-time forecasts, and what they imply for race
 strategy simulation.
+
+**Website:** https://nahianibnat-2000.github.io/stint-theory/ · **Research report:** [paper/stint_theory_report.pdf](paper/stint_theory_report.pdf)
 
 Website: **https://nahianibnat-2000.github.io/stint-theory/**
 
