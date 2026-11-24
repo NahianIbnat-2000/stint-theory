@@ -2,6 +2,8 @@
 export const ROUTES = [
   { path: "/", label: "Home", title: "STINT THEORY", nav: false },
   { path: "/simulator", label: "Simulator", title: "Strategy simulator", nav: true },
+  { path: "/races", label: "Races", title: "Race explorer", nav: true },
+  { path: "/models", label: "Models", title: "Model arena", nav: true },
   { path: "/next-lap", label: "Next lap", title: "The next lap", nav: true },
   { path: "/ten-laps", label: "Ten laps", title: "The next ten laps", nav: true },
   { path: "/tyres", label: "Tyre lab", title: "Tyre-age lab", nav: true },

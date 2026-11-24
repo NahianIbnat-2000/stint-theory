@@ -1,8 +1,9 @@
-# Methodology (Phase 2: next-lap prediction)
+# Methodology: forecasting models (Tasks 1 and 2)
 
-Status: code written and tested on synthetic races. No model has been run on the
-real data in this document's version; results go to
-`research/results/phase2_dev/report.md` when `python -m models dev` is run.
+Status: all models below were developed, frozen and scored once on the locked test
+races (Task 1: `research/results/final_test/report.md`; Task 2:
+`research/results/task2_test/report.md`). Development results are in
+`research/results/phase2_dev/`, `phase3_dev/` and `task2_dev/`.
 
 ## Task
 

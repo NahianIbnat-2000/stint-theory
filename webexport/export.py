@@ -11,6 +11,13 @@ What is published (web/public/data, committed):
         lap (compound, tyre age, stops so far, compounds used, pace intercept mu
         and its standard error, number of clean laps behind mu).
 
+  * results/test_errors.json
+        descriptive breakdown of the single pre-registered Task 1 test run (already
+        stored predictions): error by tyre age, by race, quantiles and a histogram
+        of signed errors per model. No model is refitted or rescored.
+  * per race "context": weather medians and ranges, share of laps under SC/VSC/red,
+        number of pit stops, lap completeness (aggregates of the lap table).
+
 What is NOT published: lap times. mu is an average over up to 30 laps net of the
 model, rounded to 1 ms; individual laps cannot be recovered from it.
 """
@@ -146,6 +153,11 @@ def driver_numbers(laps_path: Path | None) -> dict:
 def export_sim(sim_dir: Path, out: Path, log=print, laps_path: Path | None = None) -> int:
     index = json.loads((sim_dir / "index.json").read_text())
     numbers = driver_numbers(laps_path)
+    lp = laps_path or config.PROCESSED / "laps_clean.parquet"
+    cov = config.REPORTS / "coverage.json"
+    completeness = {(r["season"], r["round"]): r["lap_completeness"]
+                    for r in json.loads(cov.read_text()).get("lap_completeness", [])} if cov.exists() else {}
+    context = race_context(pd.read_parquet(lp), completeness) if lp.exists() else {}
     (out / "sim" / "races").mkdir(parents=True, exist_ok=True)
     rows = []
     for r in index:
@@ -153,6 +165,7 @@ def export_sim(sim_dir: Path, out: Path, log=print, laps_path: Path | None = Non
         web = public_params(p)
         status = official_status(p["season"], p["round"], numbers.get(p["race_id"], {}))
         web["drivers"] = {d: driver_export(p, d, status.get(d)) for d in sorted(p["drivers"])}
+        web["context"] = context.get(p["race_id"])
         (out / "sim" / "races" / f"{r['race_id']}.json").write_text(
             json.dumps(_clean(web), separators=(",", ":"), default=float))
         rows.append({k: r[k] for k in ("race_id", "season", "event_name", "total_laps",
@@ -177,6 +190,12 @@ def export_results(out: Path, log=print) -> dict:
             copy_json(src, out / "results" / f"{name}.json")
         else:
             found["missing"].append(str(src.relative_to(ROOT)))
+    preds = RESULTS / "final_test" / "predictions.parquet"
+    if preds.exists():
+        meta = json.loads(JSONS["final_test_meta"].read_text()) if JSONS["final_test_meta"].exists() else None
+        (out / "results" / "test_errors.json").write_text(json.dumps(_clean(test_errors(pd.read_parquet(preds), meta))))
+    else:
+        found["missing"].append(str(preds.relative_to(ROOT)))
     curve = RESULTS / "task3" / "tyre_age_curves.csv"
     if curve.exists():
         (out / "results" / "tyre_curves.json").write_text(
@@ -186,6 +205,55 @@ def export_results(out: Path, log=print) -> dict:
     for m in found["missing"]:
         log(f"missing (skipped): {m}")
     return found
+
+
+TYRE_BINS = [0, 5, 10, 15, 20, 30, 80]
+HIST_EDGES = [round(-3 + 0.1 * i, 1) for i in range(61)]
+
+
+def test_errors(pred: pd.DataFrame, meta: dict | None = None) -> dict:
+    """Aggregates of stored test predictions (columns pred_<model>, y, race_id,
+    target_tyre_life). Nothing is refitted; no new comparisons or intervals."""
+    import numpy as np
+    models = [c[5:] for c in pred.columns if c.startswith("pred_")]
+    err = {m: (pred[f"pred_{m}"] - pred["y"]).to_numpy(float) for m in models}
+    out = {"source": "research/results/final_test/predictions.parquet",
+           "run_finished_utc": (meta or {}).get("finished_utc"),
+           "n_laps": int(len(pred)), "races": int(pred["race_id"].nunique()), "models": models}
+    bins = pd.cut(pred["target_tyre_life"], TYRE_BINS)
+    out["by_tyre_age"] = [{"bin": str(b), "lo": int(b.left), "hi": int(b.right), "n": int(len(g)),
+                           "mae": {m: float(np.abs(err[m][g.index.to_numpy()]).mean()) for m in models}}
+                          for b, g in pred.reset_index(drop=True).groupby(bins.reset_index(drop=True), observed=True)]
+    out["by_race"] = [{"race_id": str(r), "n": int(len(g)),
+                       "mae": {m: float(np.abs(err[m][g.index.to_numpy()]).mean()) for m in models}}
+                      for r, g in pred.reset_index(drop=True).groupby("race_id")]
+    qs = [0.1, 0.25, 0.5, 0.75, 0.9, 0.95]
+    out["abs_error_quantiles"] = {m: dict(zip([f"p{int(q * 100)}" for q in qs],
+                                              np.quantile(np.abs(err[m]), qs).tolist())) for m in models}
+    edges = np.array(HIST_EDGES)
+    out["signed_error_hist"] = {"edges": HIST_EDGES, "counts": {
+        m: {"inside": np.histogram(err[m], edges)[0].tolist(),
+            "below": int((err[m] < edges[0]).sum()), "above": int((err[m] > edges[-1]).sum())} for m in models}}
+    return out
+
+
+def race_context(laps: pd.DataFrame, completeness: dict) -> dict:
+    """race_id -> weather and neutralisation aggregates (no lap times)."""
+    out = {}
+    for rid, g in laps.groupby("race_id"):
+        def rng(col):
+            v = pd.to_numeric(g[col], errors="coerce").dropna() if col in g else pd.Series(dtype=float)
+            return None if v.empty else {"median": float(v.median()), "min": float(v.min()), "max": float(v.max())}
+        share = lambda col: float(g[col].fillna(False).astype(bool).mean()) if col in g else None
+        key = (int(g["season"].iloc[0]), int(g["round"].iloc[0]))
+        out[rid] = {"track_temp_c": rng("track_temp_c"), "air_temp_c": rng("air_temp_c"),
+                    "humidity_pct": rng("humidity_pct"), "wind_speed_ms": rng("wind_speed_ms"),
+                    "rain_lap_share": share("rainfall") if "rainfall" in g else share("flag_rain"),
+                    "sc_lap_share": share("flag_sc"), "vsc_lap_share": share("flag_vsc"),
+                    "red_lap_share": share("flag_red"), "clean_green_share": share("is_clean_green"),
+                    "drivers": int(g["driver"].nunique()), "pit_stops": int(g["flag_pit_in"].fillna(False).astype(bool).sum()),
+                    "lap_completeness": completeness.get(key)}
+    return out
 
 
 def export_all(sim_dir: Path | None = None, out: Path | None = None, log=print) -> Path:

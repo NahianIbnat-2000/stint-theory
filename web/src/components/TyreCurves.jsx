@@ -3,16 +3,16 @@ import { COMPOUND } from "../data.js";
 import { fmt, signed } from "../format.js";
 
 // Lap time at each tyre age relative to age 5, by compound, with 95% bands.
-export default function TyreCurves({ curve, svgRef }) {
+export default function TyreCurves({ curve, svgRef, visible = null }) {
   const [hover, setHover] = useState(null);
-  const W = 760, H = 360, left = 56, right = 80, top = 16, bottom = 40;
+  const W = 760, H = 430, left = 56, right = 80, top = 16, bottom = 110;
   const ages = [...new Set(curve.map((r) => r.tyre_age))].sort((a, b) => a - b);
   const lo = Math.min(...curve.map((r) => r.ci_low)), hi = Math.max(...curve.map((r) => r.ci_high));
   const x = (a) => left + ((a - ages[0]) / (ages.at(-1) - ages[0])) * (W - left - right);
   const y = (v) => top + ((hi - v) / (hi - lo)) * (H - top - bottom);
   const yt = ticks(lo, hi);
   const series = Object.keys(COMPOUND).map((c) => ({ c, rows: curve.filter((r) => r.compound === c).sort((a, b) => a.tyre_age - b.tyre_age) }))
-    .filter((s) => s.rows.length);
+    .filter((s) => s.rows.length && (!visible || visible.includes(s.c)));
   // end labels: keep at least 15 px apart so they never overlap
   const labelY = (() => {
     const ys = series.map((s, i) => ({ i, y: y(s.rows.at(-1).effect_s) + 4 })).sort((a, b) => a.y - b.y);
@@ -36,9 +36,22 @@ export default function TyreCurves({ curve, svgRef }) {
             </g>
           ))}
           {ages.filter((a) => a % 5 === 0 || a === 1).map((a) => (
-            <text key={a} x={x(a)} y={H - 18} textAnchor="middle" className="axis">{a}</text>
+            <text key={a} x={x(a)} y={H - 88} textAnchor="middle" className="axis">{a}</text>
           ))}
-          <text x={(left + W - right) / 2} y={H - 2} textAnchor="middle" className="axis">Tyre age (laps); ages above {ages.at(-1)} pooled</text>
+          {/* sample size: laps behind each point, per compound (small multiples of bars) */}
+          {(() => {
+            const maxN = Math.max(...series.flatMap((s) => s.rows.map((r) => r.laps)), 1);
+            const bh = 52 / Math.max(series.length, 1);
+            return series.map(({ c, rows }, si) => (
+              <g key={c}>
+                {rows.map((r) => <rect key={r.tyre_age} x={x(r.tyre_age) - (x(2) - x(1)) / 2 + 1} width={Math.max(x(2) - x(1) - 2, 2)} rx={1}
+                  y={H - 70 + si * bh + (bh - 2) * (1 - r.laps / maxN)} height={Math.max((bh - 2) * (r.laps / maxN), 0.5)}
+                  fill={COMPOUND[c].color} opacity=".75" />)}
+                <text x={W - right + 8} y={H - 70 + si * bh + bh / 2 + 3} className="axis" style={{ fontSize: 10 }}>{COMPOUND[c].short} laps</text>
+              </g>
+            ));
+          })()}
+          <text x={(left + W - right) / 2} y={H - 2} textAnchor="middle" className="axis-title">Tyre age (laps); ages above {ages.at(-1)} pooled. Bars: number of laps behind each point</text>
           <text x={left - 44} y={top + 2} className="axis">s</text>
           {series.map(({ c, rows }, si) => (
             <g key={c}>

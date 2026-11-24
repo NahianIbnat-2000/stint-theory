@@ -46,3 +46,33 @@ def test_nan_becomes_null(tmp_path):
     src.write_text('{"a": NaN, "b": [1.5, Infinity], "c": "x"}')
     copy_json(src, tmp_path / "b.json")
     assert json.loads((tmp_path / "b.json").read_text()) == {"a": None, "b": [1.5, None], "c": "x"}
+
+
+def test_test_errors_aggregates_only():
+    import numpy as np
+    import pandas as pd
+    from webexport.export import test_errors
+    rng = np.random.default_rng(0)
+    n = 400
+    pred = pd.DataFrame({"race_id": rng.choice(["2025_13", "2025_14"], n), "target_tyre_life": rng.integers(1, 50, n),
+                         "y": rng.normal(0, 1, n)})
+    pred["pred_a"] = pred["y"] + rng.normal(0, 0.3, n)
+    pred["pred_b"] = pred["y"] + rng.normal(0, 0.5, n)
+    out = test_errors(pred)
+    assert out["models"] == ["a", "b"] and out["n_laps"] == n
+    assert sum(r["n"] for r in out["by_tyre_age"]) == n
+    total = sum(r["n"] * r["mae"]["a"] for r in out["by_race"]) / n
+    assert abs(total - (pred["pred_a"] - pred["y"]).abs().mean()) < 1e-9
+    h = out["signed_error_hist"]["counts"]["b"]
+    assert sum(h["inside"]) + h["below"] + h["above"] == n
+    assert "y" not in json.dumps(out["by_race"])
+
+
+def test_race_context(web):
+    from webexport.export import race_context
+    laps = build_laps()
+    ctx = race_context(laps, {})
+    r = next(iter(ctx.values()))
+    assert r["drivers"] == 8 and r["pit_stops"] > 0
+    assert set(r) >= {"track_temp_c", "sc_lap_share", "lap_completeness"}
+    assert "lap_time_s" not in json.dumps(ctx)

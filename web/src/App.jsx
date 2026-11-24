@@ -7,6 +7,8 @@ import Home from "./pages/Home.jsx";
 const PAGES = {
   "/": Home,
   "/simulator": lazy(() => import("./pages/Simulator.jsx")),
+  "/races": lazy(() => import("./pages/Races.jsx")),
+  "/models": lazy(() => import("./pages/Models.jsx")),
   "/next-lap": lazy(() => import("./pages/NextLap.jsx")),
   "/ten-laps": lazy(() => import("./pages/TenLaps.jsx")),
   "/tyres": lazy(() => import("./pages/Tyres.jsx")),

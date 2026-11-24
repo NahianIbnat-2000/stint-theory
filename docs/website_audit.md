@@ -27,6 +27,7 @@ Status: **fixed** in this round, **deferred** to a later round (with the reason)
 | R4 | Simulator showed "share faster" for plans that differ by one lap (57% for a −0.0 s gap) with no warning | `pages/Simulator.jsx` | Screenshot, Abu Dhabi ALB lap 21 | Deterministic explanation: "no reliable winner" when the gap is under 1 s and the 90% range spans zero; duplicates marked | fixed |
 | R5 | Single-car limitation not visible where it bites (Monaco: model prefers a 1-stop by 18 s over Leclerc's winning no-stop race) | `lib/explain.js` | Browser check of a shared link | Track-position caveat in every explanation | fixed |
 | R6 | Development and test results are mixed only in the Methods document list | `pages/Methods.jsx` | Development reports sit next to test reports | Labelled "Development results"; result pages show test results only | fixed (labels); a dedicated model arena is deferred |
+| R8 | `docs/methodology_models.md` still said "code written and tested on synthetic races; no model has been run on the real data" | `docs/methodology_models.md` | File header | Header rewritten with the actual status and result paths | fixed (round 2) |
 | R7 | GitHub description "A personal Project" | repository settings | GitHub page | Needs the owner: Settings → General → Description (text in the final report) | owner action |
 
 ## Usability issues
@@ -59,10 +60,21 @@ Status: **fixed** in this round, **deferred** to a later round (with the reason)
 | P2 | Simulator recomputation: about 90-150 ms for the optimiser plus 110-130 ms for 1,000 races (measured on three real races) | Slider updates deferred so dragging stays smooth | fixed |
 | P3 | Data: 3.0 MB of JSON, fetched per race (about 40 kB each) | Acceptable; cached by the browser | no change |
 
-## Optional enhancements (deferred to the next rounds)
+## Round 2 (Priority 3), 2026-11-24
 
-1. Model arena: ranked chart with MAE/RMSE switch (RMSE is already in `final_test.json`), test vs development kept apart, per-model detail panels, an evidence inspector.
-2. Tyre lab filters (season rows exist in `task3.json`; per-circuit curves need a new export).
-3. Race explorer (race overview, weather context, missingness, entry into the simulator).
-4. Featured race case study, written around one simulator scenario.
-5. Research reliability page: needs `simulation/backtest.py` to also write JSON so the numbers load from an artifact instead of Markdown.
+| feature | files | data behind it | status |
+|---|---|---|---|
+| Model arena: ranked chart, MAE / RMSE / median / bias switch, 95% intervals where computed, locked test and development on separate tabs, model detail panels (family, objective, inputs, validation, metrics, seed spread, frozen settings, strengths, limits), "when does complexity stop paying" summary | `pages/Models.jsx`, `components/ModelRanking.jsx`, `models.js` | `final_test.json`, `final_test_meta.json`, `phase2_dev.json`, `phase3_dev.json` | done |
+| Evidence inspector (source, evaluation period, pre-registration hash, run date, sample, metric, interval method, method doc) | `components/Evidence.jsx` | the same artifacts | done on the model arena and tyre lab; the simulator has its own evidence table |
+| Error by tyre age, by race, quantiles, signed-error histogram from the stored test predictions (descriptive; nothing refitted or rescored) | `webexport/export.py` (`test_errors`), `components/BinLines.jsx` | `research/results/final_test/predictions.parquet` (local, git-ignored) | done; appears after the next export |
+| Tyre lab: compound filter, laps-per-age bars, specification groups (main, season, robustness, naive), circuit ranking with search and sort, forecast error by tyre age | `pages/Tyres.jsx`, `components/DotCI.jsx`, `components/TyreCurves.jsx` | `task3.json`, `tyre_curves.json`, `test_errors.json` | done |
+| Race explorer: season and Grand Prix selection, race overview, weather medians and ranges, neutralisation shares, lap completeness, stint chart, driver table with classification and a link into the simulator | `pages/Races.jsx`, `webexport/export.py` (`race_context`) | race files; weather and flags aggregated from `laps_clean.parquet` (local) | done; conditions appear after the next export |
+
+Tests added: `tests/test_webexport.py` (test-error aggregates sum back to the overall error and carry no lap values; race context has no lap times).
+
+## Still deferred
+
+1. Featured race case study (Priority 4).
+2. Research reliability page: needs `simulation/backtest.py` to also write JSON so the numbers load from an artifact.
+3. Per-circuit tyre curves (needs a new Task 3 export; the circuit slopes are already shown).
+4. Pasting a shared simulator link into a tab already on the simulator needs a reload (U7).
