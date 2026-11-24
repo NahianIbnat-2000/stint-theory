@@ -94,9 +94,16 @@ Files: `web/src/tokens.css`, theme layer at the end of `web/src/styles.css`,
 `web/package.json` (three font packages). Checked at 1280 px and 390 px: no page is
 wider than the screen.
 
+## Round 4 (Priority 4), 2026-11-24
+
+| feature | files | data behind it | status |
+|---|---|---|---|
+| Case study "Monza 2024: one stop or two?": race context with five cited reports, stint chart, the decision at lap 20, assumptions read from the race file, Piastri and Leclerc duels, timeline, distribution, tyre-wear break-even curve, what can and cannot be concluded | `pages/CaseStudy.jsx` | `sim/races/2024_16.json`; every model number computed live (seed 2026) | done |
+| Research reliability page: dataset quality, validation design with pre-registration hashes, development vs test errors, simulator backtest, uncertainty methods, calibration, limitations, reproducibility; no scores or badges | `pages/Reliability.jsx` | `coverage.json`, `final_test*.json`, `task2_test_meta.json`, `phase2_dev.json`, `phase3_dev.json`, `sim_backtest.json` | done; backtest and calibration sections appear after the backtest is rerun |
+| Backtest writes `backtest.json`; calibration check of the simulated ranges (after the freeze, check only) | `simulation/backtest.py`, `webexport/export.py` | backtest rows (local) | done; logged in `docs/model_changes.md` |
+| Tyre lab text on error by tyre age now generated from the data (the earlier fixed sentence "old tyres are harder to forecast" was wrong: error is highest in the first five laps of a stint) | `pages/Tyres.jsx` | `test_errors.json` | fixed |
+
 ## Still deferred
 
-1. Featured race case study (Priority 4).
-2. Research reliability page: needs `simulation/backtest.py` to also write JSON so the numbers load from an artifact.
-3. Per-circuit tyre curves (needs a new Task 3 export; the circuit slopes are already shown).
-4. Pasting a shared simulator link into a tab already on the simulator needs a reload (U7).
+1. Per-circuit tyre curves (needs a new Task 3 export; the circuit slopes are already shown).
+2. Pasting a shared simulator link into a tab already on the simulator needs a reload (U7).

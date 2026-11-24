@@ -1,0 +1,182 @@
+{
+ "generated_by": "python -m simulation backtest",
+ "races": 62,
+ "parameters": [
+  {
+   "parameter": "lap_number",
+   "mean": -0.056824301946831794,
+   "min": -0.057659702932450145,
+   "max": -0.05494620269554087
+  },
+  {
+   "parameter": "k_SOFT",
+   "mean": -0.25093927154265566,
+   "min": -0.2731275730966726,
+   "max": -0.21593564338206125
+  },
+  {
+   "parameter": "k_HARD",
+   "mean": 0.07550779926895804,
+   "min": 0.06188312150486946,
+   "max": 0.11866832099177226
+  },
+  {
+   "parameter": "age_SOFT",
+   "mean": 0.06784508064163898,
+   "min": 0.0652947422515405,
+   "max": 0.06948963059956698
+  },
+  {
+   "parameter": "age_MEDIUM",
+   "mean": 0.04777205361486326,
+   "min": 0.04712759251966733,
+   "max": 0.050663370444115154
+  },
+  {
+   "parameter": "age_HARD",
+   "mean": 0.04243528231915646,
+   "min": 0.04147804990969329,
+   "max": 0.043686014883901066
+  },
+  {
+   "parameter": "age2_SOFT",
+   "mean": 0.0,
+   "min": 0.0,
+   "max": 0.0
+  },
+  {
+   "parameter": "age2_MEDIUM",
+   "mean": 0.0,
+   "min": 0.0,
+   "max": 0.0
+  },
+  {
+   "parameter": "age2_HARD",
+   "mean": 0.0,
+   "min": 0.0,
+   "max": 0.0
+  },
+  {
+   "parameter": "tail_SOFT",
+   "mean": 0.06784508064163898,
+   "min": 0.0652947422515405,
+   "max": 0.06948963059956698
+  },
+  {
+   "parameter": "tail_MEDIUM",
+   "mean": 0.04777205361486326,
+   "min": 0.04712759251966733,
+   "max": 0.050663370444115154
+  },
+  {
+   "parameter": "tail_HARD",
+   "mean": 0.04243528231915646,
+   "min": 0.04147804990969329,
+   "max": 0.043686014883901066
+  },
+  {
+   "parameter": "circuit_scale",
+   "mean": 1.0087479755963658,
+   "min": 0.5,
+   "max": 1.904937841545443
+  },
+  {
+   "parameter": "pit_loss",
+   "mean": 24.895570702318505,
+   "min": 18.877971830985917,
+   "max": 46.9939756097561
+  }
+ ],
+ "next_stint": {
+  "laps": 37586,
+  "stops": 1807,
+  "model_mae": 0.8758967256630693,
+  "model_bias": 0.17653032127488305,
+  "persistence_mae": 1.5972856382695682,
+  "persistence_bias": 1.4556921194061616,
+  "by_laps_after_stop": [
+   {
+    "bin": "(0, 3]",
+    "laps": 2989,
+    "model_mae": 0.9041889151856679,
+    "model_bias": 0.3953926998586014,
+    "persistence_mae": 1.7179073268651723,
+    "persistence_bias": 1.5890936768149881
+   },
+   {
+    "bin": "(3, 6]",
+    "laps": 4736,
+    "model_mae": 0.8024914131203331,
+    "model_bias": 0.2685522518600559,
+    "persistence_mae": 1.5906007179054051,
+    "persistence_bias": 1.4507856841216216
+   },
+   {
+    "bin": "(6, 10]",
+    "laps": 6426,
+    "model_mae": 0.7647377108951791,
+    "model_bias": 0.21359629207199235,
+    "persistence_mae": 1.533868658574541,
+    "persistence_bias": 1.413754435107376
+   },
+   {
+    "bin": "(10, 15]",
+    "laps": 7520,
+    "model_mae": 0.787205577248662,
+    "model_bias": 0.16878996919687916,
+    "persistence_mae": 1.542141223404255,
+    "persistence_bias": 1.411556914893617
+   },
+   {
+    "bin": "(15, 20]",
+    "laps": 6150,
+    "model_mae": 0.8288193686747475,
+    "model_bias": 0.09169216577172329,
+    "persistence_mae": 1.524380487804878,
+    "persistence_bias": 1.4050094308943089
+   },
+   {
+    "bin": "(20, 30]",
+    "laps": 6979,
+    "model_mae": 1.0553688878707845,
+    "model_bias": 0.11672018272896681,
+    "persistence_mae": 1.6846306061040262,
+    "persistence_bias": 1.520758418111477
+   },
+   {
+    "bin": "(30, 80]",
+    "laps": 2786,
+    "model_mae": 1.1204541542792548,
+    "model_bias": 0.057792209179633104,
+    "persistence_mae": 1.7164928212491024,
+    "persistence_bias": 1.4856593682699206
+   }
+  ]
+ },
+ "remaining": {
+  "drivers": 537,
+  "races": 43,
+  "decision": "one third distance; no SC, VSC or red flag afterwards for that driver",
+  "mae_s": 35.052768430790714,
+  "median_abs_s": 19.186817788144708,
+  "bias_s": 19.062033021431198,
+  "mae_per_lap_s": 1.0033074557378692,
+  "abs_p90_s": 50.88464345086259
+ },
+ "calibration": {
+  "draws": 300,
+  "seed": 2026,
+  "drivers": 537,
+  "coverage50": 0.3407821229050279,
+  "coverage90": 0.7430167597765364,
+  "below90": 0.18808193668528864,
+  "above90": 0.06890130353817504,
+  "median_width90_s": 63.10372111450533
+ },
+ "pit_loss": {
+  "stops": 1572,
+  "mae_s": 5.586332868984978,
+  "median_abs_s": 2.0080558333333443,
+  "bias_s": -0.8830168768615636
+ }
+}

@@ -116,7 +116,7 @@ test("every report and result file the pages read was exported", { skip: !haveDa
   const methods = readFileSync(join(SRC, "pages", "Methods.jsx"), "utf8");
   for (const m of methods.matchAll(/\["([a-z0-9_]+)", "/g)) assert.ok(man.reports.includes(m[1]), `doc ${m[1]} not exported`);
   // pages show a "re-export" note when these are absent (added after the first export)
-  const OPTIONAL = new Set(["results/test_errors.json"]);
+  const OPTIONAL = new Set(["results/test_errors.json", "results/sim_backtest.json"]);
   for (const m of files.matchAll(/useData\("(results\/[a-z0-9_]+\.json)"/g)) if (!OPTIONAL.has(m[1])) assert.ok(existsSync(join(DATA, m[1])), `${m[1]} missing`);
 });
 

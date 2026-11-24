@@ -60,6 +60,7 @@ JSONS = {
     "phase2_dev": RESULTS / "phase2_dev" / "metrics.json",
     "phase3_dev": RESULTS / "phase3_dev" / "metrics.json",
     "coverage": config.REPORTS / "coverage.json",
+    "sim_backtest": RESULTS / "simulator" / "backtest.json",
 }
 STATE_KEYS = ["lap", "comp", "age", "stops", "used", "mu", "mu_se", "n"]
 

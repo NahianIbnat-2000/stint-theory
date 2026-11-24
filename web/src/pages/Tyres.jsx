@@ -98,7 +98,9 @@ export default function Tyres() {
       {e?.by_tyre_age && (
         <section className="wide" aria-labelledby="pe-h">
           <h2 id="pe-h">Forecast error as tyres age</h2>
-          <p className="note">How well the next-lap models do as the predicted lap’s tyres get older (locked test races). Old tyres are rarer and harder to forecast.</p>
+          <p className="note">How well the next-lap models do by the tyre age of the predicted lap (locked test races).{" "}
+            {(() => { const b = e.by_tyre_age, m = b.map((x) => x.mae.xgboost_ens5); const hi = b[m.indexOf(Math.max(...m))], lo = b[m.indexOf(Math.min(...m))];
+              return `XGBoost’s error is highest for laps ${hi.lo + 1}–${hi.hi} of a stint (${fmt(Math.max(...m), 3)} s) and lowest for laps ${lo.lo + 1}–${lo.hi} (${fmt(Math.min(...m), 3)} s).`; })()}</p>
           <BinLines bins={e.by_tyre_age.map((b) => ({ label: `${b.lo + 1}–${b.hi}`, n: b.n }))}
             series={[
               { key: "persistence", label: "Persistence", color: "var(--text-2)", dash: "5 4", values: e.by_tyre_age.map((b) => b.mae.persistence) },

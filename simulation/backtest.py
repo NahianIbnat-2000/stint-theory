@@ -7,6 +7,10 @@
    time of the strategy the driver actually ran, against the time they actually
    took, for drivers with no safety car, VSC or red flag after the decision lap.
 3. Pit loss: predicted mean loss (other races) against each green-flag stop.
+4. Calibration (added after the simulator was frozen; a check only, nothing was
+   changed in response): for the drivers in check 2, how often the actual remaining
+   time falls inside the simulator's own 50% and 90% ranges (no safety car drawn,
+   since those drivers had none).
 
 These test the parts a strategy comparison is built from. They cannot test the
 counterfactual itself: no race was run twice.
@@ -20,7 +24,7 @@ import numpy as np
 import pandas as pd
 
 from models.run import _md
-from .engine import Pace, decision_state, expected_time, observed_strategy
+from .engine import Pace, decision_state, expected_time, observed_strategy, simulate
 from .params import OUT, PUBLIC
 
 
@@ -57,7 +61,11 @@ def next_stint_rows(p: dict) -> list[dict]:
     return rows
 
 
-def remaining_rows(p: dict) -> list[dict]:
+CAL_DRAWS = 300
+CAL_SEED = 2026
+
+
+def remaining_rows(p: dict, calibrate: bool = True) -> list[dict]:
     N = p["total_laps"]
     L = max(5, N // 3)
     rows = []
@@ -77,9 +85,16 @@ def remaining_rows(p: dict) -> list[dict]:
         except ValueError:
             continue
         actual = float(sum(h["lap_time_s"][i] for i in idx))
-        rows.append({"race_id": p["race_id"], "driver": drv, "decision_lap": L,
-                     "laps": N - L, "stops": len(s.stop_laps),
-                     "model_s": expected_time(p, st, s), "actual_s": actual})
+        row = {"race_id": p["race_id"], "driver": drv, "decision_lap": L,
+               "laps": N - L, "stops": len(s.stop_laps),
+               "model_s": expected_time(p, st, s), "actual_s": actual}
+        if calibrate:
+            t = simulate(p, st, [s], n=CAL_DRAWS, seed=CAL_SEED, sc_mode="none")["times"][:, 0]
+            q = np.quantile(t, [0.05, 0.25, 0.75, 0.95])
+            row |= {"in50": bool(q[1] <= actual <= q[2]), "in90": bool(q[0] <= actual <= q[3]),
+                    "below90": bool(actual < q[0]), "above90": bool(actual > q[3]),
+                    "width90": float(q[3] - q[0])}
+        rows.append(row)
     return rows
 
 
@@ -147,8 +162,39 @@ def run_backtest(root: Path | None = None, public: Path | None = None) -> Path:
         parts += ["## 3. Pit loss of green-flag stops (s)",
                   _md(pd.DataFrame([{"stops": len(pit), "MAE": e.abs().mean(),
                                      "median abs": e.abs().median(), "bias": e.mean()}]))]
+    summary = {"generated_by": "python -m simulation backtest", "races": int(sum(r["simulatable"] for r in index))}
+    if coefs:
+        summary["parameters"] = summ.to_dict(orient="records")
+    if not ns.empty:
+        summary["next_stint"] = {"laps": int(len(ns)), "stops": int(ns.groupby(["race_id", "driver", "stop_lap"]).ngroups),
+                                 "model_mae": float(ns["err_model"].abs().mean()), "model_bias": float(ns["err_model"].mean()),
+                                 "persistence_mae": float(ns["err_persist"].abs().mean()),
+                                 "persistence_bias": float(ns["err_persist"].mean()), "by_laps_after_stop": t.to_dict(orient="records")}
+    if not rem.empty:
+        summary["remaining"] = {"drivers": int(len(rem)), "races": int(rem["race_id"].nunique()),
+                                "decision": "one third distance; no SC, VSC or red flag afterwards for that driver",
+                                "mae_s": float(rem["err"].abs().mean()), "median_abs_s": float(rem["err"].abs().median()),
+                                "bias_s": float(rem["err"].mean()), "mae_per_lap_s": float(rem["err_per_lap"].abs().mean()),
+                                "abs_p90_s": float(rem["err"].abs().quantile(0.9))}
+        if "in90" in rem:
+            cal = {"draws": CAL_DRAWS, "seed": CAL_SEED, "drivers": int(len(rem)),
+                   "coverage50": float(rem["in50"].mean()), "coverage90": float(rem["in90"].mean()),
+                   "below90": float(rem["below90"].mean()), "above90": float(rem["above90"].mean()),
+                   "median_width90_s": float(rem["width90"].median())}
+            summary["calibration"] = cal
+            parts += ["## 4. Calibration of the simulated range (added after the freeze; check only)",
+                      f"For the {cal['drivers']} drivers above, {CAL_DRAWS} simulated races each (no safety car). "
+                      f"Share of actual remaining times inside the simulator's 50% range: {cal['coverage50']:.1%} "
+                      f"(nominal 50%); inside its 90% range: {cal['coverage90']:.1%} (nominal 90%). "
+                      f"Below the range (faster than simulated): {cal['below90']:.1%}; above: {cal['above90']:.1%}. "
+                      f"Median width of the 90% range: {cal['median_width90_s']:.1f} s. The simulator was not changed "
+                      "in response to this check."]
+    if not pit.empty:
+        summary["pit_loss"] = {"stops": int(len(pit)), "mae_s": float(e.abs().mean()),
+                               "median_abs_s": float(e.abs().median()), "bias_s": float(e.mean())}
     public.mkdir(parents=True, exist_ok=True)
     (public / "backtest.md").write_text("\n\n".join(parts) + "\n")
+    (public / "backtest.json").write_text(json.dumps(summary, indent=1, default=float))
     # row-level backtest tables contain lap times: processed (git-ignored) folder only
     for name, df in (("backtest_next_stint", ns), ("backtest_remaining", rem)):
         if not df.empty:

@@ -199,3 +199,13 @@ this, and treat the part that does not cancel (the fresh-tyre bias, about 1-2 s 
 extra stop) as the strategy-specific caveat. The wording of `backtest.md` was edited
 by hand after the run (marked in the file); `simulation/backtest.py` now writes the
 corrected text. No parameter, number or model changed.
+
+## Calibration check added to the simulator backtest, 2026-11-24 (no model change)
+
+`simulation/backtest.py` now also (a) writes `backtest.json` with the numbers of
+`backtest.md`, for the website's reliability page, and (b) runs a calibration check:
+for each driver in the remaining-race check, 300 simulated races (seed 2026, no
+safety car, since those drivers had none) and the share of actual remaining times
+inside the simulator's 50% and 90% ranges. This is a check only, added after the
+simulator was frozen; the simulator is not changed in response to it. Rerunning the
+backtest leaves sections 1-3 unchanged (same frozen parameters, deterministic code).

@@ -49,8 +49,8 @@ Limits: [docs/limitations.md](docs/limitations.md).
 | Task 2 final test (ten laps) | **Done**, run once under `docs/preregistration_task2.md`. |
 | Task 3 tyre-age effect | **Done** (observational estimates with robustness checks). |
 | Strategy simulator | **Done and frozen** after backtest 3. |
-| Website | **Live.** Strategy simulator (duel, timeline, sensitivity, exports), race explorer, model arena, tyre-age lab, result pages for Tasks 1-3. |
-| Planned | Featured race case study, research reliability page, paper. |
+| Website | **Live.** Strategy simulator (duel, timeline, sensitivity, exports), Monza 2024 case study, race explorer, model arena, tyre-age lab, research reliability page, result pages for Tasks 1-3. |
+| Planned | Paper. |
 
 ## Architecture
 

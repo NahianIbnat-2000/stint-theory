@@ -177,6 +177,11 @@ def test_backtest_and_demo_run(built, capsys, monkeypatch):
     root, laps = built
     text = backtest.run_backtest(root / "out").read_text()
     assert "Simulator backtest" in text
+    js = json.loads((root / "out" / "backtest.json").read_text())
+    if "calibration" in js:
+        c = js["calibration"]
+        assert 0 <= c["coverage50"] <= c["coverage90"] <= 1
+        assert abs(c["below90"] + c["above90"] + c["coverage90"] - 1) < 1e-9
     monkeypatch.setattr(backtest, "OUT", root / "out")
     from simulation.__main__ import demo
     rid = sorted(laps["race_id"].unique())[2]
