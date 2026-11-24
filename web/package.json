@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "check-data": "node scripts/check-data.mjs",
-    "build": "node scripts/check-data.mjs && vite build",
+    "build": "node scripts/check-data.mjs && node scripts/copy-paper.mjs && vite build",
     "preview": "vite preview",
     "test": "node --test test/parity.test.mjs test/features.test.mjs"
   },

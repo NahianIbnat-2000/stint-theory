@@ -1,3 +1,4 @@
+import { PAPER_URL } from "../lib/paper.js";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useData } from "../data.js";
@@ -139,7 +140,7 @@ export default function Home() {
         <Story n="4" title="What the models show so far">
           <p>On the locked 2025 test races, the neural networks (MLP, LSTM, TCN) and gradient-boosted trees ended up within a hundredth of a second of each other per lap. All of them beat repeating the last lap. More architecture did not buy accuracy here, which is itself the finding: the question the site now asks is when added complexity stops paying.</p>
           {summary && <p className="fact">Lowest test errors: {summary.slice(0, 4).map((r) => `${name(r.model)} ${r.mae.toFixed(3)} s`).join("; ")}.</p>}
-          <p><Link to="/next-lap">Next-lap results</Link> · <Link to="/ten-laps">Ten-lap results</Link></p>
+          <p><Link to="/next-lap">Next-lap results</Link> · <Link to="/ten-laps">Ten-lap results</Link> · <a href={PAPER_URL}>Full research report (PDF)</a></p>
         </Story>
         <Story n="5" title="Try a strategy yourself">
           <p>Pick a season, a Grand Prix, a driver and the lap you are deciding on. Compare what the driver did with the model’s best plan for each number of stops, or enter your own. Every result comes with its spread, a sensitivity check and a plain-language reading.</p>
@@ -147,7 +148,7 @@ export default function Home() {
         </Story>
         <Story n="6" title="Limits and reproducibility">
           <p>The simulator is one car against the clock: no traffic, no finishing positions. Its errors were measured on real races before it was frozen, and every number on this site is generated from files in the public repository, with the full history of model changes.</p>
-          <p><Link to="/limits">Limits</Link> · <Link to="/methods">Methods</Link> · <a href="https://github.com/NahianIbnat-2000/stint-theory">Code and reports</a></p>
+          <p><a href={PAPER_URL}>Research report (PDF)</a> · <Link to="/limits">Limits</Link> · <Link to="/methods">Methods</Link> · <a href="https://github.com/NahianIbnat-2000/stint-theory">Code and reports</a></p>
         </Story>
       </div>
     </>

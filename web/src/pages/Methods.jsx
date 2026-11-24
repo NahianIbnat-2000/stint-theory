@@ -1,3 +1,4 @@
+import { PAPER_URL } from "../lib/paper.js";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Report from "../components/Report.jsx";
@@ -28,6 +29,7 @@ export default function Methods() {
         <p className="lede">How the tests were set up so that the results can be trusted: train on 2023–2024, develop on
           the first half of 2025, test once on the second half. The test races were locked in code, every opening was
           logged, and each change to a model is recorded with the run that prompted it.</p>
+        <p>The full write-up, with the literature, equations and every result: <a href={PAPER_URL}>research report (PDF)</a>.</p>
       </header>
       <section className="docs">
         <nav className="doc-list" aria-label="Documents">

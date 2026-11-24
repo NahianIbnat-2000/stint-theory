@@ -1,3 +1,4 @@
+import { PAPER_URL } from "./lib/paper.js";
 import { HashRouter, NavLink, Route, Routes, useLocation } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
 import { ROUTES } from "./routes.js";
@@ -48,7 +49,7 @@ export default function App() {
             </li>
           ))}
         </ul>
-        <div className="rail-foot">Data: OpenF1. Not affiliated with Formula 1, the FIA or Pirelli.<br /><a href="https://github.com/NahianIbnat-2000/stint-theory">Code and reports</a></div>
+        <div className="rail-foot">Data: OpenF1. Not affiliated with Formula 1, the FIA or Pirelli.<br /><a href={PAPER_URL}>Research report (PDF)</a><br /><a href="https://github.com/NahianIbnat-2000/stint-theory">Code and reports</a></div>
       </nav>
       <div>
       <main id="main">
@@ -64,6 +65,7 @@ export default function App() {
           <span>STINT THEORY, by Nahian Ibnat</span>
           <span>Data: OpenF1, 2023–2025</span>
           <span>Not affiliated with Formula 1, the FIA or Pirelli</span>
+          <a href={PAPER_URL}>Research report (PDF)</a>
           <a href="https://github.com/NahianIbnat-2000/stint-theory">Code and reports on GitHub</a>
         </div>
       </footer>
