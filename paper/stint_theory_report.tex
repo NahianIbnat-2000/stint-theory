@@ -66,182 +66,194 @@ fixed effects, Monte Carlo simulation, race strategy
 % ======================================================================= 1 introduction
 \section{Introduction}\label{sec:intro}
 
-A Formula~1 race strategy is a sequence of decisions about when to stop for new tyres and which tyres to fit. Each
-stop costs time in the pit lane, and each lap on an older set costs pace; the strategist's task is to balance the two
-over the race \parencite{bekker2009,heilmeier2020vse}. Teams support these decisions with race simulations, which
-rely in turn on forecasts of how fast a car will lap in the coming laps \parencite{heilmeier2020mc,heilmeier2022}. If
-better forecasts are available, better strategies should follow.
+A Formula~1 race is won by the car that covers a fixed number of laps in the shortest total time, and a large part of
+that time is decided off the track, by the race strategy: the choice of when to stop in the pit lane for new tyres and
+which tyres to fit \parencite{bekker2009,heilmeier2020vse}. Every stop costs time, and every lap on an older set of
+tyres also costs time, so the strategist trades a fixed cost against a cost that grows with use
+\parencite{heilmeier2020vse}. Teams weigh this trade-off with race simulations, which add up forecasts of how fast a car
+will lap over the rest of the race \parencite{heilmeier2018,heilmeier2020mc}. The quality of a strategy is therefore
+bounded by the quality of the lap-time forecasts it is built on.
 
-Deep learning has transformed forecasting with images, text and sound, but its advantage on tabular data is not
-established. Large benchmark studies find that tree-based ensembles such as gradient boosting remain at least as
-accurate as neural networks on medium-sized tables of features \parencite{grinsztajn2022,shwartzziv2022}, and the M5
-forecasting competition was won with tree-based methods \parencite{makridakis2022}. Lap-time data sit between the two
-worlds: each lap is a row of features (tyre age, compound, fuel, weather), but laps also form sequences within a
-driver's race, which recurrent and convolutional networks are designed to exploit
-\parencite{hochreiter1997,bai2018}.
+Deep learning has changed forecasting with images, text and sound, but its advantage on tables of features is not
+established. Benchmark studies find that tree-based ensembles remain at least as accurate as neural networks on
+medium-sized tabular data \parencite{grinsztajn2022,shwartzziv2022,borisov2024}, and forecasting competitions have
+repeatedly rewarded simpler or tree-based methods over complex ones
+\parencite{makridakis2018,makridakis2022}. Lap-time data sit between the two worlds. Each lap is a row of features,
+such as tyre age, tyre compound, fuel load and weather, but the laps of one driver also form a sequence, which is the
+structure recurrent and convolutional networks are built to use \parencite{hochreiter1997,bai2018}.
 
-This report therefore asks one central question: \emph{can deep learning models predict Formula~1 lap times and
-tyre-related pace loss more accurately than statistical and standard machine learning models, and what does the answer
-imply for strategy decisions?} It answers it in four parts:
+This report asks one central question: \emph{can deep learning models predict Formula~1 lap times and tyre-related pace
+loss more accurately than statistical and standard machine learning models, and what does the answer imply for strategy
+decisions?} It answers the question in four steps. The first two steps compare ten models on forecasts of each
+driver's next lap (Task~1, \cref{sec:t1}) and of the next ten laps (Task~2, \cref{sec:t2}), on twelve test races that
+were locked until all models and decision rules had been fixed. The third step estimates how lap time changes with tyre
+age once fuel burn and track changes are held fixed (Task~3, \cref{sec:t3}). The fourth builds a strategy simulator
+from these estimates, measures its errors against real races (\cref{sec:sim}) and applies it to a well-known strategic
+decision at the 2024 Italian Grand Prix (\cref{sec:case}).
 
-\begin{enumerate}
-  \item \textbf{Task 1, the next lap.} Ten models forecast each driver's next lap time and are compared on twelve
-  locked test races under pre-registered rules (\cref{sec:t1}).
-  \item \textbf{Task 2, the next ten laps.} The strongest models forecast a ten-lap horizon, the quantity a strategist
-  adds up (\cref{sec:t2}).
-  \item \textbf{Task 3, the tyre-age effect.} A fixed-effects regression estimates how lap time changes with tyre age
-  once fuel burn and track changes are removed (\cref{sec:t3}).
-  \item \textbf{A strategy simulator,} built from these estimates, is checked against real races
-  (\cref{sec:sim}) and applied to a well-known strategic call at the 2024 Italian Grand Prix (\cref{sec:case}).
-\end{enumerate}
+The report makes three contributions. First, it compares the model families on the same laps with a pre-registered
+design that is tested for information leaks, so that the result cannot be tuned after the fact
+\parencite{nosek2018,kapoor2023}. Second, it separates tyre ageing from fuel burn, which public lap times mix together,
+and states the identification argument in full. Third, it publishes the strategy simulator together with its measured
+errors and a test of whether its uncertainty ranges contain real outcomes as often as they claim, rather than presenting simulated
+outcomes as observations.
 
-The report makes three contributions. First, it compares the model families on the same laps with a pre-registered,
-leakage-checked design, so that the result cannot be tuned after the fact \parencite{nosek2018,kapoor2023}. Second, it
-separates tyre ageing from fuel burn, which public lap times mix together, using an identification argument stated in
-full. Third, it publishes the strategy simulator together with measured errors and an interval calibration test,
-rather than presenting simulated outcomes as observations.
+The main findings, in brief, are these. On the next lap the neural networks are equivalent to gradient-boosted trees;
+over ten laps the boosted trees are slightly ahead; tyre ageing becomes visible only after fuel effects are removed; and
+the simulator gets the direction of a famous strategy call right while overstating its size. \Cref{sec:lit} reviews the
+literature, \cref{sec:data,sec:methods} describe the data and methods, \cref{sec:t1,sec:t2,sec:t3,sec:sim} present the
+results, \cref{sec:case} the case study, and \cref{sec:discussion,sec:limits,sec:conclusion} the discussion,
+limitations and conclusions.
 
-The main findings, in brief: on the next lap, the neural networks are equivalent to gradient-boosted trees; over ten
-laps, the boosted trees are slightly ahead; tyre ageing is clearly visible only after fuel effects are removed; and the
-simulator gets the direction of a famous strategy call right while overstating its size.
-\Cref{sec:background} defines the terms used throughout. \Cref{sec:data,sec:methods} describe the data and methods,
-\cref{sec:t1,sec:t2,sec:t3,sec:sim} the results, \cref{sec:case} the case study, and
-\cref{sec:discussion,sec:limits,sec:conclusion} the discussion, limitations and conclusions.
+% ======================================================================= 2 literature
+\section{Literature review}\label{sec:lit}
 
-% ======================================================================= 2 background
-\section{Background and definitions}\label{sec:background}
+\subsection{Race strategy and race simulation}\label{sec:lit-strategy}
 
-\subsection{Race strategy terms}\label{sec:terms-race}
+Operational research on Formula~1 strategy begins with \textcite{bekker2009}, who built a discrete-event simulation of
+a race to compare pit-stop plans and validated it on three races of the 2005 season. In this literature, race strategy
+means the number and timing of pit stops and the choice of tyres for each \emph{stint}, the run of consecutive laps a
+driver completes on one set of tyres \parencite{heilmeier2020vse}. \textcite{heilmeier2018} formalised the lap-by-lap
+race simulation that later studies use: lap time is built up from the driver's and car's base pace plus the effects of
+tyre wear and of the fuel mass that the car burns off as the race goes on, and the simulation adds the time lost in the
+pit lane. That time is the \emph{pit loss}: the time a stop costs compared with staying on track, including the slower
+lap into the pit lane (the in-lap) and the lap out of it (the out-lap) as well as the time the car stands still
+\parencite{heilmeier2020mc}.
 
-\paragraph{Grand Prix, lap and stint.} A Grand Prix is a race over a fixed number of laps of a circuit. A \emph{stint}
-is the run of consecutive laps a driver completes on one set of tyres; strategy is the choice of how many stints to
-run, how long each is, and on which tyres \parencite{heilmeier2020vse}.
+Tyres are the main reason to stop. Pirelli, the sole supplier, brings slick (dry-weather) tyres in several rubber
+compounds that trade grip against durability, and for each event it nominates three of them, labelled \emph{soft},
+\emph{medium} and \emph{hard} for that event \parencite{pirelli_tyres,pirelli_choice}. Because the same label can refer to
+a different compound at different circuits, this report always uses the event-relative labels. The sporting rules
+require each driver in a dry race to use at least two different slick compounds, which forces at least one stop
+\parencite{pirelli_tyres,f1_monaco_rule}. As a tyre is used it loses performance, which is called tyre degradation. One
+visible form is \emph{graining}, a surface defect that forms when the rubber is stressed beyond its limit and breaks
+into small cracks, leaving a rough tread with less grip \parencite{pirelli_graining}.
 
-\paragraph{Tyre compound.} Pirelli supplies slick (dry-weather) tyres in several rubber compounds that trade grip
-against durability; for each event it nominates three, labelled \emph{soft}, \emph{medium} and \emph{hard}, chosen to
-suit the circuit \parencite{pirelli_tyres,pirelli_choice}. Because the same label can refer to a different compound at
-different circuits, this report always uses the event-relative labels.
+The second source of strategic uncertainty is the neutralisation of a race. After an incident, race control can deploy
+a safety car, which leads the field at reduced speed, declare a virtual safety car, under which every driver must slow
+to a set pace, or stop the race with a red flag. \textcite{heilmeier2020mc} added such events, together with accidents
+and variation in pit stops, to the race simulation through Monte Carlo simulation, which estimates the distribution of
+an outcome by repeating a random experiment many times \parencite{glasserman2003}. They show that neutralisations make
+stops cheaper and are a main source of randomness in race outcomes. \textcite{heilmeier2020vse} then trained neural
+networks to take the pit-stop decisions inside the simulation, and note that for a single car without opponents and with
+tyre degradation as the only effect, the best strategy is the solution of a quadratic optimisation problem.
+\textcite{piccinotti2021} treated the same decision as a sequential planning problem and searched over pit-stop plans
+with a simulator calibrated on historical Formula~1 lap times. Outside Formula~1, \textcite{tulabandhula2014} built a
+real-time system for tyre-change decisions in professional car racing and argue that expert knowledge of the sport was
+needed to make the prediction problem workable.
 
-\paragraph{Two-compound rule.} In a dry race, each driver must use at least two different slick compounds, which
-forces at least one pit stop \parencite{pirelli_tyres,f1_monaco_rule}. Two events in the sample had additional rules:
-the 2023 Qatar Grand Prix limited each set to 18 laps \parencite{fia_qatar2023}, the 2025 Monaco Grand Prix required at
-least three sets of tyres, and so at least two stops \parencite{f1_monaco_rule}, and the 2025 Qatar Grand Prix limited
-each set to 25 laps \parencite{f1_qatar2025}. The simulator enforces all of these.
+These studies treat the lap-time model as an input: it is assumed, calibrated per race or learned inside the decision
+system. None of them asks how accurately lap times can be forecast from data available during the race, which model
+family forecasts them best, or how large the forecasting error of the resulting simulator is. That gap is the starting
+point of this report.
 
-\paragraph{Pit stop and pit loss.} A pit stop is a visit to the pit lane to change tyres. Its \emph{pit loss} is the
-time lost against staying on track, which includes the slower in-lap and out-lap as well as the stationary time
-\parencite{heilmeier2020mc}. This report estimates it as the in-lap plus the out-lap minus two laps at the driver's
-reference pace.
+\subsection{Separating driver, car and tyre in lap times}\label{sec:lit-identification}
 
-\paragraph{Safety car, virtual safety car and red flag.} After an incident, race control can neutralise the race by
-deploying a safety car, which leads the field at reduced speed, declaring a virtual safety car, under which every
-driver must slow to a set pace, or stopping the race with a red flag. Neutralisations make pit stops cheaper and are a
-main source of randomness in strategy \parencite{heilmeier2020mc}.
+A lap time mixes the pace of the driver, the car, the tyres and the track on the day. \textcite{bell2016} separate
+driver and team contributions to Formula~1 results with a multilevel model, a regression that lets effects vary at
+several levels at once, and find that the team explains more of the results than the driver, increasingly so over
+time. For lap times within a race, the same idea suggests comparing each car with itself. A \emph{fixed effect} is a
+separate constant for each unit, such as a driver in a given race, that absorbs everything about the unit that does not
+change, so that the remaining coefficients are estimated only from changes within the unit
+\parencite[ch.~5]{angrist2009}. With several large sets of fixed effects, the model is estimated by removing each set in
+turn until the estimates stop changing, an algorithm known as alternating projections
+\parencite{guimaraes2010,gaure2013}.
 
-\paragraph{Tyre degradation and graining.} Tyre degradation is the loss of performance as a tyre is used. One form of
-it is \emph{graining}: a surface defect that forms when the compound is stressed beyond its limit and breaks into small
-cracks, leaving a rough tread with less grip \parencite{pirelli_graining}. Public timing data do not observe the tyre
-itself, only lap times; this report therefore speaks of lap-time changes \emph{associated with} tyre age, not of
-measured wear.
+The difficulty for tyre wear is that fuel and tyre age move together. Cars burn fuel and the track gains grip during a
+race, so every car gets faster lap by lap \parencite{heilmeier2018}, while the age of the tyres also rises lap by lap.
+Within a stint, tyre age equals the lap number minus a constant, so the two cannot be separated from that variation alone.
+This is a form of the age--period--cohort problem in social science, where age, calendar period and birth cohort are
+linked by an identity and only extra structure separates their effects \parencite{fosse2019}. Leaving the lap effect
+out of the model would let the common speed-up load onto tyre age, a case of omitted-variable bias, the distortion that
+arises when a left-out factor is correlated with an included one \parencite[ch.~3]{angrist2009}.
 
-\subsection{Forecasting and evaluation terms}\label{sec:terms-eval}
+Economics offers a frame for what the estimates are for. Keeping a set of tyres or stopping for a new one is a
+replacement decision of the kind studied in capital theory: a machine loses value with use, and the owner decides when to
+pay a fixed cost to renew it. \textcite{rust1987} estimated such a model for the replacement of bus engines. Read this
+way, the tyre-age slope is a depreciation rate and the pit loss is the replacement cost.
 
-\paragraph{Persistence forecast.} The naive or persistence forecast predicts that the next value equals the last
-observed value; it is the standard benchmark that any forecasting model must beat \parencite{hyndman2021}. Here it is
-the driver's last clean lap in the current stint.
+\subsection{Machine learning and deep learning for forecasting}\label{sec:lit-ml}
 
-\paragraph{Mean absolute error and root mean squared error.} For forecasts $\hat y_i$ of outcomes $y_i$, the mean
-absolute error (MAE) is $\frac1n\sum_i|\hat y_i-y_i|$ and the root mean squared error (RMSE) is
-$\sqrt{\frac1n\sum_i(\hat y_i-y_i)^2}$ \parencite{hyndman2006}. The MAE is in the units of the data (seconds) and is not
-dominated by a few large errors, which makes it the more interpretable average \parencite{willmott2005}; it is the
-primary metric here. \emph{Bias} is the mean of $\hat y_i-y_i$.
+The models compared in this report come from three families. The statistical family includes \emph{ridge regression},
+least squares with a penalty on the squared size of the coefficients that stabilises estimates when features are
+correlated \parencite{hoerl1970}, and the \emph{linear mixed-effects model}, a regression with effects shared by all
+units plus random effects that vary by unit, here by driver \parencite{laird1982}. The tree-based family includes the
+\emph{random forest}, an average of many decision trees, each grown on a resampled copy of the data with a random subset
+of features considered at each split \parencite{breiman2001}, and \emph{gradient-boosted trees}, in which trees are added
+one at a time, each fitted to the errors that remain, with a penalty on tree complexity; XGBoost is the standard
+implementation \parencite{chen2016}. The deep learning family includes the \emph{multilayer perceptron} (MLP), a network
+of stacked layers of weighted sums and nonlinear functions trained by passing errors backwards through the layers
+\parencite{rumelhart1986}; the \emph{long short-term memory network} (LSTM), a recurrent network whose gated memory cell
+carries information along a sequence \parencite{hochreiter1997}; and the \emph{temporal convolutional network} (TCN), a
+stack of causal convolutions in which each output depends only on present and past inputs \parencite{bai2018}.
 
-\paragraph{Skill score.} The relative improvement over a benchmark, $1-\mathrm{MAE}_{\text{model}}/\mathrm{MAE}_{\text{persistence}}$,
-the share of the benchmark's error a model removes \parencite{hyndman2006}.
+The evidence on which family forecasts best is mixed and depends on the data. On 1,045 monthly series from the M3
+competition, \textcite{makridakis2018} found that popular machine learning methods were less accurate than standard
+statistical methods at every horizon and needed far more computation. In the later M5 competition, on daily retail
+sales, the leading entries were based on gradient-boosted trees \parencite{makridakis2022}. For tabular data, where each
+row is an observation and each column a feature, \textcite{grinsztajn2022} find on 45 benchmark datasets that
+tree-based models still beat deep learning at medium size, and \textcite{shwartzziv2022} reach the same conclusion for
+deep models designed for tables. A survey by \textcite{borisov2024} reports the same pattern in its own comparison and
+argues that tabular data remain a challenge for deep networks. The present question adds a sequential element: if the
+laps of a driver carry information in their order, the LSTM and TCN should have an edge that the tabular benchmarks do
+not test.
 
-\paragraph{Rolling-origin evaluation.} A forecast evaluation in which each test period is predicted by a model fitted
-only on data from before it, and the origin then moves forward \parencite{tashman2000}. It mimics real use and prevents
-the future from informing the past.
+\subsection{Evaluating forecasts fairly}\label{sec:lit-eval}
 
-\paragraph{Leakage.} Information in the training or input data that would not be available at prediction time, which
-makes out-of-sample accuracy look better than it is \parencite{kaufman2012,kapoor2023}.
+A forecast comparison is only as good as its design. The first requirement is a benchmark. The simplest one, the
+\emph{persistence} or naive forecast, predicts that the next value equals the last observed value, and any useful
+model must beat it \parencite{hyndman2021}. The second is an error measure. The mean absolute error (MAE) is in the
+units of the data and is not dominated by a few large misses, which makes it the most interpretable average error
+\parencite{willmott2005}; a relative measure, the skill score, gives the share of the benchmark's error that a model
+removes \parencite{hyndman2006}. The third is a test sample the model has never seen. In \emph{rolling-origin} evaluation, each test period
+is predicted by a model fitted only on earlier data, and the origin then moves forward, which mimics real use
+\parencite{tashman2000}. \emph{Leakage}, information in the inputs that would not be available at prediction time, makes
+out-of-sample accuracy look better than it is \parencite{kaufman2012}, and \textcite{kapoor2023} document it as a
+widespread cause of irreproducible results in machine-learning-based science.
 
-\paragraph{Pre-registration.} Writing down the hypotheses, data and analysis plan before seeing the outcome data, so
-that confirmatory tests cannot be adjusted after the results are known \parencite{nosek2018}.
+The fourth requirement concerns inference. When two forecasts are scored on the same observations, the difference of
+their losses removes the variation they share and is the natural basis for a test \parencite{diebold1995}. The
+\emph{bootstrap} estimates the uncertainty of such a statistic by recomputing it on many resampled copies of the data
+\parencite{efron1979}; when observations are correlated within groups, whole groups are resampled
+\parencite{cameron2008}. When several hypotheses are tested together, the Holm procedure keeps the chance of at least one
+false rejection at the chosen level \parencite{holm1979}. A non-significant difference is not evidence that two models
+are equally good; an \emph{equivalence test} answers that question by asking whether the difference lies inside a
+margin set in advance \parencite{schuirmann1987,lakens2017}. Finally, \emph{pre-registration}, writing down the
+hypotheses and analysis plan before seeing the outcome data, prevents tests from being adjusted after the results are
+known \parencite{nosek2018}.
 
-\paragraph{Clustered bootstrap.} The bootstrap estimates the sampling distribution of a statistic by resampling the
-data with replacement \parencite{efron1979}. When observations are correlated within groups, whole groups are resampled
-instead \parencite{cameron2008}; here the groups are races, because laps of the same race share weather, track and
-incidents.
+Uncertainty ranges can be checked in the same spirit. In risk management, a value-at-risk model states a loss that
+should be exceeded only on a given share of days, and \textcite{kupiec1995} proposed a likelihood-ratio test of whether
+the observed share of exceedances matches the stated one. \textcite{christoffersen1998} generalised this to the
+evaluation of any interval forecast. The same test applies to the ranges a race simulator reports.
 
-\paragraph{Paired comparison.} Two forecasts are compared on the same observations through the difference of their
-losses, which removes variation the two share \parencite{diebold1995}.
+\subsection{What this report adds}\label{sec:lit-gap}
 
-\paragraph{Holm correction.} A step-down procedure that controls the probability of at least one false rejection
-across a family of tests by comparing ordered $p$-values with increasingly lenient thresholds \parencite{holm1979}.
-
-\paragraph{Equivalence test.} A test of whether a difference is small enough to ignore: with a pre-set margin
-$\delta$, equivalence is concluded when the $1-2\alpha$ confidence interval of the difference lies entirely within
-$[-\delta,\delta]$, the two one-sided tests (TOST) procedure \parencite{schuirmann1987,lakens2017}.
-
-\subsection{Model families}\label{sec:terms-models}
-
-\paragraph{Ridge regression.} Least squares with a penalty on the squared size of the coefficients, which stabilises
-estimates when features are correlated \parencite{hoerl1970}.
-
-\paragraph{Linear mixed-effects model.} A regression with fixed effects shared by all units and random effects that
-vary by unit (here by driver), estimated jointly \parencite{laird1982}; fitted with statsmodels
-\parencite{seabold2010}.
-
-\paragraph{Random forest.} An average of many decision trees, each grown on a bootstrap sample with a random subset of
-features considered at each split \parencite{breiman2001}.
-
-\paragraph{Gradient-boosted trees (XGBoost).} An ensemble in which trees are added one at a time, each fitted to the
-remaining errors of the current ensemble, with regularisation of tree complexity \parencite{chen2016}.
-
-\paragraph{Multilayer perceptron (MLP).} A feed-forward neural network of stacked layers of weighted sums and nonlinear
-functions, trained by back-propagating errors \parencite{rumelhart1986}.
-
-\paragraph{Long short-term memory network (LSTM).} A recurrent neural network whose gated memory cell lets it carry
-information across long sequences \parencite{hochreiter1997}.
-
-\paragraph{Temporal convolutional network (TCN).} A network of causal, dilated convolutions over a sequence, in which
-each output depends only on present and past inputs \parencite{bai2018}.
-
-\paragraph{Training terms.} The neural networks use the Huber loss, which is quadratic for small errors and linear for
-large ones and so limits the pull of outliers \parencite{huber1964}; the AdamW optimiser, which separates weight decay
-from the gradient update \parencite{loshchilov2019}; dropout, which randomly removes units during training to reduce
-overfitting \parencite{srivastava2014}; and early stopping on held-out races \parencite{prechelt1998}. They are
-implemented in PyTorch \parencite{paszke2019}; the other models use scikit-learn \parencite{pedregosa2011} and XGBoost.
-
-\subsection{Related work}\label{sec:related}
-
-\textcite{bekker2009} built a discrete-event simulation of Formula~1 races to plan strategies, validated on three races
-of the 2005 season. \textcite{heilmeier2020mc} added probabilistic effects, such as accidents and safety cars, through
-Monte Carlo simulation, and \textcite{heilmeier2020vse} trained neural networks to make the pit-stop decisions inside
-such a simulation. These studies take lap-time models as given or calibrate them per race. The present report instead
-asks how accurately lap times can be forecast from public data, compares model families under a pre-registered test,
-and measures the error of the simulator that results. On the machine learning side, it adds a domain test to the
-evidence that tree ensembles match or beat neural networks on tabular data
-\parencite{grinsztajn2022,shwartzziv2022}.
+This report brings these strands together. It takes the lap-time model that strategy studies treat as given and asks how
+well it can be forecast from public data. It tests the tabular-benchmark finding in a domain with a natural sequence
+structure, under a pre-registered design with equivalence tests, so that a ``no difference'' result can be read as
+positive evidence of similar accuracy within a stated margin. It estimates tyre-age effects with an explicit answer to
+the fuel--age identification problem. And it reports the error and the interval calibration of the simulator built from
+these pieces, which earlier simulation studies do not report against held-out races.
 
 % ======================================================================= 3 data
 \section{Data}\label{sec:data}
 
-\subsection{Source}
 Lap times, sector times, tyre stints, pit stops, race-control messages, positions and weather come from OpenF1, a free,
 community-run interface to Formula~1 timing data that is independent of Formula~1 and the FIA and provides history from
 the 2023 season onward \parencite{openf1}. The sample covers the 2023, 2024 and 2025 seasons. Because the data belong to
 Formula~1 and its partners, lap-level tables are not redistributed; the repository publishes only derived results.
 
-\subsection{Construction and checks}
 Each race was downloaded, rebuilt into one row per driver per lap, validated and cleaned. Safety-car, virtual
-safety-car and red-flag periods were rebuilt from race-control messages; in-laps (the lap entering the pit lane) were
-inferred as the lap before each out-lap; and deleted laps were read from the stewards' messages. No row was dropped:
-laps were \emph{flagged} instead, and each analysis selects the laps it needs. A lap is \emph{clean green} if it is
-not a pit lap, not run under a neutralisation or yellow flag, not the first lap, not deleted and not affected by rain.
-Races with fewer than 90\% of the expected driver-laps recorded were excluded; this removed one race, the 2025 Miami
-Grand Prix (55.8\% complete).
+safety-car and red-flag periods were rebuilt from race-control messages; in-laps were inferred as the lap before each
+out-lap; and laps deleted by the stewards were read from their messages. No row was dropped. Laps were \emph{flagged}
+instead, and each analysis selects the laps it needs. A lap is called \emph{clean green} if it is not a pit lap, not run
+under a neutralisation or yellow flag, not the first lap, not deleted and not affected by rain. Races with fewer than
+90\% of the expected driver-laps recorded were excluded; this removed one race, the 2025 Miami Grand Prix (55.8\%
+complete). Three events in the sample had tyre rules beyond the two-compound rule: the 2023 Qatar Grand Prix limited each
+set to 18 laps \parencite{fia_qatar2023}, the 2025 Monaco Grand Prix required at least three sets of tyres, and so at
+least two stops \parencite{f1_monaco_rule}, and the 2025 Qatar Grand Prix limited each set to 25 laps
+\parencite{f1_qatar2025}. The simulator enforces all of these.
 
 \begin{table}[htbp]
 \centering
@@ -272,86 +284,218 @@ aside when scoring, which is why the results describe racing laps, not every lap
 % ======================================================================= 4 methods
 \section{Methods}\label{sec:methods}
 
-\subsection{Prediction target}\label{sec:target}
-At the end of lap $t$, a model forecasts lap $t+1$ (Task~1) or laps $t+1,\dots,t+10$ (Task~2) for a driver who stays out
-on the same tyres. Forecasts are scored only on clean green target laps. Except for persistence, models predict the
-change from a \emph{reference pace}: the driver's last clean lap in the current stint, or, early in a stint, the median
-lap of other drivers in the previous two minutes. This keeps the large differences between circuits out of the
-problem. All inputs are built only from information available at the end of lap $t$; an automated test perturbs future
-laps and checks that no input changes, and a second test confirms that the first test detects a deliberately leaky
-feature \parencite{kaufman2012}.
+\subsection{What is forecast}\label{sec:target}
+
+Let $y_{irt}$ be the lap time, in seconds, of driver $i$ in race $r$ on lap $t$. At the end of lap $t$, a model forecasts
+the time of lap $t+h$ for a driver who stays out on the same tyres, with horizon $h=1$ in Task~1 and $h=1,\dots,10$ in
+Task~2. Except for persistence, every model predicts the change from a reference pace rather than the lap time itself:
+\begin{equation}\label{eq:target}
+  \hat y_{ir,t+h} = \tilde y_{irt} + \hat f_h\!\left(\mathbf{x}_{irt}\right),
+\end{equation}
+where $\tilde y_{irt}$ is the reference pace, $\mathbf{x}_{irt}$ the vector of inputs known at the end of lap $t$, and
+$\hat f_h$ the fitted model for horizon $h$. The reference pace is the driver's last clean lap in the current stint or,
+early in a stint before such a lap exists, the median lap of the other drivers in the previous two minutes. Writing the
+forecast as a change keeps the large differences in lap time between circuits out of what the models must learn. The persistence forecast is $\hat y_{ir,t+h}=y^{\text{last}}_{irt}$, the driver's last clean lap in the
+stint \parencite{hyndman2021}.
+
+Forecasts are scored only on clean green target laps. All inputs are built from information available at the end of lap
+$t$. An automated test changes the laps after $t$ and checks that no input changes, and a second test confirms that the
+first one detects a deliberately leaky input \parencite{kaufman2012}.
+
+\subsection{Models and training}\label{sec:models}
+
+Task~1 compares ten models, drawn from the families reviewed in \cref{sec:lit-ml}: persistence; \emph{compound drift}
+(persistence plus the average lap-to-lap change for the compound in training); ridge regression; a linear mixed-effects
+model with a random intercept and tyre-age slope for each driver, fitted with statsmodels \parencite{seabold2010}; a
+random forest; XGBoost; XGBoost averaged over five random seeds; and the MLP, LSTM and TCN. The tabular models and the
+MLP see the same inputs: tyre age and its square, laps remaining (a proxy for fuel load), weather, summaries of recent
+pace (last clean lap, three-lap mean, five-lap spread and trend), the pace of the field, the compound, the circuit and
+the team. The LSTM and TCN also receive the raw sequence of the driver's last ten laps. This design isolates two
+questions: the MLP against XGBoost compares learners on identical inputs, and the LSTM or TCN against the MLP measures
+what the raw sequence adds.
+
+The neural networks are trained to minimise the Huber loss, which is quadratic for small errors and linear for large
+ones, so that a few unusual laps do not dominate training \parencite{huber1964}:
+\begin{equation}\label{eq:huber}
+  \ell_{c}(e) =
+  \begin{cases}
+    \tfrac12 e^{2}, & |e|\le c,\\[2pt]
+    c\left(|e|-\tfrac12 c\right), & |e|>c,
+  \end{cases}
+\end{equation}
+where $e$ is the forecast error of one lap and $c>0$ is the threshold at which the loss turns from quadratic to linear.
+Weights are updated with AdamW, which separates the shrinking of weights (weight decay) from the gradient step
+\parencite{loshchilov2019}. Dropout, which switches off a random share of units at each training step, limits
+overfitting \parencite{srivastava2014}, and training stops early when the error on held-out races stops improving
+\parencite{prechelt1998}. Each network is trained with five seeds and its predictions are averaged, so the fair tree
+comparator is XGBoost averaged over five seeds. The networks are implemented in PyTorch \parencite{paszke2019}, and
+the other models in scikit-learn \parencite{pedregosa2011}, statsmodels and XGBoost.
 
 \subsection{Validation design}\label{sec:design}
-The split was fixed before any model was fitted: the 2023 and 2024 seasons for training, with hyperparameters tuned
-only inside 2024; the first half of 2025 (rounds 1--12) for development; and the second half of 2025 (rounds 13--24)
-as the test set. Development and test both use rolling origins: each race is predicted by models trained on every
-earlier race \parencite{tashman2000}. The test set was locked in code, every opening was logged, and each task was
-scored on it once, after all models were frozen and the comparisons, margins and decision rules had been committed to
-the repository \parencite{nosek2018}. The commit identifiers and file hashes are listed in \cref{app:repro}.
 
-\subsection{Models}\label{sec:models}
-Task~1 compares ten models (\cref{sec:terms-models}): persistence; \emph{compound drift} (persistence plus the average
-lap-to-lap change for the compound in training); ridge regression; a linear mixed-effects model with a random intercept
-and tyre-age slope by driver; a random forest; XGBoost; XGBoost averaged over five random seeds; and three neural
-networks. The tabular models and the MLP see the same inputs: tyre age and its square, laps remaining (a fuel proxy),
-weather, recent pace summaries (last clean lap, three-lap mean, five-lap spread and trend), field pace, compound,
-circuit and team. The LSTM and TCN add the raw sequence of the driver's last ten laps. This design isolates two
-questions: MLP against XGBoost compares learners on identical inputs, and LSTM or TCN against MLP measures what the raw
-sequence adds. Neural networks were trained with five seeds and their predictions averaged, so the fair tree
-comparator is XGBoost averaged over five seeds.
+The split was fixed before any model was fitted. The 2023 and 2024 seasons are the training data, with hyperparameters
+tuned only inside 2024; the first half of 2025 (rounds 1--12) is the development set; and the second half of 2025 (rounds
+13--24) is the test set. Development and test both use rolling origins: each race is predicted by models trained on every
+earlier race \parencite{tashman2000}. The test set was locked in code, every opening was logged, and each task was scored
+on it once, after all models were frozen and the comparisons, margins and decision rules had been committed to the
+repository \parencite{nosek2018}. The commit identifiers and file hashes are listed in \cref{app:repro}.
 
-\subsection{Decision rules}\label{sec:rules}
-Models are compared in pairs on the same laps through the difference in MAE \parencite{diebold1995}, with 95\% and
-90\% race-clustered bootstrap intervals over 2,000 resamples \parencite{cameron2008}. For Task~1, five primary
-comparisons and a practical margin of $\delta=0.01$\,s per lap were pre-registered. A comparison is labelled
-\emph{equivalent} when the 90\% interval lies inside $\pm\delta$ (TOST at 5\%; \cite{lakens2017}), \emph{meaningful
-difference} when the 95\% interval excludes zero and the whole 90\% interval lies beyond $\delta$, \emph{statistically
-different, size unclear} when the 95\% interval excludes zero but the 90\% interval crosses the margin, and
-\emph{inconclusive} otherwise. $p$-values are Holm-corrected across the primary family \parencite{holm1979}. Task~2
-uses the same rules on the ten-lap total with $\delta=0.1$\,s.
+\subsection{Accuracy measures}\label{sec:measures}
 
-\subsection{Task 3: the tyre-age effect}\label{sec:t3method}
-Lap time $y_{irl}$ of driver $i$ in race $r$ on lap $l$, on compound $c$ with tyre age $a$, is modelled as
+For a model $m$ and the set $S$ of $n$ scored laps, let $e_{mk}=\hat y_{mk}-y_k$ be the forecast error on lap $k$. The
+report uses four measures \parencite{hyndman2006}:
+\begin{equation}\label{eq:mae}
+  \text{MAE}_m = \frac{1}{n}\sum_{k\in S}\left|e_{mk}\right|,\qquad
+  \text{RMSE}_m = \sqrt{\frac{1}{n}\sum_{k\in S}e_{mk}^{2}},\qquad
+  \text{Bias}_m = \frac{1}{n}\sum_{k\in S}e_{mk},
+\end{equation}
+\begin{equation}\label{eq:skill}
+  \text{Skill}_m = 1-\frac{\text{MAE}_m}{\text{MAE}_{\text{persistence}}}.
+\end{equation}
+The MAE is the primary measure \parencite{willmott2005}. A positive bias means the model predicts laps that are too slow.
+A skill of 10\% means the model removes a tenth of the persistence forecast's typical error. In Task~2 the error is
+measured on the sum of the ten laps from forecast origin $o$,
+\begin{equation}\label{eq:ten}
+  E_{mo}^{(10)} = \sum_{h=1}^{10}\left(\hat y_{mo,h}-y_{o,h}\right),
+\end{equation}
+because a strategist adds lap times up, and errors that cancel across laps do not matter for the total. The MAE of the
+ten-lap total is the mean of $|E_{mo}^{(10)}|$ over the origins whose ten laps were all scored.
+
+\subsection{Comparing models}\label{sec:rules}
+
+Two models $A$ and $B$ are compared on the same laps through the difference of their MAEs \parencite{diebold1995}:
+\begin{equation}\label{eq:delta}
+  \Delta_{AB} = \text{MAE}_A-\text{MAE}_B = \frac{1}{n}\sum_{k\in S}\left(\left|e_{Ak}\right|-\left|e_{Bk}\right|\right).
+\end{equation}
+A negative $\Delta_{AB}$ favours model $A$. Its uncertainty comes from a race-clustered bootstrap: in each of 2,000
+resamples, the twelve test races are drawn with replacement, $\Delta_{AB}$ is recomputed on all laps of the drawn races,
+and the 2.5th, 5th, 95th and 97.5th percentiles of the resampled values give the 90\% and 95\% intervals
+\parencite{efron1979,cameron2008}. Races are resampled as whole units because laps of the same race share weather, track
+and incidents.
+
+For Task~1, five primary comparisons and a practical margin of $\delta=0.01$\,s per lap were pre-registered; Task~2
+uses the same rule on the ten-lap total with $\delta=0.1$\,s. With $\text{CI}_{90}$ and $\text{CI}_{95}$ the bootstrap
+intervals of $\Delta_{AB}$, each comparison receives one label:
+\begin{equation}\label{eq:labels}
+  \text{label}_{AB} =
+  \begin{cases}
+    \text{equivalent}, & \text{CI}_{90}\subset(-\delta,\delta),\\
+    \text{meaningful difference}, & 0\notin\text{CI}_{95}\ \text{and}\ \text{CI}_{90}\cap[-\delta,\delta]=\varnothing,\\
+    \text{statistically different, size unclear}, & 0\notin\text{CI}_{95}\ \text{otherwise},\\
+    \text{inconclusive}, & \text{otherwise}.
+  \end{cases}
+\end{equation}
+The first case is the two one-sided tests (TOST) procedure at the 5\% level: the difference is shown to be smaller
+than $\delta$ in both directions \parencite{schuirmann1987,lakens2017}. The $p$-values of the $M=5$ primary comparisons
+are adjusted with the Holm procedure \parencite{holm1979}. With the raw $p$-values ordered as
+$p_{(1)}\le\dots\le p_{(M)}$, the adjusted value of the $j$-th is
+\begin{equation}\label{eq:holm}
+  \tilde p_{(j)} = \max_{l\le j}\ \min\!\left\{1,\ (M-l+1)\,p_{(l)}\right\}.
+\end{equation}
+
+\subsection{Task 3: the tyre-age model}\label{sec:t3method}
+
+Lap time $y_{irl}$ of driver $i$ in race $r$ on lap $l$, on compound $c$ with tyre age $a_{irl}$ (laps already run on the
+set), is modelled as
 \begin{equation}\label{eq:fe}
   y_{irl} = \beta_{c}\,a_{irl} + \lambda_{rl} + \mu_{ir} + \kappa_{rc} + \varepsilon_{irl},
 \end{equation}
-where $\lambda_{rl}$ is a race-by-lap effect that absorbs everything common to all cars on a lap (fuel burn, track
-evolution, wind), $\mu_{ir}$ a driver-by-race effect (car and driver pace at that event), and $\kappa_{rc}$ a
-race-by-compound effect (the pace level of each compound at that event). $\beta_c$ is the lap-time change associated
-with one more lap of tyre age on compound $c$. The model is estimated on clean green dry laps on slicks with the three
-sets of fixed effects removed by alternating projections \parencite{guimaraes2010,gaure2013}, and standard errors are
-clustered by race \parencite{cameron2015}.
+where $\lambda_{rl}$ is a race-by-lap fixed effect that absorbs everything common to all cars on a lap (fuel burn, track
+evolution, wind), $\mu_{ir}$ a driver-by-race fixed effect (the pace of that driver and car at that event), $\kappa_{rc}$
+a race-by-compound fixed effect (the pace level of each compound at that event) and $\varepsilon_{irl}$ the remaining
+error. The coefficient $\beta_c$ is the lap-time change associated with one more lap of tyre age on compound $c$. The
+model is estimated on clean green dry laps on slicks, with the three sets of fixed effects removed by alternating
+projections \parencite{guimaraes2010,gaure2013}, and standard errors are clustered by race, which allows the errors of
+all laps in a race to be correlated \parencite{cameron2015}.
 
-Identification needs care. Within a stint, tyre age rises one-for-one with the lap number, so it cannot be separated
-from $\lambda_{rl}$ by within-stint variation alone; this is a form of the age--period--cohort problem
+The identification problem of \cref{sec:lit-identification} applies directly. Within a stint, $a_{irl}=l-l_0$ for the
+lap $l_0$ before the stint began, so tyre age cannot be separated from $\lambda_{rl}$ by within-stint variation alone
 \parencite{fosse2019}. The slope is identified from the pace change at a pit stop, when tyre age resets but the lap
 number does not, compared across drivers who stopped at different ages. It therefore rests on two assumptions: a
-driver's underlying pace is the same across stints within a race, and compound offsets are common to all cars at a
-race. Replacing driver-by-race with driver-by-stint effects makes $\beta_c$ unidentified, and the code checks and
-reports this. The estimates are associations, not causal effects of tyre wear: pit timing is chosen by teams, and
-tyre management may differ by stint \parencite{angrist2009}.
+driver's underlying pace is the same across stints within a race, and compound offsets are common to all cars at a race.
+Replacing $\mu_{ir}$ with driver-by-stint effects makes $\beta_c$ unidentified, and the code checks and reports this.
+The estimates are associations, not causal effects of tyre wear, because teams choose when to stop and drivers may manage
+tyres differently in different stints \parencite{angrist2009}.
 
 \subsection{The strategy simulator}\label{sec:simmethod}
-The simulator plays out the rest of a race for one car from a decision lap $L$, for any plan of stop laps and
-compounds. Expected lap time on lap $j$ is
-\begin{equation}\label{eq:sim}
-  \mathbb{E}[y_j] = \mu + \beta\,j + \kappa_{c} + s_{\text{circuit}}\,\beta_{c}\,a_j ,
-\end{equation}
-with the tyre-age slopes $\beta_c$ from \cref{eq:fe}, compound offsets $\kappa_c$ estimated from same-lap comparisons
-of cars on different compounds, a common per-lap trend $\beta$, and a circuit factor $s_{\text{circuit}}$ from other
-years at the same circuit, normalised to average one. Every parameter is estimated \emph{without} the race being
-simulated (leave-race-out). The driver's pace level $\mu$ comes only from laps already run. Lap-to-lap noise follows a
-first-order autoregressive process, pit loss is drawn around the circuit's historical mean, and safety cars arrive at
-the historical rate. Each plan is simulated 1,000 times with \emph{common random numbers}: every plan faces the same
-draws, so differences between plans are not driven by luck \parencite{law2015,glasserman2003}. Normal draws use the
-Box--Muller method \parencite{box1958}. The best plan for each number of stops is found exactly by dynamic programming
-over stop laps and compounds \parencite{bellman1957}, under the tyre rules in \cref{sec:terms-race}. The simulator is a
-single car against the clock: it models race time, not finishing positions, traffic or other cars' strategies.
 
-% ======================================================================= 5 results
+The simulator plays out the rest of a race for one car from a decision lap $L$, for any plan $p$ of stop laps and
+compounds, as in the race simulations of \textcite{heilmeier2018,heilmeier2020mc}. Under plan $p$, the car runs lap $j$
+on compound $c_j$ with tyre age $a_j$, and its expected lap time is
+\begin{equation}\label{eq:sim}
+  \bar y_{j}(p) = \mu_i + \gamma\,j + \kappa_{c_j} + s_r\,\beta_{c_j}\,a_j ,\qquad j=L+1,\dots,N,
+\end{equation}
+where $N$ is the race distance in laps, $\mu_i$ the driver's pace level, $\gamma$ the common per-lap change from fuel burn
+and track evolution, $\kappa_{c}$ the offset of compound $c$ against the medium, $\beta_c$ the tyre-age slope of
+\cref{eq:fe}, and $s_r$ a tyre-wear factor for the circuit. The three pace components are estimated in turn on other
+races: $\beta_c$ exactly as in \cref{eq:fe}; then $\kappa_c$ from same-lap comparisons of cars on different compounds,
+with race-by-lap and driver-by-race effects; then $\gamma$ with driver-by-race effects. The driver's pace level $\mu_i$
+is the mean, over the driver's last 30 clean laps up to lap $L$, of the lap time minus the other terms of \cref{eq:sim}.
+
+The circuit factor comes from other years at the same circuit. With $R_r$ the ratio of the circuit's average tyre-age
+slope to the average over all other races, and $n_r$ the number of other years available,
+\begin{equation}\label{eq:scale}
+  s_r = \min\!\left\{2,\ \max\!\left\{0.5,\ \frac{1}{\bar s}\left[1+\frac{n_r}{n_r+2}\left(R_r-1\right)\right]\right\}\right\},
+\end{equation}
+where the term in square brackets shrinks the noisy ratio towards one, more strongly when few years are available, and
+$\bar s$ is the average shrunk ratio over all other circuits, so that the factor averages one across circuits.
+
+Lap-to-lap noise follows a first-order autoregressive process, in which each lap's deviation carries over a share $\phi$
+of the previous lap's:
+\begin{equation}\label{eq:ar1}
+  u_{L+1} = \frac{\sigma}{\sqrt{1-\phi^{2}}}\,z_{L+1},\qquad u_{j} = \phi\,u_{j-1}+\sigma z_{j},\quad z_j\sim\mathcal N(0,1),
+\end{equation}
+with $\phi$ and the innovation standard deviation $\sigma$ estimated from residuals in other races. Each stop $q$ adds a
+pit loss
+\begin{equation}\label{eq:pitloss}
+  P_q = \max\!\left\{\tfrac12\bar P_r,\ \bar P_r+\sigma_P\,\xi_q\right\},\qquad \xi_q\sim\mathcal N(0,1),
+\end{equation}
+where $\bar P_r$ is the mean pit loss at the circuit in other years, with the slowest 5\% of stops capped, and $\sigma_P$
+the spread of pit losses around each circuit's median. Each historical stop's loss is measured as the in-lap plus the
+out-lap minus two laps at the driver's median clean pace in the surrounding laps. Safety cars arrive with the per-lap
+probability observed in other races; on a safety-car lap the lap time is multiplied by the historical slowdown factor
+and a stop costs a historical fraction of its normal loss. The total time of plan $p$ in simulation draw $d$ is
+\begin{equation}\label{eq:total}
+  T^{(d)}(p) = \sum_{j=L+1}^{N}\Big(\bar y^{(d)}_{j}(p)+u^{(d)}_{j}\Big)\,\omega^{(d)}_{j}
+  \;+\;\sum_{q\in\mathcal Q(p)} P^{(d)}_q,
+\end{equation}
+where $\omega^{(d)}_j$ equals the safety-car slowdown factor on neutralised laps and one otherwise, and $\mathcal Q(p)$ is
+the set of stops in plan $p$. In every draw the pace parameters are drawn from their estimated sampling distribution and
+$\mu_i$ from its standard error, so the spread of $T^{(d)}(p)$ includes parameter uncertainty.
+
+Each plan is simulated $D=1{,}000$ times with \emph{common random numbers}: in draw $d$, every plan faces the same
+parameters, noise path, pit-stop shocks and safety cars \parencite{law2015,glasserman2003}. Plans are then compared
+through the paired difference
+\begin{equation}\label{eq:crn}
+  \Delta T(p_A,p_B) = \frac{1}{D}\sum_{d=1}^{D}\left[T^{(d)}(p_A)-T^{(d)}(p_B)\right],
+\end{equation}
+together with the share of draws in which $p_A$ is faster. Because both plans share every random input, the difference
+reflects the plans rather than luck. Normal draws use the Box--Muller method \parencite{box1958}. The best plan for each
+number of stops, $\arg\min_p \bar T(p)$ with $\bar T(p)=\sum_{j}\bar y_j(p)+\sum_q\bar P_r$, is found exactly by dynamic
+programming over stop laps and compounds \parencite{bellman1957}, subject to the tyre rules of \cref{sec:lit-strategy,sec:data}.
+The simulator is a single car against the clock: it models race time, not finishing positions, traffic or other cars'
+strategies.
+
+\subsection{Checking the simulator}\label{sec:simcheck}
+
+A counterfactual strategy outcome cannot be observed, because no race is run twice. The simulator is therefore checked
+on the parts it is built from, with every race simulated using parameters estimated without that race (leave-race-out).
+Three checks are reported: the pace of the first stint after a real pit stop, forecast from just before the stop; the
+remaining race time of the plan each driver actually ran, from a decision lap at one third of the race distance, for
+drivers with no neutralisation afterwards; and the pit loss of each real stop. For the second check, the coverage of the
+simulator's 90\% range is tested with the unconditional-coverage test of \textcite{kupiec1995}. With $n$ drivers, $x$ of
+whose real times fall outside the range, and the nominal miss rate $\pi=0.10$,
+\begin{equation}\label{eq:kupiec}
+  \text{LR}_{\text{uc}} = -2\ln\!\left[(1-\pi)^{\,n-x}\,\pi^{x}\right]
+  + 2\ln\!\left[\left(1-\tfrac{x}{n}\right)^{n-x}\left(\tfrac{x}{n}\right)^{x}\right],
+\end{equation}
+which has approximately a $\chi^2$ distribution with one degree of freedom when the range is correctly calibrated
+\parencite{kupiec1995,christoffersen1998}.
+
 \section{Task 1: the next lap}\label{sec:t1}
 
-\Cref{tab:t1} reports every model on the 11,041 scored laps of the twelve test races.
+\Cref{tab:t1} reports every model on the 11,041 scored laps of the twelve test races, with the measures of
+\cref{eq:mae,eq:skill}.
 
 \begin{table}[htbp]
 \centering
@@ -395,9 +539,9 @@ describe race-to-race uncertainty that all models share; the paired comparisons 
 \bottomrule
 \end{tabularx}
 \begin{tablenotes}\footnotesize
-\item \textit{Note.} $\Delta$MAE is the first model's MAE minus the second's on the same laps; negative favours the first
-model. Equivalence margin $\pm$0.01\,s per lap, fixed in the pre-registration (\cref{app:repro}); labels as defined in
-\cref{sec:rules} \parencite{lakens2017}. Holm correction over the five comparisons \parencite{holm1979}.
+\item \textit{Note.} $\Delta$MAE is the first model's MAE minus the second's on the same laps (\cref{eq:delta}); negative
+favours the first model. Equivalence margin $\pm$0.01\,s per lap, fixed in the pre-registration (\cref{app:repro}); labels as defined in
+\cref{eq:labels} \parencite{lakens2017}. Holm correction over the five comparisons (\cref{eq:holm}; \cite{holm1979}).
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -439,7 +583,7 @@ fell measurably behind.
 \section{Task 2: the next ten laps}\label{sec:t2}
 
 A strategist needs pace over the coming laps, not one lap. Task~2 forecasts laps $t+1$ to $t+10$ and scores the error of
-their total, on 5,241 forecast origins whose ten laps were all scored.
+their total (\cref{eq:ten}), on 5,241 forecast origins whose ten laps were all scored.
 
 \begin{table}[htbp]
 \centering
@@ -537,25 +681,46 @@ directly. Season by season (R5), the estimates stay within the same range, with 
 shaded: 95\% intervals clustered by race. Source: \texttt{research/results/task3}.}\label{fig:curves}
 \end{figure}
 
-\paragraph{Economic reading.} The slopes put a price on keeping a set. Over a 25-lap stint, the medium tyre's slope adds
-up to about 14.3\,s (that is, $0.048\times\sum_{k=0}^{24}k$) relative to a set that stayed new, and the hard about 12.7\,s,
-against a pit stop that costs about 25\,s. The strategist's choice is the familiar replacement problem of capital
-theory: keep a depreciating asset or pay a fixed cost to renew it \parencite{rust1987}. In a stylised version with a
-linear slope $b$, a pit loss $P$ and a race of $N$ laps split into $k$ equal stints, total time lost is $bN^2/(2k)+P(k-1)$,
-minimised at $k^*=N\sqrt{b/(2P)}$. With the medium slope, $P=24.9$\,s (\cref{sec:sim}) and $N=57$, $k^*\approx1.8$
-stints. Because the two-compound rule requires at least two stints, the stylised optimum is a one-stop race, and a
-second stop pays only when the slope exceeds $12P/N^2\approx0.09$\,s per lap, about twice the medium estimate. Real
-races split almost evenly: of the 819 classified drivers who completed the full distance in the 62 dry races in the
-simulator, 43.3\% stopped once and 42.2\% twice. The stylised model leaves out the faster pace loss early in a stint,
-the softer compounds, safety cars and racing between cars, all of which can make a second stop worthwhile, so it is an
-illustration built on the estimates, not a tested model of team behaviour. Its message is that many dry races sit close
-to the margin between one stop and two.
+\subsection{Economic reading: tyres as a depreciating asset}\label{sec:t3econ}
+
+The slopes put a price on keeping a set. Relative to a set that stayed new, the medium tyre's slope adds up over a
+25-lap stint to
+\begin{equation}\label{eq:stintcost}
+  \beta_{\text{medium}}\sum_{a=0}^{24}a = 0.0478\times300 \approx 14.3\ \text{s},
+\end{equation}
+and the hard tyre's to about 12.7\,s, against a pit stop that costs about 25\,s (\cref{sec:sim}), with slopes taken to three significant figures. The strategist's choice is the replacement problem of capital theory reviewed in
+\cref{sec:lit-identification}: keep a depreciating asset or pay a fixed cost to renew it \parencite{rust1987}.
+
+A stylised version makes the trade-off explicit, in the spirit of the single-car optimisation of
+\textcite{heilmeier2020vse}. Suppose a race of $N$ laps is split into $k$ equal stints, each additional stint costs a
+pit loss $P$, and pace falls linearly with tyre age at a slope $b$. Each stint of $N/k$ laps then loses about
+$b(N/k)^2/2$ seconds to tyre age, and the total time lost to tyres and stops is
+\begin{equation}\label{eq:replace}
+  C(k) = \frac{bN^{2}}{2k} + P\,(k-1),
+\end{equation}
+where the first term falls and the second rises with the number of stints. Treating $k$ as continuous and setting the
+derivative to zero gives the cost-minimising number of stints,
+\begin{equation}\label{eq:kstar}
+  k^{*} = N\sqrt{\frac{b}{2P}} .
+\end{equation}
+With the medium slope, $P=24.9$\,s (\cref{sec:sim}) and $N=57$ laps, $k^{*}\approx1.8$ stints. Because the two-compound
+rule requires at least two stints, the stylised optimum is a one-stop race. Comparing two and three stints directly,
+\begin{equation}\label{eq:twostop}
+  C(2)-C(3) = \frac{bN^{2}}{12} - P > 0 \iff b > \frac{12P}{N^{2}} \approx 0.09\ \text{s per lap},
+\end{equation}
+so a second stop pays only when the slope is about twice the medium estimate. Real races split almost evenly: of the 819
+classified drivers who completed the full distance in the 62 dry races in the simulator, 43.3\% stopped once and 42.2\%
+twice. The stylised model leaves out the faster pace loss early in a stint, the softer compounds, safety cars and racing
+between cars, all of which can make a second stop worthwhile, so it is an illustration built on the estimates, not a
+tested model of team behaviour. Its message is that many dry races sit close to the margin between one stop and two,
+where a small change in the depreciation rate or the replacement cost changes the best decision.
 
 % ----------------------------------------------------------------------- simulator
 \section{The strategy simulator against real races}\label{sec:sim}
 
-A counterfactual strategy outcome cannot be observed: no race was run twice. The simulator was therefore tested on the
-parts it is built from, with every race checked using parameters estimated without it (\cref{tab:bt}).
+\subsection{Errors in pace and race time}\label{sec:simerr}
+
+\Cref{tab:bt} reports the three leave-race-out checks described in \cref{sec:simcheck}.
 
 \begin{table}[htbp]
 \centering
@@ -599,12 +764,14 @@ strategies: much of the error, such as the driver's pace level and the per-lap t
 same driver and cancels when two plans are compared under common random numbers. The part that does not cancel is the
 fresh-tyre bias described above.
 
-\paragraph{Calibration.} A final check, added after the simulator was frozen and not used to change it, asked how often
+\subsection{Are the simulator's ranges calibrated?}\label{sec:calib}
+
+A final check, added after the simulator was frozen and not used to change it, asked how often
 the real remaining time fell inside the simulator's own ranges. It did so in 34.1\% of cases for the 50\% range and
 74.3\% for the 90\% range, against 50\% and 90\% nominal. The misses are lopsided: 18.8\% of drivers were faster than the
 whole 90\% range and only 6.9\% slower. Read as a risk-model backtest, this is like a 90\% value-at-risk model breached
-on 25.7\% of days instead of 10\%. A Kupiec unconditional-coverage test rejects correct coverage (138 misses in 537
-against 54 expected; likelihood ratio 107.5, $p<0.001$; \cite{kupiec1995,christoffersen1998}). Because nearly all misses
+on 25.7\% of days instead of 10\%. The Kupiec test of \cref{eq:kupiec}, with $n=537$ drivers and $x=138$ misses against 54 expected, gives
+$\text{LR}_{\text{uc}}=107.5$ and $p<0.001$, so correct coverage is rejected \parencite{kupiec1995,christoffersen1998}. Because nearly all misses
 fall on one side, and the median 90\% range (63\,s) is wider than the typical error (35\,s), the problem is the centre
 of the distribution, the +19\,s bias, rather than its width. The simulated ranges describe the uncertainty the model
 knows about (parameters, driver pace, lap noise, pit-stop variation and safety cars), not its systematic error.
@@ -631,9 +798,9 @@ decision point used below. Source: OpenF1 stints \parencite{openf1}.}\label{fig:
 
 \subsection{The decision and the model}
 After lap 20, both Leclerc and Piastri were on hard tyres after their first stop, five and four laps old respectively. With 33 laps
-remaining, the question was whether to stop again for fresh tyres or to run this set to the finish. The simulator was
-run from that point with every parameter estimated without this race. Its tyre-wear factor for Monza, 0.84 times the
-average, came from the circuit's two other years in the sample; each driver's pace came from 17 clean laps already
+remaining, the question was whether to stop again for fresh tyres or to run this set to the finish. The simulator
+(\cref{eq:sim,eq:total}) was run from that point with every parameter estimated without this race. Its tyre-wear factor for Monza, $s_r=0.84$ in \cref{eq:scale},
+came from the circuit's two other years in the sample; each driver's pace came from 17 clean laps already
 run; pit loss was 25.8\,s per stop on average; and no safety car was drawn, since none occurred.
 
 \begin{table}[htbp]
@@ -650,8 +817,8 @@ Driver & Actual plan & Alternative & Alternative minus actual (s) & 90\% of race
 \end{tabularx}
 \begin{tablenotes}\footnotesize
 \item \textit{Note.} 1,000 simulated races per plan with common random numbers, seed 2026. Negative: the alternative is
-faster. Break-even wear: the multiplier on the model's tyre-age effect at which one stop and two stops take the same
-expected time. Model-based counterfactual estimates, not observations. Source: \texttt{paper/data/monza.json}.
+faster. Break-even wear: the multiplier $m$ on $s_r\beta_c$ in \cref{eq:sim} at which one stop and two stops take the
+same expected time. Differences as in \cref{eq:crn}. Model-based counterfactual estimates, not observations. Source: \texttt{paper/data/monza.json}.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -683,7 +850,8 @@ that McLaren decided wrongly, since a team reading live tyre data had informatio
 % ======================================================================= discussion
 \section{Discussion}\label{sec:discussion}
 
-\paragraph{When does added complexity stop paying?} On public timing data, the three neural networks matched
+\subsection{When does added complexity stop paying?}
+ On public timing data, the three neural networks matched
 gradient-boosted trees on the next lap and fell slightly behind over ten laps, at many times the training cost. This
 agrees with benchmark evidence that tree ensembles remain at least as accurate on tabular data
 \parencite{grinsztajn2022,shwartzziv2022}. The design of the comparison points to a reason. The MLP saw exactly the
@@ -694,14 +862,16 @@ it reflects information no model sees in public data: traffic and dirty air, dri
 tyre temperatures and team instructions. In economic terms, the forecasting problem looks supply-constrained in
 information, not in modelling capacity, and investment in data would likely earn more than investment in architecture.
 
-\paragraph{What the forecasts are worth to a strategist.} The best model reduces the error over ten laps by about
+\subsection{What the forecasts are worth to a strategist}
+ The best model reduces the error over ten laps by about
 1\,s, around 4\% of the cost of a pit stop. That is useful at the margin, for example when two plans are close, but it
 does not transform strategy; the larger gains come from getting the structure right, such as separating tyre ageing
-from fuel burn (\cref{sec:t3}). The stylised replacement model puts the average dry race near the margin between one
-and two stops, and real finishers split almost evenly between the two (\cref{sec:t3}), so many decisions are close
+from fuel burn (\cref{sec:t3}). The stylised replacement model (\cref{eq:replace}) puts the average dry race near the margin between one
+and two stops, and real finishers split almost evenly between the two (\cref{sec:t3econ}), so many decisions are close
 calls where a small bias, such as the simulator's 1--2\,s per extra stop, can tip the recommendation.
 
-\paragraph{Why measured error matters.} Simulated strategy outcomes are easy to present as facts. The calibration test
+\subsection{Why measured error matters}
+ Simulated strategy outcomes are easy to present as facts. The calibration test
 shows why they should not be: the simulator's ranges contained the real outcome far less often than claimed, mainly
 because the whole distribution sat about 19\,s too slow. Comparisons between plans are more robust than absolute times,
 because shared errors cancel, but the remaining strategy-specific bias should be stated next to any recommendation, as
@@ -710,24 +880,21 @@ it is on the project website.
 % ======================================================================= limitations
 \section{Limitations}\label{sec:limits}
 
-\begin{itemize}
-  \item \textbf{Sample.} Three seasons from one set of technical regulations and an unofficial data source
-  \parencite{openf1}; one race excluded for incomplete data. Results may not carry over to a regulation change.
-  \item \textbf{Test size.} Twelve test races per task. Intervals are race-clustered and therefore wide relative to the
-  differences between the best models; ``equivalent'' is relative to the pre-registered margin, not a claim that the
-  models are identical \parencite{lakens2017}.
-  \item \textbf{Scored laps.} Accuracy refers to clean green laps; laps after stops, under neutralisation or in heavy
-  traffic are not scored.
-  \item \textbf{Tyre-age effect.} An association in lap time, identified from pace changes at pit stops under the
-  assumptions in \cref{sec:t3method}; pit timing is chosen, so the estimates are not causal effects of wear
-  \parencite{angrist2009,fosse2019}. The linear headline understates early-stint losses.
-  \item \textbf{Simulator.} One car against the clock; no traffic, track position, other cars' strategies or available
-  tyre sets; dry races only; virtual safety cars not modelled. Its absolute times are biased and its ranges too narrow
-  for absolute outcomes (\cref{sec:sim}). The simulator was frozen before the calibration check and was not changed
-  in response to it.
-  \item \textbf{Case study.} One race; facts about the race come from published reports, and the interpretation of the
-  gap is a plausible reading, not a test.
-\end{itemize}
+The results carry six limitations. The sample covers three seasons under one set of technical regulations and comes
+from an unofficial data source \parencite{openf1}, with one race excluded for incomplete data, so the results may not
+carry over to a change of regulations. Each task was tested on twelve races; the intervals are clustered by race and are
+therefore wide relative to the differences between the best models, and ``equivalent'' is a statement relative to the
+pre-registered margin, not a claim that the models are identical \parencite{lakens2017}. Accuracy refers to clean green
+laps only: laps after stops, under neutralisation or in heavy traffic are not scored.
+
+The tyre-age effect is an association in lap time, identified from pace changes at pit stops under the assumptions of
+\cref{sec:t3method}; teams choose when to stop, so the estimates are not causal effects of wear
+\parencite{angrist2009,fosse2019}, and the linear headline understates losses early in a stint. The simulator models one
+car against the clock, without traffic, track position, other cars' strategies or the sets of tyres actually available,
+for dry races only and without virtual safety cars. Its absolute times are biased and its ranges too narrow for absolute
+outcomes (\cref{sec:sim}); it was frozen before the calibration check and was not changed in response to it. Finally,
+the case study is one race: its facts come from published reports, and the interpretation of the gap is a plausible
+reading, not a test.
 
 % ======================================================================= conclusion
 \section{Conclusion}\label{sec:conclusion}
@@ -751,22 +918,22 @@ bias.
 \appendix
 \section{Reproducibility and pre-registration}\label{app:repro}
 
-\begin{itemize}
-  \item \textbf{Repository.} \url{https://github.com/NahianIbnat-2000/stint-theory}, including the pipeline, models,
-  simulator, generated reports, website and this report's sources (\texttt{paper/}).
-  \item \textbf{Task 1 pre-registration.} \texttt{docs/preregistration.md}, git commit
-  \texttt{5c481b0f}, SHA-256 \texttt{98780c55b2eebef4\ldots}.
-  \item \textbf{Task 2 pre-registration.} \texttt{docs/preregistration\_task2.md}, git commit \texttt{c662c564}, SHA-256
-  \texttt{991df6177c18b37c\ldots}.
-  \item \textbf{Test lock.} Test rows are removed when data are loaded unless an environment variable is set; every
-  opening is written to \texttt{data/reports/test\_access.log}. The test runners refuse to start if the pre-registration
-  is missing or uncommitted, or if a final report already exists.
-  \item \textbf{Changes after development results.} Every change made after looking at development results is listed
-  with the run that prompted it in \texttt{docs/model\_changes.md}.
-  \item \textbf{Simulator parity.} The website runs a line-by-line JavaScript port of the simulator; automated tests
-  check it against the Python version, draw by draw, on the exported races.
-  \item \textbf{This report.} \texttt{node paper/monza.mjs}, then \texttt{python paper/make\_assets.py}, then compile
-  \texttt{paper/stint\_theory\_report.tex} with XeLaTeX and Biber.
-\end{itemize}
+{\raggedright
+
+The repository, \url{https://github.com/NahianIbnat-2000/stint-theory}, holds the data pipeline, models, simulator,
+generated reports, website and the sources of this report (\texttt{paper/}). The Task~1 pre-registration is
+\texttt{docs/preregistration.md}, git commit \texttt{5c481b0f}, SHA-256 \texttt{98780c55b2eebef4\ldots}; the Task~2
+pre-registration is \texttt{docs/preregistration\_task2.md}, git commit \texttt{c662c564}, SHA-256
+\texttt{991df6177c18b37c\ldots}.
+
+Test rows are removed when data are loaded unless an environment variable is set, and every opening is written to
+\texttt{data/reports/test\_access.log}. The test runners refuse to start if the pre-registration is missing or
+uncommitted, or if a final report already exists. Every change made after looking at development results is listed,
+with the run that prompted it, in \texttt{docs/model\_changes.md}. The website runs a line-by-line JavaScript port of the
+simulator, and automated tests check it against the Python version, draw by draw, on the exported races.
+
+To rebuild this report, run \texttt{node paper/monza.mjs}, then \texttt{python paper/make\_assets.py}, then compile
+\texttt{paper/stint\_theory\_report.tex} with XeLaTeX and Biber.
+\par}
 
 \end{document}
