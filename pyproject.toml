@@ -14,4 +14,4 @@ testpaths = ["tests"]
 filterwarnings = ["ignore::DeprecationWarning", "ignore::FutureWarning"]
 
 [tool.setuptools]
-packages = ["pipelines", "models"]
+packages = ["pipelines", "models", "simulation"]

@@ -96,6 +96,7 @@ def fe_ols(df: pd.DataFrame, y: str, xs: list[str], fe: list[str], cluster: str)
 def estimation_sample(laps: pd.DataFrame, strict: bool = False) -> pd.DataFrame:
     """Dry, clean green laps on slicks; ids for the fixed effects."""
     flag = "is_clean_green_strict" if strict else "is_clean_green"
+    laps = laps.reset_index(drop=True)
     d = laps[laps[flag] & laps["compound_relative"].isin(COMPOUNDS)].copy()
     d["race_lap"] = d["race_id"] + "_" + d["lap_number"].astype(str)
     d["driver_stint"] = d["race_id"] + "_" + d["driver"].astype(str) + "_" + d["stint"].astype(str)

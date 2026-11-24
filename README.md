@@ -17,7 +17,7 @@ rights holders.
 | 1 | Data pipeline: ingest (OpenF1, 2023 to 2025), validate, clean, features, coverage audit | **Done.** 70 races, 77,373 driver-laps, 60,701 clean green laps. See `data/reports/coverage_report.md`. |
 | 2 | Benchmarks, ridge, mixed-effects, random forest, XGBoost; locked test set | **Code done and tested on synthetic races.** Development results: `research/results/phase2_dev/report.md` after `python -m models dev`. |
 | 3 | MLP, LSTM, TCN on the same design | **Development done.** Neural models tie XGBoost within about 0.005 s; the lap sequence adds nothing measurable. Final test pre-registered in `docs/preregistration.md`. |
-| 4 | Strategy simulator | planned |
+| 4 | Strategy simulator | **Code done and tested on synthetic races.** `python -m simulation build / backtest / demo`. See `docs/methodology_simulator.md`. |
 | 5 | Website | planned |
 | 6 | Publication and deployment | planned |
 
