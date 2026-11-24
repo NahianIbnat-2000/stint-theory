@@ -1,6 +1,6 @@
 # Task 3: lap-time change associated with tyre age
 
-Generated 2026-11-24T12:01:11+00:00. Sample: clean green dry laps on slicks, 2023-2025, 60248 laps in 68 races after dropping singleton groups. Standard errors clustered by race. These are estimated associations with tyre age, not measured tyre wear; see docs/methodology_tyre.md for the assumptions.
+Generated 2026-11-24T12:32:57+00:00. Sample: clean green dry laps on slicks, 2023-2025, 60248 laps in 68 races after dropping singleton groups. Standard errors clustered by race. These are estimated associations with tyre age, not measured tyre wear; see docs/methodology_tyre.md for the assumptions.
 
 ## Main estimate and robustness (seconds per extra lap of tyre age)
 
@@ -69,34 +69,34 @@ The naive slope mixes tyre ageing with everything that changes lap by lap for al
 
 ## Heterogeneity by circuit (all slick compounds pooled)
 
-Compound levels are absorbed by the stint effects; the slope is pooled across compounds, so circuits with more soft running look steeper.
+One slope per circuit, compounds pooled, so circuits with more soft running look steeper. Only 2-3 races per circuit, so standard errors are clustered by driver-race, not race: they ignore conditions shared within a race and are too narrow. Use this table to rank circuits, not to test differences between them.
 
-| circuit | races | n laps | s_per_lap | se | ci_low | ci_high |
-|---|---|---|---|---|---|---|
-| Bahrain Grand Prix | 3 | 2778 | 0.1135 | 0.004 | 0.1058 | 0.1213 |
-| Belgian Grand Prix | 3 | 2019 | 0.0783 | 0.0305 | 0.0185 | 0.1381 |
-| Japanese Grand Prix | 3 | 2380 | 0.0725 | 0.0301 | 0.0136 | 0.1314 |
-| Spanish Grand Prix | 3 | 3334 | 0.0657 | 0.0138 | 0.0387 | 0.0926 |
-| Hungarian Grand Prix | 3 | 3630 | 0.059 | 0.0095 | 0.0405 | 0.0775 |
-| Austrian Grand Prix | 3 | 3281 | 0.0587 | 0.0052 | 0.0485 | 0.0688 |
-| Abu Dhabi Grand Prix | 3 | 2924 | 0.0568 | 0.0031 | 0.0508 | 0.0628 |
-| São Paulo Grand Prix | 2 | 1990 | 0.0536 | 0.0007 | 0.0523 | 0.055 |
-| Chinese Grand Prix | 2 | 1665 | 0.0534 | 0.0269 | 0.0007 | 0.1062 |
-| Emilia Romagna Grand Prix | 2 | 2069 | 0.0516 | 0.0006 | 0.0505 | 0.0527 |
-| Las Vegas Grand Prix | 3 | 2175 | 0.05 | 0.0177 | 0.0154 | 0.0846 |
-| Singapore Grand Prix | 3 | 3005 | 0.0489 | 0.0028 | 0.0435 | 0.0543 |
-| United States Grand Prix | 3 | 2608 | 0.0481 | 0.0124 | 0.0238 | 0.0724 |
-| Mexico City Grand Prix | 3 | 3127 | 0.043 | 0.0077 | 0.0279 | 0.0581 |
-| Dutch Grand Prix | 3 | 2991 | 0.0401 | 0.005 | 0.0303 | 0.0498 |
-| Italian Grand Prix | 3 | 2658 | 0.0363 | 0.0155 | 0.0059 | 0.0667 |
-| Australian Grand Prix | 3 | 1593 | 0.0348 | 0.0053 | 0.0245 | 0.0452 |
-| Monaco Grand Prix | 3 | 3250 | 0.0345 | 0.0013 | 0.032 | 0.037 |
-| British Grand Prix | 3 | 1420 | 0.0322 | 0.0089 | 0.0147 | 0.0496 |
-| Saudi Arabian Grand Prix | 3 | 2350 | 0.031 | 0.0035 | 0.0242 | 0.0377 |
-| Miami Grand Prix | 2 | 1951 | 0.023 | 0.0013 | 0.0204 | 0.0256 |
-| Canadian Grand Prix | 3 | 2427 | 0.0226 | 0.0017 | 0.0193 | 0.026 |
-| Azerbaijan Grand Prix | 3 | 2354 | 0.0216 | 0.0053 | 0.0112 | 0.032 |
-| Qatar Grand Prix | 3 | 2269 | 0.0181 | 0.0065 | 0.0054 | 0.0308 |
+| circuit | races | driver-race clusters | n laps | s_per_lap | se | ci_low | ci_high |
+|---|---|---|---|---|---|---|---|
+| Bahrain Grand Prix | 3 | 60 | 2778 | 0.1135 | 0.0051 | 0.1036 | 0.1235 |
+| Belgian Grand Prix | 3 | 59 | 2019 | 0.0783 | 0.0099 | 0.059 | 0.0976 |
+| Japanese Grand Prix | 3 | 57 | 2380 | 0.0725 | 0.0073 | 0.0582 | 0.0868 |
+| Spanish Grand Prix | 3 | 59 | 3334 | 0.0657 | 0.0072 | 0.0515 | 0.0798 |
+| Hungarian Grand Prix | 3 | 58 | 3630 | 0.059 | 0.0041 | 0.051 | 0.067 |
+| Austrian Grand Prix | 3 | 57 | 3281 | 0.0587 | 0.003 | 0.0527 | 0.0646 |
+| Abu Dhabi Grand Prix | 3 | 59 | 2924 | 0.0568 | 0.0032 | 0.0506 | 0.063 |
+| São Paulo Grand Prix | 2 | 35 | 1990 | 0.0536 | 0.0037 | 0.0464 | 0.0609 |
+| Chinese Grand Prix | 2 | 39 | 1665 | 0.0534 | 0.0084 | 0.0369 | 0.07 |
+| Emilia Romagna Grand Prix | 2 | 40 | 2069 | 0.0516 | 0.0036 | 0.0446 | 0.0587 |
+| Las Vegas Grand Prix | 3 | 57 | 2175 | 0.05 | 0.0071 | 0.0362 | 0.0639 |
+| Singapore Grand Prix | 3 | 58 | 3005 | 0.0489 | 0.0045 | 0.04 | 0.0578 |
+| United States Grand Prix | 3 | 59 | 2608 | 0.0481 | 0.006 | 0.0363 | 0.0599 |
+| Mexico City Grand Prix | 3 | 56 | 3127 | 0.043 | 0.003 | 0.0371 | 0.0489 |
+| Dutch Grand Prix | 3 | 60 | 2991 | 0.0401 | 0.0037 | 0.0328 | 0.0473 |
+| Italian Grand Prix | 3 | 58 | 2658 | 0.0363 | 0.0052 | 0.0262 | 0.0464 |
+| Australian Grand Prix | 3 | 42 | 1593 | 0.0348 | 0.006 | 0.0231 | 0.0466 |
+| Monaco Grand Prix | 3 | 56 | 3250 | 0.0345 | 0.0043 | 0.026 | 0.043 |
+| British Grand Prix | 3 | 54 | 1420 | 0.0322 | 0.0076 | 0.0172 | 0.0471 |
+| Saudi Arabian Grand Prix | 3 | 57 | 2350 | 0.031 | 0.004 | 0.0231 | 0.0388 |
+| Miami Grand Prix | 2 | 40 | 1951 | 0.023 | 0.0032 | 0.0168 | 0.0291 |
+| Canadian Grand Prix | 3 | 58 | 2427 | 0.0226 | 0.0031 | 0.0166 | 0.0287 |
+| Azerbaijan Grand Prix | 3 | 59 | 2354 | 0.0216 | 0.0047 | 0.0123 | 0.0309 |
+| Qatar Grand Prix | 3 | 55 | 2269 | 0.0181 | 0.0075 | 0.0034 | 0.0328 |
 
 ## Non-parametric curve
 

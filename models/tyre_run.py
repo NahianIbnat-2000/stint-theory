@@ -85,12 +85,15 @@ def run_tyre(laps_path: Path | None = None, out: Path | None = None) -> Path:
     for ev, g in d.groupby("event_name"):
         g = g.assign(age_all=g["tyre_life"])
         try:
-            r = fe_ols(g, "lap_time_s", ["age_all"], FE, "race_id")
+            # 2-3 races per circuit are far too few clusters for race-clustered errors;
+            # cluster by driver-race instead (about 50-60 clusters) and say so
+            r = fe_ols(g, "lap_time_s", ["age_all"], FE, "driver_race")
         except Exception:
             continue
         if "age_all" in r["coef"] and r["clusters"] >= 2:
             b, s = r["coef"]["age_all"], r["se"]["age_all"]
-            circ.append({"circuit": ev, "races": r["clusters"], "n laps": r["n"],
+            circ.append({"circuit": ev, "races": int(g["race_id"].nunique()),
+                         "driver-race clusters": r["clusters"], "n laps": r["n"],
                          "s_per_lap": b, "se": s, "ci_low": b - 1.96 * s, "ci_high": b + 1.96 * s})
     circ_t = pd.DataFrame(circ).sort_values("s_per_lap", ascending=False)
 
@@ -127,8 +130,10 @@ def run_tyre(laps_path: Path | None = None, out: Path | None = None) -> Path:
         "## Curvature: quadratic specification, marginal effect at given tyre ages",
         _md(quad_t, 4),
         "## Heterogeneity by circuit (all slick compounds pooled)",
-        "Compound levels are absorbed by the stint effects; the slope is pooled across "
-        "compounds, so circuits with more soft running look steeper.",
+        "One slope per circuit, compounds pooled, so circuits with more soft running look "
+        "steeper. Only 2-3 races per circuit, so standard errors are clustered by "
+        "driver-race, not race: they ignore conditions shared within a race and are too "
+        "narrow. Use this table to rank circuits, not to test differences between them.",
         _md(circ_t, 4),
         "## Non-parametric curve",
         "Effect of each tyre age relative to age 5, by compound, saved in "
