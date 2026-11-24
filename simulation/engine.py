@@ -92,7 +92,12 @@ def decision_state(p: dict, driver: str, lap: int, n_pace: int = 8) -> DecisionS
            and h["compound_relative"][k] in SLICKS and h["lap_time_s"][k] is not None][-n_pace:]
     notes = []
     if len(idx) < 3:
-        raise ValueError(f"fewer than 3 clean laps by lap {lap}; choose a later decision lap")
+        clean = [laps[k] for k in range(len(laps)) if h["is_clean_green"][k]
+                 and h["compound_relative"][k] in SLICKS]
+        first = clean[2] if len(clean) >= 3 else None
+        raise ValueError(f"{driver} has fewer than 3 clean laps by lap {lap}; "
+                         + (f"the earliest usable decision lap is {first}" if first
+                            else "this driver has too few clean laps in this race"))
     resid = [h["lap_time_s"][k] - (pace.lap_mean(0.0, laps[k], h["compound_relative"][k],
                                                  h["tyre_life"][k])) for k in idx]
     mu = float(np.mean(resid))

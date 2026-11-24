@@ -21,7 +21,7 @@ import pandas as pd
 
 from models.run import _md
 from .engine import Pace, decision_state, expected_time, observed_strategy
-from .params import OUT
+from .params import OUT, PUBLIC
 
 
 def load_params(rid: str, root: Path | None = None) -> dict:
@@ -83,8 +83,9 @@ def remaining_rows(p: dict) -> list[dict]:
     return rows
 
 
-def run_backtest(root: Path | None = None) -> Path:
+def run_backtest(root: Path | None = None, public: Path | None = None) -> Path:
     root = root or OUT
+    public = public or (PUBLIC if root == OUT else root)
     index = json.loads((root / "index.json").read_text())
     ns, rem, pit = [], [], []
     stops = pd.read_csv(root / "pit_stops.csv")
@@ -131,9 +132,11 @@ def run_backtest(root: Path | None = None) -> Path:
         parts += ["## 3. Pit loss of green-flag stops (s)",
                   _md(pd.DataFrame([{"stops": len(pit), "MAE": e.abs().mean(),
                                      "median abs": e.abs().median(), "bias": e.mean()}]))]
-    (root / "backtest.md").write_text("\n\n".join(parts) + "\n")
+    public.mkdir(parents=True, exist_ok=True)
+    (public / "backtest.md").write_text("\n\n".join(parts) + "\n")
+    # row-level backtest tables contain lap times: processed (git-ignored) folder only
     for name, df in (("backtest_next_stint", ns), ("backtest_remaining", rem)):
         if not df.empty:
             df.drop(columns=[c for c in ("bin",) if c in df.columns]).to_csv(root / f"{name}.csv",
                                                                               index=False)
-    return root / "backtest.md"
+    return public / "backtest.md"

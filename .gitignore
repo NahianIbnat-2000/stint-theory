@@ -10,3 +10,5 @@ __pycache__/
 .venv/
 venv/
 .DS_Store
+# simulator row-level outputs (lap histories, per-stop rows)
+research/results/simulator/*.csv

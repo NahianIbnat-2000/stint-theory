@@ -83,6 +83,8 @@ def fe_ols(df: pd.DataFrame, y: str, xs: list[str], fe: list[str], cluster: str)
     e = yt - X @ b
     cl = _codes(d[cluster])
     G, n, k = cl.max() + 1, len(yt), X.shape[1]
+    if G < 2 or n <= k:
+        raise NotIdentified("too few clusters or observations for these regressors")
     S = np.zeros((G, k))
     np.add.at(S, cl, X * e[:, None])
     V = XtX_inv @ (S.T @ S) @ XtX_inv * (G / (G - 1)) * ((n - 1) / (n - k))
@@ -129,17 +131,15 @@ FE_MAIN = ["race_lap", "driver_race", "race_compound"]
 def age_curve(d: pd.DataFrame, cap: int = 35, ref: int = 5) -> pd.DataFrame:
     """Non-parametric curve: tyre-age bin dummies by compound (reference age `ref`),
     same fixed effects. Ages above `cap` are pooled."""
-    d = d.copy()
     age = d["tyre_life"].clip(upper=cap).astype(int)
-    cols = []
+    new = {}
     for c in COMPOUNDS:
         on = d["compound_relative"] == c
         for a in range(1, cap + 1):
-            if a == ref:
-                continue
-            col = f"b_{c}_{a}"
-            d[col] = ((age == a) & on).astype(float)
-            cols.append(col)
+            if a != ref:
+                new[f"b_{c}_{a}"] = ((age == a) & on).astype(float)
+    cols = list(new)
+    d = pd.concat([d, pd.DataFrame(new, index=d.index)], axis=1)
     res = fe_ols(d, "lap_time_s", cols, FE_MAIN, "race_id")
     rows = []
     for c in COMPOUNDS:

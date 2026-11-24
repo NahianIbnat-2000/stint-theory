@@ -13,3 +13,11 @@ Raw and processed lap tables stay out of the repository because the timing data
 belongs to Formula 1 and its data partners (served here through OpenF1). Anyone can rebuild them with
 `python -m pipelines all`. The website will only publish derived results and
 small aggregates.
+
+## Note on an early commit
+
+Commit `f8f82ca` ("Phase 4: strategy simulator") briefly placed per-driver lap
+histories and per-stop rows in `research/results/simulator/`. They were removed
+from the repository in the next commit and are now written to the git-ignored
+`data/processed/simulator/`. Git history was not rewritten, because the
+pre-registered test reports cite commit hashes that a rewrite would change.

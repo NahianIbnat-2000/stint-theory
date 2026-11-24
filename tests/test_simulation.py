@@ -90,6 +90,8 @@ def test_params_are_leave_race_out(built, tmp_path):
     lp = tmp_path / "laps.parquet"
     pert.to_parquet(lp, index=False)
     params.build_all(lp, out=tmp_path / "out", races=[rid], log=lambda *a: None)
+    pub = json.loads((tmp_path / "out" / "public" / "races" / f"{rid}.json").read_text())
+    assert "drivers" not in pub                       # no lap histories in the public files
     new = json.loads((tmp_path / "out" / "races" / f"{rid}.json").read_text())
     for key in ("pace", "ar1", "pit_loss", "safety_car", "circuit"):
         assert json.dumps(new[key], sort_keys=True) == json.dumps(base[key], sort_keys=True), key

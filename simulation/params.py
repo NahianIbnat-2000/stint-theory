@@ -26,7 +26,10 @@ from models.tyre import COMPOUNDS, estimation_sample, fe_ols
 from pipelines import config
 from .constraints import rules_for
 
-OUT = config.ROOT / "research" / "results" / "simulator"
+# Full per-race files include every driver's lap history (raw timing data): kept in
+# the git-ignored processed folder. Only aggregates go to research/results.
+OUT = config.PROCESSED / "simulator"
+PUBLIC = config.ROOT / "research" / "results" / "simulator"
 LAPS = config.PROCESSED / "laps_clean.parquet"
 AGE_CAP = 40          # quadratic used up to this tyre age, linear beyond
 PACE_X = ["lap_number", "k_SOFT", "k_HARD"] + [f"age_{c}" for c in COMPOUNDS] + \
@@ -192,8 +195,9 @@ def driver_histories(g: pd.DataFrame) -> dict:
 
 
 def build_all(laps_path: Path | None = None, out: Path | None = None,
-              races: list[str] | None = None, log=print) -> Path:
+              races: list[str] | None = None, log=print, public_out: Path | None = None) -> Path:
     out = out or OUT
+    public_out = public_out or (PUBLIC if out == OUT else out / "public")
     (out / "races").mkdir(parents=True, exist_ok=True)
     laps = pd.read_parquet(laps_path or LAPS)
     d = pace_sample(laps)
@@ -225,8 +229,12 @@ def build_all(laps_path: Path | None = None, out: Path | None = None,
             "estimation": "leave-this-race-out: no parameter uses this race's laps",
         }
         (out / "races" / f"{rid}.json").write_text(json.dumps(params, default=float))
+        public = {k: v for k, v in params.items() if k != "drivers"}
+        (public_out / "races").mkdir(parents=True, exist_ok=True)
+        (public_out / "races" / f"{rid}.json").write_text(json.dumps(public, default=float, indent=1))
         index.append({"race_id": rid, "season": season, "event_name": event,
                       "total_laps": params["total_laps"], "simulatable": params["simulatable"]})
         log(f"params {rid} {event}")
     (out / "index.json").write_text(json.dumps(index, indent=1))
+    (public_out / "index.json").write_text(json.dumps(index, indent=1))
     return out
