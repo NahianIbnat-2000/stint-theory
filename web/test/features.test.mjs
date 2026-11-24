@@ -120,3 +120,16 @@ test("every report and result file the pages read was exported", { skip: !haveDa
   for (const m of files.matchAll(/useData\("(results\/[a-z0-9_]+\.json)"/g)) if (!OPTIONAL.has(m[1])) assert.ok(existsSync(join(DATA, m[1])), `${m[1]} missing`);
 });
 
+
+
+test("calibration reading: one-sided misses point to a shifted range, not a narrow one", async () => {
+  const { calibrationReading } = await import("../src/lib/reliability.js");
+  // the actual backtest-3 numbers
+  const r = calibrationReading({ coverage50: 0.341, coverage90: 0.743, below90: 0.188, above90: 0.069 }, 19.062);
+  assert.match(r, /missed 25\.7% of the time/);
+  assert.match(r, /mostly faster than the whole range/);
+  assert.match(r, /\+19\.1 s bias/);
+  assert.doesNotMatch(r, /so the ranges are too narrow/);
+  assert.match(calibrationReading({ coverage90: 0.75, below90: 0.12, above90: 0.13 }), /so the ranges are too narrow/);
+  assert.match(calibrationReading({ coverage90: 0.9, below90: 0.05, above90: 0.05 }), /about as often/);
+});

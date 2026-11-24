@@ -4,6 +4,7 @@ import { fmt, signed } from "../format.js";
 import Report from "../components/Report.jsx";
 import Evidence, { shortHash, day } from "../components/Evidence.jsx";
 import { name } from "../models.js";
+import { calibrationReading } from "../lib/reliability.js";
 
 const pct = (x, d = 1) => (x == null ? "–" : `${fmt(100 * x, d)}%`);
 
@@ -121,9 +122,7 @@ export default function Reliability() {
             <p><b>Calibration check of the simulator’s ranges</b> (added after the simulator was frozen; nothing was changed in response).
               Over {b.calibration.drivers} real drivers, the actual remaining time fell inside the simulator’s 50% range {pct(b.calibration.coverage50)} of the time and inside its 90% range {pct(b.calibration.coverage90)} of the time
               (median width of the 90% range {fmt(b.calibration.median_width90_s, 1)} s). It fell below the range (faster than simulated) {pct(b.calibration.below90)} of the time and above it {pct(b.calibration.above90)}.</p>
-            <p style={{ marginBottom: 0 }}>{b.calibration.coverage90 < 0.8
-              ? "The ranges are far too narrow for absolute race time: they should not be read as a forecast interval for a finishing time. They describe the spread the model knows about, which is what a comparison of two plans uses."
-              : b.calibration.coverage90 < 0.88 ? "The ranges are somewhat too narrow for absolute race time." : "The ranges cover about as often as they should."}</p>
+            <p style={{ marginBottom: 0 }}>{calibrationReading(b.calibration, b.remaining?.bias_s)}</p>
           </div>
         ) : <p className="note">The calibration check appears after <code>python -m simulation backtest</code> and <code>python -m webexport</code> are rerun.</p>}
       </section>
