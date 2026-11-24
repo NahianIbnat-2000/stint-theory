@@ -7,6 +7,7 @@ simulator reports race time, never finishing positions.
 
 Lap time of lap j (after the decision lap L):
   mu + beta * j + kappa[c] + s * g_c(age)  + AR(1) noise
+(pace model v3: see simulation/params.py)
 plus, on a stop lap, the pit loss (in-lap + out-lap minus two normal laps), and
 under a safety car the lap is slowed by the SC factor and a stop costs less.
 mu is the driver's pace estimated from laps up to L only.
@@ -58,18 +59,27 @@ class Pace:
         self.c = dict(coef or p["pace"]["coef"])
         self.cap = p["pace"]["age_cap"]
         self.scale = p["circuit"]["scale"]
+        self.tail = dict(p["pace"].get("tail_slope") or {})
 
     def kappa(self, comp):
         return self.c.get(f"k_{comp}", 0.0)
 
     def g(self, comp, age):
-        """Tyre-age term; quadratic up to the cap, then linear at the cap's slope."""
+        """Tyre-age term, times the circuit scale. Quadratic up to the cap, linear
+        beyond. v3: if the quadratic is concave and peaks before the cap, the cap
+        moves to the peak (lap time never falls with age); beyond the cap the slope
+        is at least the compound's linear Task 3 slope."""
         b1, b2 = self.c[f"age_{comp}"], self.c[f"age2_{comp}"]
+        cap = float(self.cap)
+        if b2 < 0:
+            cap = min(cap, max(-b1 / (2 * b2), 0.0))
         age = np.asarray(age, float)
-        a = np.minimum(age, self.cap)
+        a = np.minimum(age, cap)
         val = b1 * a + b2 * a ** 2
-        slope_cap = b1 + 2 * b2 * self.cap
-        return self.scale * (val + np.maximum(age - self.cap, 0) * slope_cap)
+        slope_cap = b1 + 2 * b2 * cap
+        if comp in self.tail:
+            slope_cap = max(slope_cap, self.tail[comp])
+        return self.scale * (val + np.maximum(age - cap, 0) * slope_cap)
 
     def lap_mean(self, mu, lap, comp, age):
         return mu + self.c["lap_number"] * np.asarray(lap, float) + self.kappa(comp) + self.g(comp, age)

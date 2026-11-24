@@ -142,5 +142,48 @@ pit loss: MAE 5.1 s, median 1.4 s, bias -2.0 s.
    locked test set; these changes were made once after backtest 1 and backtest 2
    is reported as it comes out, without further tuning.
 
+## Simulator backtest 2, 2026-11-24 (v2)
+
+Next stint: MAE 0.910 s, bias +0.329. Remaining race time: MAE 37.3 s, bias
++26.3 s. Green-flag pit loss: bias -0.88 s (fixed). The driver-pace change did not
+remove the bias, so the diagnosis behind change 8a was wrong.
+
+The parameter table showed the cause: the pace model contradicted Task 3. Tyre-age
+slopes soft 0.030, medium 0.043, hard 0.060 s/lap (Task 3: 0.068, 0.048, 0.042);
+fresh hard 0.22 s faster than fresh medium; circuit factor mean 1.49 (range
+0.33-3.19).
+
+9. **Simulator v3 (pace model).** Motivated by the contradiction with the
+   identified Task 3 model, not by the backtest numbers. (a) Three-step pace model:
+   Task 3 linear tyre slopes (race-lap, driver-race, race-compound FE), then
+   compound offsets from same-lap comparisons (race-lap, driver-race FE), then the
+   lap trend (driver-race FE); all leave-race-out. (b) Circuit factor shrunk harder
+   (n/(n+2)), normalised to average 1, capped to [0.5, 2.0]. (c) A quadratic tyre
+   curve was tested on synthetic data first and rejected (weakly identified; hard
+   offset 0.25 s against a true 0.40 s); the linear version recovers the true
+   values (synthetic test added). Backtest 3 is the last simulator run: the
+   simulator is frozen after it and reported as it comes out.
+
+## Simulator backtest 3, 2026-11-24 (v3). Simulator frozen.
+
+Parameters now agree with Task 3: tyre-age slopes soft 0.068, medium 0.048, hard
+0.042 s/lap; fresh soft 0.25 s faster and fresh hard 0.08 s slower than medium;
+lap trend -0.057 s/lap; circuit factor mean 1.01 (0.50-1.90).
+
+Next stint: MAE 0.876 s (persistence 1.597), bias +0.177 (v2: +0.329). The bias
+falls with laps since the stop: +0.40 s on laps 1-3, +0.06 s after lap 30, so the
+model is too slow on fresh tyres and real stints are not linear in tyre age.
+Remaining race time: MAE 35.1 s, median 19.2 s, bias +19.1 s, 90% of errors within
+50.9 s. Pit loss: MAE 5.6 s, bias -0.88 s.
+
+Frozen as promised; no further changes. Known consequences, carried to
+limitations.md and the website:
+- absolute race times are too slow by about 19 s over two thirds of a race;
+- the lap-trend part of that error is common to every strategy and cancels in
+  strategy differences; the fresh-tyre part does not: each extra stop adds a new
+  stint that starts about 0.3-0.4 s/lap too slow for a few laps, so the model
+  leans slightly against extra stops (a few tenths to about 1-2 s per stop);
+- strategy differences inside the backtest error band are shown as not separable.
+
 Not changed: the split, the reference pace, the features, the scored sample and
 the evaluation method.

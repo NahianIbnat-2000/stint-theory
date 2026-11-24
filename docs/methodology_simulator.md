@@ -18,30 +18,52 @@ that has not started (for example "stop on lap 20 for hards"). The simulator use
 the structural pace model below for every lap, and the backtest compares it with
 simple benchmarks on real stints.
 
-## Pace model (no hindsight)
+## Pace model v3 (no hindsight)
 
 Estimated for each race **without that race's laps** (leave-race-out), on clean
 green dry laps on slicks:
 
 lap_time = mu[driver x race] + beta x lap + kappa[compound]
-           + s_circuit x (b1[compound] x age + b2[compound] x age^2) + e
+           + s_circuit x b1[compound] x age + e
 
-- beta: common per-lap trend (fuel burn + track evolution).
-- kappa: pace of soft and hard relative to medium (pooled across circuits; the
-  relative labels map to different Pirelli compounds at different races).
-- b1, b2: tyre-age curve by compound; quadratic up to age 40, linear beyond.
+Three steps, so each term is identified the same way as in Task 3:
+1. b1 (tyre-age slope by compound): the Task 3 headline spec, with race x lap,
+   driver x race and race x compound fixed effects.
+2. kappa (soft and hard relative to medium): lap_time - b1 x age on compound
+   dummies with race x lap and driver x race fixed effects, i.e. cars on different
+   compounds on the same lap, net of driver pace and tyre age. Pooled across
+   circuits (the relative labels map to different Pirelli compounds at different
+   races).
+3. beta (common per-lap trend, fuel burn + track evolution): the remainder on lap
+   number with driver x race fixed effects.
+
+Parameter uncertainty uses a block-diagonal covariance across the three steps
+(cross-step covariance ignored, so intervals are somewhat too narrow).
+
 - s_circuit: this circuit's tyre-age slope in other years divided by the average
-  slope, shrunk toward 1 with weight n/(n+1) (n = other years at this circuit).
+  slope of other races, shrunk toward 1 with weight n/(n+2), divided by the
+  average shrunk ratio across other circuits (so it averages 1), capped to
+  [0.5, 2.0].
 - e: AR(1) within a driver's race (persistence of errors found in Task 2).
-- mu (driver pace): from the driver's last 8 clean laps **up to lap L**, net of the
-  model terms. Needs at least 3 clean laps, so very early decision laps are refused.
+- mu (driver pace): from the driver's last 30 clean laps **up to lap L**, net of
+  the model terms. Needs at least 3 clean laps, so very early decision laps are
+  refused.
+
+Why v3: v1/v2 fitted every term at once with driver x race effects only. Compound
+choice was then confounded with when and where each compound is run: hard came
+out 0.22 s faster than medium, the wear ordering was reversed against Task 3
+(soft 0.030, medium 0.043, hard 0.060 s/lap) and the circuit factor averaged 1.49.
+A quadratic tyre curve was tried for step 1 and dropped before any real-data run:
+on synthetic data with known values its curvature was weakly identified and the
+error leaked into the compound offsets. The engine still supports a quadratic
+(capped at its peak, with the linear slope as the minimum beyond the cap).
 
 ## Pit loss
 
 Each real stop: in-lap + out-lap time minus twice the driver's median clean lap
 within ±6 laps. Stops with a red-flag lap are excluded (tyre changes during a
-stoppage cost no pit-lane time). Mean = median green-flag loss at this circuit in
-other years (all other races if fewer than 5 stops); spread from the deviation of
+stoppage cost no pit-lane time). Mean = green-flag loss at this circuit in other years (v2: mean with the top 5%
+capped; v1 used the median) (all other races if fewer than 5 stops); spread from the deviation of
 stops around their circuit median; stops under SC/VSC cost `neutralised_factor`
 times the green loss (median ratio, other races).
 

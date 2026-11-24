@@ -94,6 +94,7 @@ def run_backtest(root: Path | None = None, public: Path | None = None) -> Path:
             continue
         p = load_params(r["race_id"], root)
         coefs.append({k: p["pace"]["coef"][k] for k in p["pace"]["coef"]} |
+                     {f"tail_{k}": v for k, v in (p["pace"].get("tail_slope") or {}).items()} |
                      {"circuit_scale": p["circuit"]["scale"], "pit_loss": p["pit_loss"]["mean_s"]})
         ns += next_stint_rows(p)
         rem += remaining_rows(p)
@@ -110,7 +111,9 @@ def run_backtest(root: Path | None = None, public: Path | None = None) -> Path:
         parts += ["## Pace-model parameters across the leave-race-out fits",
                   "`lap_number` is the common per-lap trend (fuel burn + track evolution; Task 3 "
                   "implied about -0.065 s/lap). `k_*` are compound offsets against medium; "
-                  "`age_*`, `age2_*` the tyre-age curve.", _md(summ, 4)]
+                  "`age_*`, `age2_*` the tyre-age curve (Task 3 spec); `tail_*` the linear "
+                  "Task 3 slopes used as the minimum slope beyond the curve's cap; "
+                  "`circuit_scale` should average about 1.", _md(summ, 4)]
     if not ns.empty:
         ns["err_model"] = ns["model"] - ns["actual"]
         ns["err_persist"] = ns["persistence"] - ns["actual"]

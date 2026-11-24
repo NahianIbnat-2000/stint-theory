@@ -6,13 +6,23 @@ other races only, so a simulation of race r never uses race r's own outcome
 know at the decision lap: the race distance, each driver's laps so far, and the
 race-specific tyre rules.
 
-Pace model (on clean green dry laps on slicks, other races):
-  lap_time = mu[driver x race] + beta * lap
-             + kappa[compound] + b1[compound] * age + b2[compound] * age^2 + e
-with driver x race fixed effects and race-clustered covariance. beta is the common
-per-lap trend (fuel burn plus track evolution). MEDIUM is the reference compound.
-Tyre-age terms are scaled by a circuit factor (other years at the same circuit,
-shrunk toward 1). Residuals e follow AR(1) within a driver's race.
+Pace model v3 (on clean green dry laps on slicks, other races), estimated in three
+steps so that each piece is identified the same way as in Task 3:
+  1. tyre-age slope: lap_time on b1[c] * age by compound, with race x lap,
+     driver x race and race x compound fixed effects (the Task 3 headline spec;
+     b2 = 0, see fit_pace for why the quadratic was not used);
+  2. compound offsets kappa[c] (MEDIUM = 0): lap_time - g(age) on compound dummies,
+     with race x lap and driver x race fixed effects (same-lap comparisons of cars
+     on different compounds, net of driver pace and tyre age);
+  3. common per-lap trend beta: lap_time - g(age) - kappa on lap number, with
+     driver x race fixed effects.
+v1/v2 fitted all terms at once with driver x race effects only; compound choice was
+then confounded with when and where each compound is run (hard faster than medium,
+wear ordering reversed). See docs/model_changes.md, change 9.
+The covariance used for parameter uncertainty is block-diagonal across the three
+steps (cross-step covariance ignored). Tyre-age terms are scaled by a circuit factor
+(other years at the same circuit, shrunk toward 1, normalised to average 1, capped).
+Residuals e follow AR(1) within a driver's race.
 """
 from __future__ import annotations
 
@@ -22,7 +32,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from models.tyre import COMPOUNDS, estimation_sample, fe_ols
+from models.tyre import COMPOUNDS, FE_MAIN, estimation_sample, fe_ols
 from pipelines import config
 from .constraints import rules_for
 
@@ -45,10 +55,47 @@ def pace_sample(laps: pd.DataFrame) -> pd.DataFrame:
     return d
 
 
+AGE_X = [f"age_{c}" for c in COMPOUNDS] + [f"age2_{c}" for c in COMPOUNDS]
+KAPPA_X = ["k_SOFT", "k_HARD"]
+LIN_X = [f"age_{c}" for c in COMPOUNDS]
+PACE_VERSION = 3
+
+
+def _age_curve(d: pd.DataFrame, coef: dict) -> pd.Series:
+    return sum(coef.get(k, 0.0) * d[k] for k in AGE_X)
+
+
 def fit_pace(d: pd.DataFrame) -> dict:
-    r = fe_ols(d, "lap_time_s", PACE_X, ["driver_race"], "race_id")
-    return {"coef": r["coef"].to_dict(), "vcov": r["vcov"].values.tolist(),
-            "names": list(r["coef"].index), "n": r["n"], "races": r["clusters"]}
+    """Three-step pace model (see module docstring)."""
+    y = "lap_time_s"
+    # step 1 is LINEAR in tyre age by compound (the Task 3 headline spec). A quadratic
+    # was tried first: on synthetic data with a known answer its curvature is weakly
+    # identified (in a first stint, tyre age moves with lap number) and the error
+    # leaked into the compound offsets (hard offset 0.25 s vs a true 0.40 s). The
+    # age2_* terms are kept in the parameter files at zero for a stable format.
+    s1 = fe_ols(d, y, LIN_X, FE_MAIN, "race_id")
+    lin = s1
+    c1 = s1["coef"].to_dict()
+    d = d.assign(_y1=d[y] - _age_curve(d, c1))
+    s2 = fe_ols(d, "_y1", KAPPA_X, ["race_lap", "driver_race"], "race_id")
+    c2 = s2["coef"].to_dict()
+    d = d.assign(_y2=d["_y1"] - sum(c2.get(k, 0.0) * d[k] for k in KAPPA_X))
+    s3 = fe_ols(d, "_y2", ["lap_number"], ["driver_race"], "race_id")
+    coef, V = {}, np.zeros((len(PACE_X), len(PACE_X)))
+    for r in (s1, s2, s3):
+        for k in r["coef"].index:
+            coef[k] = float(r["coef"][k])
+        names = list(r["coef"].index)
+        for a in names:
+            for b in names:
+                V[PACE_X.index(a), PACE_X.index(b)] = float(r["vcov"].loc[a, b])
+    for k in PACE_X:            # terms absent from the sample (e.g. compound never run)
+        coef.setdefault(k, 0.0)
+    return {"coef": {k: coef[k] for k in PACE_X}, "vcov": V.tolist(), "names": list(PACE_X),
+            "n": s1["n"], "races": s1["clusters"], "version": PACE_VERSION,
+            "tail_slope": {c: float(lin["coef"].get(f"age_{c}", 0.0)) for c in COMPOUNDS},
+            "method": "3-step: Task 3 tyre curve (race-lap, driver-race, race-compound FE); "
+                      "compound offsets (race-lap, driver-race FE); lap trend (driver-race FE)"}
 
 
 def residual_ar1(d: pd.DataFrame, pace: dict) -> dict:
@@ -81,17 +128,34 @@ def race_slopes(d: pd.DataFrame) -> pd.Series:
     return pd.Series(out)
 
 
+SCALE_PRIOR = 2.0            # shrinkage weight n / (n + SCALE_PRIOR)
+SCALE_BOUNDS = (0.5, 2.0)
+
+
 def circuit_scale(slopes: pd.Series, events: pd.Series, race_id: str) -> dict:
-    """Ratio of this circuit's tyre-age slope (other years) to the average slope of
-    all other races, shrunk toward 1 with weight n / (n + 1), n = other years here."""
+    """Tyre-wear multiplier for this circuit, from other years at the same circuit.
+
+    v3: raw ratio = circuit's mean slope / all other races' mean slope, shrunk toward 1
+    with weight n / (n + 2); then divided by the average shrunk ratio over all other
+    circuits so the multiplier averages 1 across circuits (v1/v2 averaged 1.49 because
+    ratios of noisy slopes skew upward); then capped to [0.5, 2.0]."""
     others = slopes.drop(race_id, errors="ignore")
-    same = others[events.reindex(others.index) == events.get(race_id)]
+    ev = events.reindex(others.index)
     base = others.mean()
-    if len(same) == 0 or base <= 0:
-        return {"scale": 1.0, "raw": None, "years": 0}
+    if len(others) == 0 or base <= 0:
+        return {"scale": 1.0, "raw": None, "years": 0, "norm": None}
+
+    def shrunk(v: pd.Series) -> float:
+        raw = max(float(v.mean()), 0.0) / base
+        return 1 + len(v) / (len(v) + SCALE_PRIOR) * (raw - 1)
+
+    norm = float(np.mean([shrunk(others[ev == e]) for e in ev.unique()]))
+    same = others[ev == events.get(race_id)]
+    if len(same) == 0:
+        return {"scale": 1.0, "raw": None, "years": 0, "norm": norm}
     raw = float(max(same.mean(), 0.0) / base)
-    w = len(same) / (len(same) + 1)
-    return {"scale": float(1 + w * (raw - 1)), "raw": raw, "years": int(len(same))}
+    scale = float(np.clip(shrunk(same) / norm, *SCALE_BOUNDS))
+    return {"scale": scale, "raw": raw, "years": int(len(same)), "norm": norm}
 
 
 # ------------------------------------------------------------------ pit loss

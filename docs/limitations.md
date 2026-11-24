@@ -25,3 +25,18 @@
     the scored sample. Reported errors apply to normal green-flag laps, not every lap.
 11. **Pit timing is chosen,** not random, which biases simple tyre-age slopes (see
     methodology section 9).
+
+## Strategy simulator (frozen after backtest 3)
+
+- Single car against the clock: no traffic, track position or other cars'
+  strategies; reports race time, never positions.
+- Remaining race time from one third distance: typical error 35 s, bias +19 s
+  (too slow), 90% of errors within 51 s.
+- Fresh-tyre pace too slow by about 0.4 s/lap for the first laps of a stint and
+  close to zero after 30 laps (tyre wear is not linear in age; a curved model was
+  weakly identified and not used). This leans the model slightly against
+  strategies with more stops.
+- Parameter intervals are somewhat too narrow (block-diagonal covariance across
+  the three estimation steps; circuit-factor uncertainty not included).
+- Dry races on slicks only; VSC not modelled; tyre sets actually available not
+  known.

@@ -183,3 +183,56 @@ def test_backtest_and_demo_run(built, capsys, monkeypatch):
     demo(rid, "D01", 8, plan="20:H", n=40)
     out = capsys.readouterr().out
     assert "your plan" in out and "best 1-stop" in out and "counterfactual" in out
+
+
+# ------------------------------------------------------------------ pace model v3
+def confounded_panel(seed=0):
+    """SIMULATED DATA. Hards are run late in the race (low fuel), races differ in
+    track evolution, drivers differ in pace. True values below."""
+    rng = np.random.default_rng(seed)
+    kappa = {"SOFT": -0.5, "MEDIUM": 0.0, "HARD": 0.4}
+    wear = {"SOFT": 0.07, "MEDIUM": 0.05, "HARD": 0.04}
+    rows = []
+    for r in range(12):
+        evo = rng.uniform(-0.09, -0.04)
+        for drv in range(14):
+            start = "SOFT" if drv % 2 else "MEDIUM"
+            stop = int(rng.integers(12, 30))
+            mu = rng.normal(0, 0.4)
+            for lap in range(1, 51):
+                comp, age, stint = (start, lap, 1) if lap <= stop else ("HARD", lap - stop, 2)
+                t = 90 + r + mu + evo * lap + kappa[comp] + wear[comp] * age + rng.normal(0, 0.08)
+                rows.append({"race_id": f"R{r:02d}", "driver": f"D{drv:02d}", "lap_number": lap,
+                             "stint": stint, "compound_relative": comp, "tyre_life": age,
+                             "lap_time_s": t, "is_clean_green": True})
+    return pd.DataFrame(rows)
+
+
+def test_pace_v3_recovers_offsets_and_wear_under_confounding():
+    d = params.pace_sample(confounded_panel())
+    c = params.fit_pace(d)["coef"]
+    def slope(comp, a=10):
+        return c[f"age_{comp}"] + 2 * c[f"age2_{comp}"] * a
+    assert c["k_HARD"] == pytest.approx(0.4, abs=0.08)
+    assert c["k_SOFT"] == pytest.approx(-0.5, abs=0.08)
+    for comp, w in {"SOFT": 0.07, "MEDIUM": 0.05, "HARD": 0.04}.items():
+        assert slope(comp) == pytest.approx(w, abs=0.006), comp
+    assert c["lap_number"] == pytest.approx(-0.065, abs=0.015)
+
+
+def test_circuit_scale_averages_one_and_is_capped():
+    rng = np.random.default_rng(1)
+    ev = pd.Series({f"r{i}": f"E{i % 10}" for i in range(30)})
+    sl = pd.Series(np.abs(rng.normal(0.05, 0.04, 30)), index=ev.index)
+    sl.iloc[0] = 1.0                                     # one wild race
+    s = [params.circuit_scale(sl, ev, r)["scale"] for r in ev.index]
+    assert all(params.SCALE_BOUNDS[0] <= x <= params.SCALE_BOUNDS[1] for x in s)
+    assert np.mean(s) == pytest.approx(1.0, abs=0.15)
+
+
+def test_tyre_term_never_falls_with_age():
+    p = {"pace": {"coef": {"age_SOFT": 0.1, "age2_SOFT": -0.004}, "age_cap": 40,
+                  "tail_slope": {"SOFT": 0.03}}, "circuit": {"scale": 1.0}}
+    g = engine.Pace(p).g("SOFT", np.arange(0, 60))
+    assert np.all(np.diff(g) >= -1e-12)                  # peak of the quadratic at 12.5
+    assert g[59] - g[58] == pytest.approx(0.03)          # tail at the linear slope
