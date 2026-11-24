@@ -231,7 +231,11 @@ def test_final_test_needs_unlock_and_runs_end_to_end(feat_path, tmp_path, monkey
         final_test.run_test(**kw)
     monkeypatch.setenv(data.UNLOCK_ENV, data.UNLOCK_VALUE)
     report = final_test.run_test(**kw).read_text()
-    assert "P5" in report and "xgboost_ens5" in report and "NOT committed" in report
+    assert "P5" in report and "xgboost_ens5" in report
+    # the warning must appear exactly when the pre-registration is not committed;
+    # whether it is depends on the git state of the machine running the tests
+    meta = json.loads((tmp_path / "final" / "run_meta.json").read_text())
+    assert ("NOT committed" in report) == (not meta["preregistration"]["committed"])
     pred = pd.read_parquet(tmp_path / "final" / "predictions.parquet")
     assert set(pred["round"]) == {13}
     with pytest.raises(RuntimeError, match="run once"):

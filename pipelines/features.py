@@ -47,7 +47,7 @@ FEATURE_COLUMNS = [
 ]
 # Per-lap state known at the end of each lap, used to build lap sequences for the
 # Phase 3 sequence models. Not used by the Phase 2 models (they list inputs explicitly).
-SEQUENCE_COLUMNS = ["flag_pit_in", "flag_pit_out", "is_rt_green"]
+SEQUENCE_COLUMNS = ["flag_pit_in", "flag_pit_out", "flag_red", "is_rt_green"]
 TARGET_COLUMNS = ["y_next_lap_time_s", "target_lap_number", "target_valid", "target_valid_strict"]
 
 

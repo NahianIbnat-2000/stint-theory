@@ -1,0 +1,30 @@
+{
+  "started_utc": "2026-11-24T10:39:20+00:00",
+  "quick": false,
+  "n_seeds": 3,
+  "horizon": 10,
+  "xgb_settings": {
+    "max_depth": 6,
+    "n_estimators": 150,
+    "min_child_weight": 100,
+    "objective": "reg:pseudohubererror"
+  },
+  "net_settings": {
+    "mlp": {
+      "hidden": 64,
+      "dropout": 0.3
+    },
+    "lstm": {
+      "hidden": 32,
+      "dropout": 0.3
+    }
+  },
+  "runtime_s": {
+    "persistence": 0.0016380000161007047,
+    "compound_drift": 0.08987570006866008,
+    "trend_extrapolation": 0.03402770007960498,
+    "xgboost_direct": 82.99225740000838,
+    "mlp_multi": 196.8256997001008,
+    "lstm_multi": 765.911947100074
+  }
+}

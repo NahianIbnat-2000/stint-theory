@@ -107,3 +107,25 @@ Listed with the results that prompted them in [model_changes.md](model_changes.m
   are expected to be small in seconds; the skill score makes them comparable.
 - A model that predicts next-lap time well may still be poor at multi-lap
   forecasts (Phase 3, Task 2) or at strategy (Phase 4).
+
+## Task 2: multi-lap stint forecasts
+
+At the end of lap t, forecast laps t+1 to t+10 for a driver who stays out on the
+same tyres. A pair (t, h) is scored when laps t+1 to t+h are consecutive laps of
+the same stint, none of laps t+1 to t+h-1 is under SC, VSC, red flag or a restart,
+and lap t+h is a clean green lap. Slow laps in between for other reasons (traffic,
+yellows) stay in. Inputs are the origin-lap features plus the horizon h.
+
+Models: persistence (`ref` for every h); compound drift (`ref` + h x average
+one-lap change for the compound); trend extrapolation (`ref` + h x the recent
+5-lap trend, clipped to the 1st-99th percentile of training slopes); XGBoost
+direct (one model on stacked (origin, h) rows with h and tyre age at the target as
+inputs, frozen Task 1 settings); MLP and LSTM with ten outputs and a masked Huber
+loss (frozen Task 1 settings, 3 seeds). Settings are carried over from Task 1, not
+retuned. The TCN is left out: in Task 1 it was equivalent to the LSTM at twice the
+training cost.
+
+Reported: MAE by horizon, XGBoost skill and LSTM minus XGBoost by horizon with
+race-clustered intervals, and the error of the total time of the next ten laps
+(the quantity a strategy simulator adds up). The test-set run for Task 2 will be
+pre-registered after the development results, as in Task 1.

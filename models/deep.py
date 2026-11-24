@@ -89,28 +89,32 @@ def _nets():
     from torch import nn
 
     class MLP(nn.Module):
-        def __init__(self, d_tab, hidden=64, dropout=0.1, **_):
+        def __init__(self, d_tab, hidden=64, dropout=0.1, n_out=1, **_):
             super().__init__()
+            self.n_out = n_out
             self.f = nn.Sequential(nn.Linear(d_tab, 2 * hidden), nn.ReLU(), nn.Dropout(dropout),
                                    nn.Linear(2 * hidden, hidden), nn.ReLU(), nn.Dropout(dropout),
-                                   nn.Linear(hidden, 1))
+                                   nn.Linear(hidden, n_out))
 
         def forward(self, tab, seq):
-            return self.f(tab).squeeze(-1)
+            out = self.f(tab)
+            return out.squeeze(-1) if self.n_out == 1 else out
 
     class _SeqHead(nn.Module):
-        def __init__(self, d_tab, d_seq_out, hidden, dropout):
+        def __init__(self, d_tab, d_seq_out, hidden, dropout, n_out=1):
             super().__init__()
+            self.n_out = n_out
             self.tab = nn.Sequential(nn.Linear(d_tab, hidden), nn.ReLU(), nn.Dropout(dropout))
             self.head = nn.Sequential(nn.Linear(hidden + d_seq_out, hidden), nn.ReLU(),
-                                      nn.Dropout(dropout), nn.Linear(hidden, 1))
+                                      nn.Dropout(dropout), nn.Linear(hidden, n_out))
 
         def combine(self, tab, h):
-            return self.head(torch.cat([self.tab(tab), h], dim=-1)).squeeze(-1)
+            out = self.head(torch.cat([self.tab(tab), h], dim=-1))
+            return out.squeeze(-1) if self.n_out == 1 else out
 
     class LSTMNet(_SeqHead):
-        def __init__(self, d_tab, d_seq, hidden=64, dropout=0.1, **_):
-            super().__init__(d_tab, hidden, hidden, dropout)
+        def __init__(self, d_tab, d_seq, hidden=64, dropout=0.1, n_out=1, **_):
+            super().__init__(d_tab, hidden, hidden, dropout, n_out)
             self.rnn = nn.LSTM(d_seq, hidden, batch_first=True)
 
         def forward(self, tab, seq):
@@ -118,8 +122,8 @@ def _nets():
             return self.combine(tab, h[-1])
 
     class TCNNet(_SeqHead):
-        def __init__(self, d_tab, d_seq, hidden=64, dropout=0.1, **_):
-            super().__init__(d_tab, hidden, hidden, dropout)
+        def __init__(self, d_tab, d_seq, hidden=64, dropout=0.1, n_out=1, **_):
+            super().__init__(d_tab, hidden, hidden, dropout, n_out)
             self.inp = nn.Conv1d(d_seq, hidden, 1)
             self.blocks = nn.ModuleList()
             for dil in (1, 2, 4):              # receptive field 1 + 2*(1+2+4) = 15 >= SEQ_LEN

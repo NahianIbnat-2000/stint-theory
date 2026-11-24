@@ -1,6 +1,6 @@
 # STINT THEORY data coverage report
 
-Generated 2026-11-23T21:09:34+00:00 from the files in data/raw. All counts come from the data on disk.
+Generated 2026-11-24T10:38:16+00:00 from the files in data/raw. All counts come from the data on disk.
 
 ## Sessions and laps by season
 
