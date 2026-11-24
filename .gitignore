@@ -1,0 +1,12 @@
+# OpenF1 response cache and raw/processed lap data: not ours to redistribute
+.cache/
+data/raw/
+data/processed/
+# row-level predictions are derived from timing data: keep out of git
+research/results/**/predictions.parquet
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+.DS_Store

@@ -1,0 +1,4 @@
+# Planned race distance per race, checked by hand against official sources.
+# Fill a row only after checking; it overrides the OpenF1 winner-lap fallback.
+# round = order of held races in that season (see data/manifests/ingest_<season>.json).
+season,round,event_name,scheduled_laps,source_url

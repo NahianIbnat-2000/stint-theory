@@ -1,0 +1,520 @@
+{
+  "season": {
+    "type": "int",
+    "unit": "",
+    "kind": "raw",
+    "origin": "OpenF1 sessions.year",
+    "description": "Championship year."
+  },
+  "round": {
+    "type": "int",
+    "unit": "",
+    "kind": "derived",
+    "origin": "OpenF1 sessions.date_start",
+    "description": "Order of the races held that season (may differ from the official round if an event was cancelled)."
+  },
+  "race_id": {
+    "type": "str",
+    "unit": "",
+    "kind": "derived",
+    "origin": "pipeline",
+    "description": "season_round key, e.g. 2023_05."
+  },
+  "event_name": {
+    "type": "str",
+    "unit": "",
+    "kind": "raw",
+    "origin": "OpenF1 meetings.meeting_name",
+    "description": "Grand Prix name."
+  },
+  "regulation_era": {
+    "type": "str",
+    "unit": "",
+    "kind": "derived",
+    "origin": "config.regulation_era",
+    "description": "Technical-rules era of the season."
+  },
+  "scheduled_laps": {
+    "type": "int",
+    "unit": "laps",
+    "kind": "derived",
+    "origin": "reference file or OpenF1 session_result",
+    "description": "Race distance. From data/reference/scheduled_laps.csv if checked by hand, else the winner's lap count (actual distance; wrong for shortened races)."
+  },
+  "scheduled_laps_source": {
+    "type": "str",
+    "unit": "",
+    "kind": "derived",
+    "origin": "ingest",
+    "description": "reference_file, winner_laps_actual or missing."
+  },
+  "driver": {
+    "type": "str",
+    "unit": "",
+    "kind": "raw",
+    "origin": "OpenF1 drivers.name_acronym",
+    "description": "Three-letter driver code."
+  },
+  "driver_number": {
+    "type": "str",
+    "unit": "",
+    "kind": "raw",
+    "origin": "OpenF1 laps.driver_number",
+    "description": "Car number."
+  },
+  "team": {
+    "type": "str",
+    "unit": "",
+    "kind": "raw",
+    "origin": "OpenF1 drivers.team_name",
+    "description": "Constructor name for that season."
+  },
+  "lap_number": {
+    "type": "int",
+    "unit": "lap",
+    "kind": "raw",
+    "origin": "OpenF1 laps.lap_number",
+    "description": "Lap counter for the driver."
+  },
+  "stint": {
+    "type": "int",
+    "unit": "",
+    "kind": "derived",
+    "origin": "OpenF1 stints (lap_start..lap_end)",
+    "description": "Stint counter, starts at 1, rises after each tyre change."
+  },
+  "tyre_life": {
+    "type": "float",
+    "unit": "laps",
+    "kind": "derived",
+    "origin": "OpenF1 stints.tyre_age_at_start",
+    "description": "tyre_age_at_start + laps into the stint + 1 (1 on the first lap of a new set). Includes laps from earlier sessions for used sets."
+  },
+  "fresh_tyre": {
+    "type": "bool",
+    "unit": "",
+    "kind": "derived",
+    "origin": "OpenF1 stints.tyre_age_at_start",
+    "description": "tyre_age_at_start == 0."
+  },
+  "lap_time_s": {
+    "type": "float",
+    "unit": "s",
+    "kind": "raw",
+    "origin": "OpenF1 laps.lap_duration",
+    "description": "Measured lap time. Not a measure of tyre wear."
+  },
+  "s1_s": {
+    "type": "float",
+    "unit": "s",
+    "kind": "raw",
+    "origin": "OpenF1 laps.duration_sector_1",
+    "description": "Sector 1 time."
+  },
+  "s2_s": {
+    "type": "float",
+    "unit": "s",
+    "kind": "raw",
+    "origin": "OpenF1 laps.duration_sector_2",
+    "description": "Sector 2 time."
+  },
+  "s3_s": {
+    "type": "float",
+    "unit": "s",
+    "kind": "raw",
+    "origin": "OpenF1 laps.duration_sector_3",
+    "description": "Sector 3 time."
+  },
+  "lap_start_session_s": {
+    "type": "float",
+    "unit": "s",
+    "kind": "derived",
+    "origin": "OpenF1 laps.date_start",
+    "description": "Seconds from the session's scheduled start to lap start."
+  },
+  "lap_end_session_s": {
+    "type": "float",
+    "unit": "s",
+    "kind": "derived",
+    "origin": "date_start + lap_duration",
+    "description": "Seconds from scheduled start to lap end (next lap start if duration missing)."
+  },
+  "position_end_of_lap": {
+    "type": "float",
+    "unit": "place",
+    "kind": "derived",
+    "origin": "OpenF1 position",
+    "description": "Latest running position at or before lap end."
+  },
+  "track_status_raw": {
+    "type": "str",
+    "unit": "",
+    "kind": "derived",
+    "origin": "OpenF1 race_control",
+    "description": "Codes of every neutralisation period overlapping the lap, rebuilt from race-control messages (1 green, 2 yellow, 4 SC, 5 red, 6 VSC)."
+  },
+  "compound_raw": {
+    "type": "str",
+    "unit": "",
+    "kind": "raw",
+    "origin": "OpenF1 stints.compound",
+    "description": "Compound label as reported."
+  },
+  "compound_class": {
+    "type": "str",
+    "unit": "",
+    "kind": "derived",
+    "origin": "clean.map_compounds",
+    "description": "SLICK, INTERMEDIATE or WET."
+  },
+  "compound_relative": {
+    "type": "str",
+    "unit": "",
+    "kind": "derived",
+    "origin": "clean.map_compounds",
+    "description": "SOFT/MEDIUM/HARD (or INTERMEDIATE/WET). Missing where it cannot be assigned."
+  },
+  "compound_map_method": {
+    "type": "str",
+    "unit": "",
+    "kind": "derived",
+    "origin": "clean.map_compounds",
+    "description": "How compound_relative was set: reported, rank_of_observed_2018, ambiguous_*, missing."
+  },
+  "flag_yellow": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "track status",
+    "description": "Yellow flag at some point in the lap."
+  },
+  "flag_sc": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "track status",
+    "description": "Safety car at some point in the lap."
+  },
+  "flag_red": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "track status",
+    "description": "Red flag at some point in the lap."
+  },
+  "flag_vsc": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "track status",
+    "description": "Virtual safety car deployed or ending in the lap."
+  },
+  "flag_track_status_missing": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "track status",
+    "description": "No status recorded for the lap."
+  },
+  "flag_pit_in": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "OpenF1 laps.is_pit_out_lap",
+    "description": "In-lap: the lap before an out-lap. Cross-checked against the pit table."
+  },
+  "flag_pit_out": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "OpenF1 laps.is_pit_out_lap",
+    "description": "Out-lap (driver left the pit lane)."
+  },
+  "flag_first_lap": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "lap_number",
+    "description": "Opening lap (standing start)."
+  },
+  "flag_missing_time": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "lap_time_s",
+    "description": "Lap time missing."
+  },
+  "flag_deleted": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "OpenF1 race_control message",
+    "description": "Lap time deleted by race control (and not reinstated). Known only after the fact."
+  },
+  "flag_not_accurate": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "FastF1 IsAccurate",
+    "description": "Always false with OpenF1 (no equivalent field). Kept for source compatibility."
+  },
+  "flag_fastf1_generated": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "FastF1 FastF1Generated",
+    "description": "Always false with OpenF1. Kept for source compatibility."
+  },
+  "flag_non_slick": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "compound_class",
+    "description": "Not on slick tyres, or compound unknown."
+  },
+  "flag_compound_relative_missing": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "compound_relative",
+    "description": "Relative compound not assigned. Informational; not an exclusion by itself."
+  },
+  "flag_beyond_scheduled": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "lap_number > scheduled_laps",
+    "description": "Lap past the race distance (extra row after the flag, or distance undercounted)."
+  },
+  "flag_post_neutralisation": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "previous lap",
+    "description": "First lap after an SC, VSC or red-flag lap."
+  },
+  "flag_rain": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "weather",
+    "description": "Rainfall reported at the latest sample before lap start."
+  },
+  "flag_pace_outlier": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "clean.robust_outlier_flag",
+    "description": "Robust z-score of the residual from a Theil-Sen line on lap number within driver-stint, above OUTLIER_Z. Uses the whole stint: sample selection only, never a feature."
+  },
+  "grid_position": {
+    "type": "float",
+    "unit": "place",
+    "kind": "raw",
+    "origin": "OpenF1 starting_grid.position",
+    "description": "Starting grid slot. Final results are not joined."
+  },
+  "air_temp_c": {
+    "type": "float",
+    "unit": "°C",
+    "kind": "raw",
+    "origin": "OpenF1 weather.air_temperature",
+    "description": "Latest air temperature at or before lap start."
+  },
+  "track_temp_c": {
+    "type": "float",
+    "unit": "°C",
+    "kind": "raw",
+    "origin": "OpenF1 weather.track_temperature",
+    "description": "Latest track temperature at or before lap start."
+  },
+  "humidity_pct": {
+    "type": "float",
+    "unit": "%",
+    "kind": "raw",
+    "origin": "OpenF1 weather.humidity",
+    "description": "Latest humidity at or before lap start."
+  },
+  "pressure_mbar": {
+    "type": "float",
+    "unit": "mbar",
+    "kind": "raw",
+    "origin": "OpenF1 weather.pressure",
+    "description": "Latest air pressure at or before lap start."
+  },
+  "rainfall": {
+    "type": "bool",
+    "unit": "",
+    "kind": "raw",
+    "origin": "OpenF1 weather.rainfall",
+    "description": "Rainfall indicator at the latest sample."
+  },
+  "wind_speed_ms": {
+    "type": "float",
+    "unit": "m/s",
+    "kind": "raw",
+    "origin": "OpenF1 weather.wind_speed",
+    "description": "Latest wind speed at or before lap start."
+  },
+  "weather_age_s": {
+    "type": "float",
+    "unit": "s",
+    "kind": "derived",
+    "origin": "pipeline",
+    "description": "Time between the weather sample and lap start."
+  },
+  "is_clean_green": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "clean.EXCLUSION_FLAGS",
+    "description": "No default exclusion flag set (pace outlier not included). Default research sample for scored targets."
+  },
+  "is_clean_green_strict": {
+    "type": "bool",
+    "unit": "",
+    "kind": "flag",
+    "origin": "clean.STRICT_FLAGS",
+    "description": "is_clean_green and not a pace outlier. Sensitivity sample."
+  },
+  "exclusion_reason": {
+    "type": "str",
+    "unit": "",
+    "kind": "derived",
+    "origin": "clean.EXCLUSION_FLAGS",
+    "description": "Semicolon list of every exclusion flag set on the lap, pace outlier included."
+  },
+  "lt_lag0": {
+    "type": "float",
+    "unit": "s",
+    "kind": "feature",
+    "origin": "own laps <= t",
+    "description": "Lap time of lap t (any status)."
+  },
+  "lt_lag1": {
+    "type": "float",
+    "unit": "s",
+    "kind": "feature",
+    "origin": "own laps <= t",
+    "description": "Lap time of lap t-1 (any status)."
+  },
+  "last_green_lt": {
+    "type": "float",
+    "unit": "s",
+    "kind": "feature",
+    "origin": "own laps <= t",
+    "description": "Most recent real-time-green lap in this stint."
+  },
+  "roll_mean_green_3": {
+    "type": "float",
+    "unit": "s",
+    "kind": "feature",
+    "origin": "own laps <= t",
+    "description": "Mean of the last 3 real-time-green laps in this stint."
+  },
+  "roll_std_green_5": {
+    "type": "float",
+    "unit": "s",
+    "kind": "feature",
+    "origin": "own laps <= t",
+    "description": "Std. dev. of the last 5 real-time-green laps in this stint."
+  },
+  "trend_slope_green_5": {
+    "type": "float",
+    "unit": "s/lap",
+    "kind": "feature",
+    "origin": "own laps <= t",
+    "description": "OLS slope of lap time on tyre life, last 5 green laps (needs 3)."
+  },
+  "green_laps_in_stint": {
+    "type": "int",
+    "unit": "laps",
+    "kind": "feature",
+    "origin": "own laps <= t",
+    "description": "Count of real-time-green laps so far in the stint."
+  },
+  "target_tyre_life": {
+    "type": "float",
+    "unit": "laps",
+    "kind": "feature",
+    "origin": "tyre_life + 1",
+    "description": "Tyre life on lap t+1 if the driver stays out."
+  },
+  "prev_stint_compound": {
+    "type": "str",
+    "unit": "",
+    "kind": "feature",
+    "origin": "own laps <= t",
+    "description": "Relative compound of the previous stint."
+  },
+  "pit_stops_so_far": {
+    "type": "float",
+    "unit": "stops",
+    "kind": "feature",
+    "origin": "stint - 1",
+    "description": "Tyre changes made before lap t."
+  },
+  "race_progress": {
+    "type": "float",
+    "unit": "share",
+    "kind": "feature",
+    "origin": "lap / scheduled",
+    "description": "Share of scheduled distance done."
+  },
+  "laps_remaining_sched": {
+    "type": "float",
+    "unit": "laps",
+    "kind": "feature",
+    "origin": "scheduled - lap",
+    "description": "Laps left to the scheduled finish. Main fuel-load proxy."
+  },
+  "field_green_median_recent": {
+    "type": "float",
+    "unit": "s",
+    "kind": "feature",
+    "origin": "other drivers, ended <= end of lap t",
+    "description": "Median of other drivers' green laps that ended in the last 120 s."
+  },
+  "rel_pace_to_field": {
+    "type": "float",
+    "unit": "s",
+    "kind": "feature",
+    "origin": "derived",
+    "description": "roll_mean_green_3 minus field_green_median_recent."
+  },
+  "is_rt_green": {
+    "type": "bool",
+    "unit": "",
+    "kind": "feature",
+    "origin": "real-time flags of lap t",
+    "description": "Lap t had no real-time exclusion flag (pit, SC/VSC/red, yellow, restart, wet, rain). Used for lap sequences."
+  },
+  "y_next_lap_time_s": {
+    "type": "float",
+    "unit": "s",
+    "kind": "target",
+    "origin": "own lap t+1",
+    "description": "Lap time of lap t+1."
+  },
+  "target_lap_number": {
+    "type": "float",
+    "unit": "lap",
+    "kind": "target",
+    "origin": "own lap t+1",
+    "description": "Lap number of the target lap."
+  },
+  "target_valid": {
+    "type": "bool",
+    "unit": "",
+    "kind": "target",
+    "origin": "lap t+1 flags",
+    "description": "Target is the next lap, same stint, and a clean green lap."
+  },
+  "target_valid_strict": {
+    "type": "bool",
+    "unit": "",
+    "kind": "target",
+    "origin": "lap t+1 flags",
+    "description": "target_valid and lap t+1 is not a pace outlier. Sensitivity sample."
+  }
+}

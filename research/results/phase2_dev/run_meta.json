@@ -1,0 +1,58 @@
+{
+  "started_utc": "2026-11-23T21:09:36+00:00",
+  "finished_utc": "2026-11-23T21:21:40+00:00",
+  "quick": false,
+  "folds": 11,
+  "rows_scored": 8727,
+  "train_rows_first_fold": 38940,
+  "mixed_converged_folds": 10,
+  "mixed_fit_modes": {
+    "intercept_and_slope": 11
+  },
+  "seeds": {
+    "models": 20260101,
+    "bootstrap": 7
+  },
+  "versions": {
+    "python": "3.13.13",
+    "pandas": "2.3.3",
+    "numpy": "2.3.3",
+    "sklearn": "1.9.1",
+    "xgboost": "3.4.1",
+    "statsmodels": "0.15.0"
+  },
+  "split": {
+    "train": [
+      2023,
+      2024
+    ],
+    "dev": "2025 R1-12",
+    "test": "2025 R13-24 (locked, not loaded)"
+  },
+  "runtime": {
+    "persistence": {
+      "fit_s": 0.0074278999818488955,
+      "predict_s": 0.004600399930495769
+    },
+    "compound_drift": {
+      "fit_s": 0.07726600003661588,
+      "predict_s": 0.01789329992607236
+    },
+    "ridge": {
+      "fit_s": 4.267606700072065,
+      "predict_s": 0.10739559994544834
+    },
+    "mixed_effects": {
+      "fit_s": 30.61539949994767,
+      "predict_s": 0.2632059999741614
+    },
+    "random_forest": {
+      "fit_s": 191.85377839993453,
+      "predict_s": 0.6366797999362461
+    },
+    "xgboost": {
+      "fit_s": 11.919484299956821,
+      "predict_s": 0.21290319989202544
+    }
+  }
+}
