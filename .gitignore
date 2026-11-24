@@ -15,3 +15,12 @@ research/results/simulator/*.csv
 # website build
 web/node_modules/
 web/dist/
+# LaTeX build files
+paper/*.aux
+paper/*.bbl
+paper/*.bcf
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.run.xml
+paper/*.toc

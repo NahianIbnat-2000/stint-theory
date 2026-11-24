@@ -1,0 +1,70 @@
+% ---------------------------------------------------------------- layout and fonts
+\usepackage[a4paper,margin=2.54cm]{geometry}
+\usepackage{fontspec}
+% Times New Roman where installed (Windows, macOS, Overleaf); otherwise Liberation
+% Serif, which has the same character widths, so line and page breaks match.
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{Liberation Serif}}
+\usepackage{unicode-math}
+\IfFontExistsTF{Times New Roman}{\setmathfont{Latin Modern Math}}{\setmathfont{Latin Modern Math}}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage[english]{babel}
+\usepackage{csquotes}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{threeparttable}
+\usepackage{caption}
+\captionsetup{font={small,stretch=1.15},labelfont=bf,labelsep=period,justification=raggedright,singlelinecheck=false}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\setlist{itemsep=2pt,topsep=4pt}
+\usepackage{xcolor}
+\definecolor{linkblue}{HTML}{1F4E9C}
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}{\normalfont\normalsize\bfseries\itshape}{\thesubsubsection}{0.6em}{}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[R]{\small\thepage}
+\fancyhead[L]{\small STINT THEORY}
+
+% ---------------------------------------------------------------- references (APA 7)
+\usepackage[style=apa,backend=biber,uniquename=false]{biblatex}
+\addbibresource{references.bib}
+
+% ---------------------------------------------------------------- links
+\usepackage[hidelinks=false,colorlinks=true,linkcolor=linkblue,citecolor=linkblue,urlcolor=linkblue,
+  pdftitle={STINT THEORY: Does deep learning beat simpler models at forecasting Formula 1 lap times?},
+  pdfauthor={Nahian Ibnat},bookmarksnumbered=true]{hyperref}
+\usepackage[nameinlink,capitalise,noabbrev]{cleveref}
+\crefname{equation}{Equation}{Equations}
+
+% Make the whole author-date citation one link to its reference entry (not only the year).
+\DeclareFieldFormat{citehyperref}{%
+  \DeclareFieldAlias{bibhyperref}{noformat}%
+  \bibhyperref{#1}}
+\DeclareFieldFormat{textcitehyperref}{%
+  \DeclareFieldAlias{bibhyperref}{noformat}%
+  \bibhyperref{#1}}
+\savebibmacro{cite}
+\savebibmacro{textcite}
+\renewbibmacro*{cite}{\printtext[citehyperref]{\restorebibmacro{cite}\usebibmacro{cite}}}
+\renewbibmacro*{textcite}{\printtext[textcitehyperref]{\restorebibmacro{textcite}\usebibmacro{textcite}}}
+
+\newcommand{\s}{\,s}
+% \input is not expandable, so it breaks \bottomrule inside tables; use the primitive.
+\makeatletter\newcommand\tabinput[1]{\@@input #1 }\makeatother
+
+% table columns that wrap inside \textwidth
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+% let long URLs break in the reference list
+\setcounter{biburlnumpenalty}{100}
+\setcounter{biburlucpenalty}{100}
+\setcounter{biburllcpenalty}{100}
